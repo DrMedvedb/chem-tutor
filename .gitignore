@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Данные и загрузки
+server/data/
+server/uploads/
+
+# Переменные окружения
+.env
+.env.local
+
+# Кэш
+.cache/
+*.log
+
+# ОС
+Thumbs.db
+.DS_Store
+
+# VS Code
+.vscode/

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Панель модератора — Алхимичка</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/avatars.css">
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme.js"></script>
+<style>
+  body {
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,216,74,.08), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(255,155,61,.06), transparent 40%),
+      var(--light);
+    min-height: 100vh;
+  }
+  html.dark body {
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,216,74,.06), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(255,155,61,.05), transparent 40%),
+      var(--light);
+  }
+
+  .moder-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  html.dark .moder-topbar {
+    background: rgba(15,15,30,.9);
+  }
+  .moder-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 17px;
+  }
+  .moder-logo {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-size: 22px;
+    background: linear-gradient(135deg, #ffd84a, #ff9b3d);
+    color: #fff;
+    box-shadow: 0 8px 18px -8px rgba(255,170,0,.6);
+  }
+  .moder-tabs {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    background: var(--light);
+    border-radius: 12px;
+    padding: 4px;
+  }
+  html.dark .moder-tabs { background: #0f0f1e; }
+  .moder-tab {
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--gray);
+    transition: all .2s;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .moder-tab:hover { color: var(--dark); }
+  .moder-tab.active {
+    background: var(--white);
+    color: #c47f00;
+    box-shadow: 0 4px 10px -4px rgba(255,170,0,.5);
+  }
+  html.dark .moder-tab.active { color: #ffd84a; }
+  .moder-tab .cnt {
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(255,170,0,.16);
+    color: #c47f00;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  html.dark .moder-tab .cnt { background: rgba(255,216,74,.2); color: #ffd84a; }
+  .moder-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 18px;
+    border-left: 1.5px solid var(--border);
+  }
+  .moder-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 32px 32px 80px;
+  }
+
+  /* ─── Статистика ─── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 22px 24px;
+    border: 1.5px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: all .25s;
+  }
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px -20px rgba(26,26,46,.25);
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ffd84a, #ff9b3d);
+  }
+  .stat-card.accent::before  { background: linear-gradient(90deg, #6a4cff, #a678ff); }
+  .stat-card.success::before { background: linear-gradient(90deg, #00d4b8, #48e0c6); }
+  .stat-card.danger::before  { background: linear-gradient(90deg, #e0435c, #ff7a8e); }
+  .stat-card .sc-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 6px;
+  }
+  .stat-card .sc-value {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #c47f00, #ff9b3d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.1;
+  }
+  .stat-card.accent .sc-value  { background: linear-gradient(135deg, #5a3fd8, #a678ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.success .sc-value { background: linear-gradient(135deg, #008b74, #48e0c6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.danger .sc-value  { background: linear-gradient(135deg, #c43a3a, #ff7a8e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card .sc-sub {
+    font-size: 12.5px;
+    color: var(--gray);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* ─── Поиск ─── */
+  .moder-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .moder-search input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-size: 14.5px;
+    outline: none;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  html.dark .moder-search input { background: var(--white); color: var(--dark); }
+  .moder-search input:focus {
+    border-color: #ffaa00;
+    box-shadow: 0 0 0 4px rgba(255,170,0,.12);
+  }
+
+  /* ─── Карточка пользователя ─── */
+  .user-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 20px 24px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .user-card:hover {
+    border-color: #ffaa00;
+    box-shadow: 0 12px 30px -20px rgba(255,170,0,.4);
+  }
+  .user-card.trash {
+    border-color: rgba(224,67,92,.3);
+  }
+  .user-card.trash::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #e0435c, #ff7a8e);
+  }
+  .user-card .uc-body { flex: 1; min-width: 0; }
+  .user-card .uc-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .user-card .uc-name {
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--dark);
+  }
+  .user-card .uc-role {
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+  }
+  .user-card .uc-role.tutor {
+    background: rgba(106,76,255,.14);
+    color: var(--primary);
+  }
+  .user-card .uc-role.student {
+    background: rgba(0,212,184,.14);
+    color: var(--accent-dark);
+  }
+  html.dark .user-card .uc-role.tutor { background: rgba(122,92,255,.22); color: #b8a6ff; }
+  html.dark .user-card .uc-role.student { background: rgba(0,212,184,.22); color: #7affd9; }
+  .user-card .uc-login {
+    font-family: 'Consolas', monospace;
+    background: var(--light);
+    padding: 2px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    border: 1px solid var(--border);
+  }
+  html.dark .user-card .uc-login { background: #0f0f1e; }
+  .user-card .uc-meta {
+    font-size: 12.5px;
+    color: var(--gray);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .user-card .uc-meta b { color: var(--dark); font-weight: 700; }
+  .user-card .uc-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .user-card .uc-actions button {
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--gray);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  html.dark .user-card .uc-actions button { background: var(--white); }
+  .user-card .uc-actions button:hover {
+    border-color: #ffaa00;
+    color: #c47f00;
+    transform: translateY(-1px);
+  }
+  html.dark .user-card .uc-actions button:hover { color: #ffd84a; }
+  .user-card .uc-actions button.danger:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: rgba(224,67,92,.06);
+  }
+  .user-card .uc-actions button.restore:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: rgba(0,212,184,.06);
+  }
+
+  .user-card .uc-days {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(224,67,92,.12);
+    color: var(--danger);
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  /* ─── Пустое состояние ─── */
+  .moder-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--white);
+    border-radius: 20px;
+    border: 1.5px dashed var(--border);
+  }
+  .moder-empty .ic {
+    font-size: 64px;
+    margin-bottom: 14px;
+    display: block;
+    animation: bobIcon 3s ease-in-out infinite;
+  }
+  .moder-empty h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .moder-empty p { color: var(--gray); font-size: 14px; }
+
+  /* ─── Модалка: показать новый пароль ─── */
+  .newpass-box {
+    padding: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,216,74,.16), rgba(255,155,61,.08));
+    border: 2px dashed rgba(255,170,0,.5);
+    text-align: center;
+    margin: 16px 0;
+  }
+  .newpass-box .np-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #c47f00;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 8px;
+  }
+  html.dark .newpass-box .np-label { color: #ffd84a; }
+  .newpass-box .np-value {
+    font-family: 'Consolas', monospace;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--dark);
+    user-select: all;
+    word-break: break-all;
+  }
+  .newpass-box .np-hint {
+    font-size: 12.5px;
+    color: var(--gray);
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 700px) {
+    .moder-topbar { padding: 12px 16px; gap: 10px; flex-wrap: wrap; }
+    .moder-tabs { order: 3; margin-left: 0; width: 100%; justify-content: center; overflow-x: auto; }
+    .moder-content { padding: 20px 16px 60px; }
+    .user-card { flex-direction: column; align-items: stretch; }
+    .user-card .uc-actions { justify-content: flex-end; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-card .sc-value { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="moder-topbar">
+  <div class="moder-brand">
+    <div class="moder-logo">👑</div>
+    <div>Панель модератора</div>
+  </div>
+
+  <div class="moder-tabs">
+    <button class="moder-tab active" data-view="tutors">👨‍🏫 Учителя <span class="cnt" id="cnt-tutors">0</span></button>
+    <button class="moder-tab" data-view="students">👩‍🎓 Ученики <span class="cnt" id="cnt-students">0</span></button>
+    <button class="moder-tab" data-view="trash">🗑 Корзина <span class="cnt" id="cnt-trash">0</span></button>
+  </div>
+
+  <div class="moder-user">
+    <div data-theme-toggle></div>
+    <button class="btn btn-ghost" id="btn-change-moder-pass" title="Сменить пароль" style="padding:8px 14px;font-size:13px;border-radius:10px">
+      🔐
+    </button>
+    <button class="btn btn-ghost" id="logout" title="Выйти" style="padding:8px 14px;font-size:13px;border-radius:10px">
+      Выйти ⎋
+    </button>
+  </div>
+</header>
+
+<main class="moder-content">
+  <!-- Статистика -->
+  <div class="stats-grid" id="stats-grid"></div>
+
+  <!-- Поиск -->
+  <div class="moder-search">
+    <input type="text" id="moder-search" placeholder="🔍 Поиск по имени или логину…" autocomplete="off">
+  </div>
+
+  <!-- Вью -->
+  <section id="view-tutors"></section>
+  <section id="view-students" style="display:none"></section>
+  <section id="view-trash" style="display:none"></section>
+</main>
+
+<!-- ═══ МОДАЛКА: ПОКАЗАТЬ НОВЫЙ ПАРОЛЬ ═══ -->
+<div class="modal-backdrop" id="modal-newpass">
+  <div class="modal" style="max-width:480px">
+    <h3 id="np-title">🔐 Новый пароль</h3>
+    <p class="muted mt-1" style="font-size:13.5px" id="np-sub"></p>
+
+    <div class="newpass-box">
+      <div class="np-label">Новый пароль</div>
+      <div class="np-value" id="np-value">—</div>
+      <div class="np-hint">Пароль показан один раз. Скопируйте и передайте пользователю.</div>
+    </div>
+
+    <div class="flex gap-2 mt-3" style="justify-content:flex-end">
+      <button class="btn btn-ghost" id="np-copy">📋 Скопировать</button>
+      <button class="btn btn-primary" data-close>Готово</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: СМЕНА ПАРОЛЯ МОДЕРА ═══ -->
+<div class="modal-backdrop" id="modal-change-moder-pass">
+  <div class="modal" style="max-width:480px">
+    <h3>🔐 Смена пароля модератора</h3>
+    <p class="muted mt-1" style="font-size:13.5px">Минимум 6 символов.</p>
+
+    <div class="form-group mt-3">
+      <label class="label">Текущий пароль</label>
+      <input class="input" type="password" id="mp-current" autocomplete="current-password">
+    </div>
+    <div class="form-group mt-2">
+      <label class="label">Новый пароль</label>
+      <input class="input" type="password" id="mp-new" autocomplete="new-password">
+    </div>
+    <div class="form-group mt-2">
+      <label class="label">Повторите новый пароль</label>
+      <input class="input" type="password" id="mp-confirm" autocomplete="new-password">
+    </div>
+
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-primary" id="mp-save">Сменить пароль</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ПОДТВЕРЖДЕНИЕ ═══ -->
+<div class="modal-backdrop" id="modal-confirm">
+  <div class="modal">
+    <h3 id="confirm-title">Подтвердите действие</h3>
+    <p class="mt-2" id="confirm-text" style="color:var(--gray)"></p>
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-danger" id="confirm-ok">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/avatars.js"></script>
+<script src="js/moder.js"></script>
+</body>
+</html>

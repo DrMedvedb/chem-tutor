@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вход учителя — Алхимичка</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme.js"></script>
+<style>
+  .auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(106, 76, 255, .12), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(166, 120, 255, .10), transparent 45%),
+      var(--light);
+    transition: background .35s ease;
+  }
+  html.dark .auth-wrap {
+    background:
+      radial-gradient(circle at 20% 30%, rgba(122, 92, 255, .18), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(122, 92, 255, .12), transparent 45%),
+      var(--light);
+  }
+  .auth-card {
+    position: relative;
+    z-index: 2;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 44px 40px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    border: 1.5px solid var(--border);
+  }
+  .auth-head { text-align: center; margin-bottom: 28px; }
+  .auth-logo {
+    width: 68px; height: 68px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    background: linear-gradient(135deg, rgba(106,76,255,.14), rgba(106,76,255,.04));
+    margin-bottom: 14px;
+  }
+  .auth-head h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; color: var(--dark); }
+  .auth-head p  { color: var(--gray); font-size: 14px; }
+
+  .tabs {
+    display: flex;
+    background: var(--light);
+    border-radius: 14px;
+    padding: 5px;
+    margin-bottom: 26px;
+  }
+  .tab {
+    flex: 1;
+    padding: 11px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--gray);
+    transition: all .2s;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+  }
+  .tab.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: 0 4px 12px -4px rgba(106,76,255,.3);
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .error-msg {
+    background: rgba(224,67,92,.1);
+    color: var(--danger);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 22px;
+    color: var(--gray);
+    font-size: 14px;
+    transition: color .2s;
+  }
+  .back-link:hover { color: var(--primary); }
+
+  /* Кнопка темы */
+  .theme-toggle-float {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    box-shadow: 0 8px 20px -8px rgba(106,76,255,.4);
+  }
+  html.dark .theme-toggle-float {
+    box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
+  }
+</style>
+</head>
+<body>
+
+<!-- 🎨 Переключатель темы -->
+<div class="theme-toggle-float" data-theme-toggle></div>
+
+<div class="auth-wrap">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="auth-card">
+    <div class="auth-head">
+      <div class="auth-logo">👨‍🏫</div>
+      <h1>Кабинет учителя</h1>
+      <p>Войдите или создайте аккаунт</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="login" type="button">Вход</button>
+      <button class="tab" data-tab="register" type="button">Регистрация</button>
+    </div>
+
+    <div class="error-msg" id="error"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="label">Логин</label>
+        <input class="input" name="username" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label class="label">Пароль</label>
+        <input class="input" type="password" name="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-2">Войти →</button>
+    </form>
+
+    <form id="register-form" style="display:none">
+      <div class="form-group">
+        <label class="label">Ваше имя</label>
+        <input class="input" name="display_name" placeholder="Иван Петрович" required>
+      </div>
+      <div class="form-group">
+        <label class="label">Логин</label>
+        <input class="input" name="username" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label class="label">Пароль</label>
+        <input class="input" type="password" name="password" autocomplete="new-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-2">Создать аккаунт →</button>
+    </form>
+
+    <a href="index.html" class="back-link">← На главную</a>
+  </div>
+</div>
+
+<script>
+const API = '/api';
+const tabs = document.querySelectorAll('.tab');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const errorBox = document.getElementById('error');
+
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  errorBox.classList.remove('show');
+  if (t.dataset.tab === 'login') {
+    loginForm.style.display = '';
+    registerForm.style.display = 'none';
+  } else {
+    loginForm.style.display = 'none';
+    registerForm.style.display = '';
+  }
+}));
+
+function showError(msg) {
+  errorBox.textContent = msg;
+  errorBox.classList.add('show');
+}
+
+async function post(url, data) {
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: JSON.stringify(data)
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Ошибка сервера');
+  return j;
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.classList.remove('show');
+  const fd = new FormData(loginForm);
+  try {
+    await post(API + '/login', {
+      username: fd.get('username').trim(),
+      password: fd.get('password')
+    });
+    location.href = 'dashboard-tutor.html';
+  } catch (err) {
+    showError(err.message);
+  }
+});
+
+registerForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.classList.remove('show');
+  const fd = new FormData(registerForm);
+  try {
+    await post(API + '/register-tutor', {
+      display_name: fd.get('display_name').trim(),
+      username: fd.get('username').trim(),
+      password: fd.get('password')
+    });
+    location.href = 'dashboard-tutor.html';
+  } catch (err) {
+    showError(err.message);
+  }
+});
+</script>
+</body>
+</html>

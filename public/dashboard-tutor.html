@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кабинет учителя — Алхимичка</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/search.css">
+<link rel="stylesheet" href="css/avatars.css">
+<link rel="stylesheet" href="css/chat.css">
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme.js"></script>
+<style>
+  .nav-item .badge-alert {
+    margin-left: auto;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #e0435c, #ff6b7e);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px -2px rgba(224,67,92,.55);
+    position: relative;
+  }
+  .nav-item .badge-alert::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    background: rgba(224,67,92,.5);
+    animation: pulseBadge 1.8s ease-out infinite;
+    z-index: -1;
+  }
+  @keyframes pulseBadge {
+    0%   { transform: scale(1); opacity: .8; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  .nav-item.has-alert {
+    background: linear-gradient(135deg, rgba(224,67,92,.10), rgba(224,67,92,.04));
+    color: var(--danger);
+  }
+  .nav-item.has-alert .ic { animation: bellRing 2.2s ease-in-out infinite; }
+  @keyframes bellRing {
+    0%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(-12deg); }
+    20%, 40% { transform: rotate(12deg); }
+    50%      { transform: rotate(0); }
+  }
+
+  .search-trigger-sidebar {
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 12px;
+  }
+  .search-trigger-sidebar .label { flex: 1; text-align: left; }
+
+  /* ─── Фильтр-табы по классам ─── */
+  .grade-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: var(--light);
+    border-radius: 14px;
+    padding: 6px;
+    margin-bottom: 20px;
+  }
+  html.dark .grade-tabs { background: #0f0f1e; }
+
+  .grade-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--gray);
+    transition: all .2s;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    white-space: nowrap;
+  }
+  .grade-tab:hover { color: var(--dark); }
+  .grade-tab.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: 0 4px 12px -4px rgba(106,76,255,.35);
+  }
+  .grade-tab .cnt {
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(106,76,255,.12);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .grade-tab.active .cnt {
+    background: rgba(106,76,255,.18);
+  }
+
+  /* ─── Бейдж класса ─── */
+  .grade-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .2px;
+    text-transform: uppercase;
+  }
+  .grade-badge.g-junior { background: rgba(255,170,0,.16); color: #c47f00; }
+  .grade-badge.g-8      { background: rgba(74,144,226,.16); color: #2a6fc4; }
+  .grade-badge.g-9      { background: rgba(78,203,113,.16); color: #2a8a4a; }
+  .grade-badge.g-10     { background: rgba(106,76,255,.16); color: var(--primary); }
+  .grade-badge.g-11     { background: rgba(255,107,107,.16); color: #c43a3a; }
+  .grade-badge.g-adult  { background: rgba(0,212,184,.16); color: var(--accent-dark); }
+
+  html.dark .grade-badge.g-junior { background: rgba(255,170,0,.22); color: #ffc44d; }
+  html.dark .grade-badge.g-8      { background: rgba(74,144,226,.22); color: #7ab4ff; }
+  html.dark .grade-badge.g-9      { background: rgba(78,203,113,.22); color: #7de29a; }
+  html.dark .grade-badge.g-10     { background: rgba(122,92,255,.22); color: #b8a6ff; }
+  html.dark .grade-badge.g-11     { background: rgba(255,107,107,.22); color: #ff9b9b; }
+  html.dark .grade-badge.g-adult  { background: rgba(0,212,184,.22); color: #7affd9; }
+
+  .review-tile {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 22px 24px;
+    border: 1.5px solid var(--border);
+    transition: all .25s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    animation: tileIn .4s cubic-bezier(.2,.8,.3,1);
+  }
+  @keyframes tileIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .review-tile::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #ffaa00, #e0435c);
+  }
+  .review-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(224,67,92,.28);
+    border-color: #e0435c;
+  }
+  .review-tile.leaving {
+    animation: leaveRight .5s cubic-bezier(.4,0,.6,1) forwards;
+  }
+  @keyframes leaveRight {
+    to { transform: translateX(120%); opacity: 0; }
+  }
+  .review-info { flex: 1; overflow: hidden; }
+  .review-name {
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .review-meta {
+    font-size: 13px;
+    color: var(--gray);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .review-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  .rv-modal { max-width: 780px !important; width: 100%; }
+  .rv-head {
+    position: sticky;
+    top: -32px;
+    background: var(--white);
+    margin: -32px -32px 16px;
+    padding: 0 32px 16px;
+    border-bottom: 1.5px solid var(--border);
+    z-index: 5;
+    padding-top: 32px;
+  }
+  .rv-head-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .rv-head h3 { font-size: 22px; margin: 0; }
+  .rv-head .rv-sub { font-size: 13px; color: var(--gray); margin-top: 4px; }
+  .rv-progress-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    background: rgba(106,76,255,.1);
+    color: var(--primary);
+    transition: all .3s ease;
+  }
+  .rv-progress-pill.done {
+    background: rgba(0,212,184,.14);
+    color: var(--accent-dark);
+  }
+  .rv-student-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(106,76,255,.06), rgba(0,212,184,.05));
+    border: 1.5px solid var(--border);
+    margin-bottom: 20px;
+  }
+  html.dark .rv-student-head {
+    background: linear-gradient(135deg, rgba(122,92,255,.12), rgba(0,212,184,.08));
+  }
+  .rv-student-head .info { flex: 1; min-width: 0; }
+  .rv-student-head .name {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+  .rv-student-head .meta {
+    font-size: 12.5px;
+    color: var(--gray);
+    font-weight: 600;
+  }
+
+  .rv-q {
+    padding: 20px;
+    border-radius: 16px;
+    background: var(--light);
+    border-left: 4px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .rv-q.auto-correct { border-left-color: var(--accent); background: rgba(0,212,184,.05); }
+  .rv-q.auto-wrong   { border-left-color: var(--danger); background: rgba(224,67,92,.05); }
+  .rv-q.open-q       { border-left-color: #ffaa00; background: rgba(255,170,0,.05); }
+
+  .rv-q-head {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .rv-q-num {
+    width: 28px; height: 28px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .rv-q-text { font-weight: 700; font-size: 15px; flex: 1; line-height: 1.4; }
+  .rv-q-type {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .rv-q-type.single { background: rgba(106,76,255,.12); color: var(--primary); }
+  .rv-q-type.multi  { background: rgba(0,212,184,.14); color: var(--accent-dark); }
+  .rv-q-type.open   { background: rgba(255,170,0,.15); color: #c47f00; }
+
+  .rv-opt {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--white);
+    font-size: 14px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .rv-opt.correct  { background: rgba(0,212,184,.08); border-color: var(--accent); }
+  .rv-opt.given    { background: rgba(106,76,255,.06); border-color: var(--primary); }
+  .rv-opt.bad-give { background: rgba(224,67,92,.07); border-color: var(--danger); }
+  .rv-opt .key {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: var(--light);
+    color: var(--gray);
+    display: grid; place-items: center;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .rv-opt.correct .key  { background: var(--accent); color: #fff; }
+  .rv-opt.given .key    { background: var(--primary); color: #fff; }
+  .rv-opt.bad-give .key { background: var(--danger); color: #fff; }
+  .rv-opt .mark-badge {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .rv-opt.correct  .mark-badge { background: rgba(0,212,184,.18); color: var(--accent-dark); }
+  .rv-opt.given    .mark-badge { background: rgba(106,76,255,.15); color: var(--primary); }
+  .rv-opt.bad-give .mark-badge { background: rgba(224,67,92,.15); color: var(--danger); }
+
+  .rv-open-answer {
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--dark);
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 14px;
+    min-height: 60px;
+  }
+  .rv-open-answer.empty { color: var(--gray); font-style: italic; }
+  .rv-open-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(0,212,184,.05));
+    border: 1.5px solid var(--border);
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    text-decoration: none;
+    color: var(--dark);
+    transition: all .2s;
+  }
+  .rv-open-file:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .rv-open-file .fi { font-size: 22px; }
+  .rv-open-file .fs { color: var(--gray); font-size: 12px; }
+
+  .grade-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .grade-btn {
+    padding: 14px 10px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .grade-btn .ge { font-size: 20px; }
+  .grade-btn:hover { transform: translateY(-2px); border-color: var(--gray); }
+  .grade-btn.active.correct {
+    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.04));
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    box-shadow: 0 12px 24px -14px rgba(0,212,184,.5);
+  }
+  .grade-btn.active.partial {
+    background: linear-gradient(135deg, rgba(255,170,0,.16), rgba(255,170,0,.04));
+    border-color: #ffaa00;
+    color: #c47f00;
+    box-shadow: 0 12px 24px -14px rgba(255,170,0,.5);
+  }
+  .grade-btn.active.wrong {
+    background: linear-gradient(135deg, rgba(224,67,92,.14), rgba(224,67,92,.04));
+    border-color: var(--danger);
+    color: var(--danger);
+    box-shadow: 0 12px 24px -14px rgba(224,67,92,.5);
+  }
+
+  .rv-comment {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--dark);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .rv-comment:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(106,76,255,.12);
+  }
+  .rv-comment-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .rv-footer {
+    position: sticky;
+    bottom: -32px;
+    background: var(--white);
+    margin: 24px -32px -32px;
+    padding: 18px 32px;
+    border-top: 1.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .rv-footer-hint { font-size: 13px; color: var(--gray); font-weight: 600; }
+  .rv-footer-hint.done { color: var(--accent-dark); }
+
+  #view-results tbody tr {
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  #view-results tbody tr:hover {
+    background: rgba(106,76,255,.05) !important;
+  }
+  #view-results tbody tr.pending-row:hover {
+    background: rgba(255,170,0,.06) !important;
+  }
+
+  .table-wrap .user-avatar.avatar-xs {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    font-size: 16px;
+    display: inline-grid;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .access-modal { max-width: 720px !important; }
+
+  .access-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .access-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--light);
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    transition: all .2s ease;
+  }
+  .access-row:hover {
+    border-color: var(--primary);
+    background: rgba(106,76,255,.04);
+  }
+  .access-row.welcome {
+    background: linear-gradient(135deg, rgba(255,170,0,.08), rgba(255,170,0,.02));
+    border-color: rgba(255,170,0,.25);
+  }
+  .access-row .info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .access-row .name {
+    font-weight: 700;
+    font-size: 14.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .access-row .welcome-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255,170,0,.14);
+    color: #c47f00;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+  .access-row .switches {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .access-switch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all .2s;
+    user-select: none;
+  }
+  .access-switch input { display: none; }
+  .access-switch .sw-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all .2s;
+  }
+  .access-switch.on {
+    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.05));
+    border-color: var(--accent);
+    color: var(--accent-dark);
+  }
+  .access-switch.on .sw-dot { background: var(--accent); }
+  .access-switch:hover { border-color: var(--primary); }
+  .access-switch.disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .student-tile-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .student-tile-head .st-info {
+    flex: 1;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .student-tile-head .st-name {
+    font-weight: 800;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+  .student-tile-head .st-login {
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .student-tile-head .st-grade {
+    margin-top: 4px;
+  }
+
+  /* ═══ РАСПИСАНИЕ ═══ */
+  .schedule-wrap {
+    background: var(--white);
+    border-radius: 22px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+  }
+  .schedule-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 22px;
+    border-bottom: 1.5px solid var(--border);
+    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(0,212,184,.03));
+    flex-wrap: wrap;
+  }
+  html.dark .schedule-head {
+    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+  }
+  .schedule-week-title { font-size: 17px; font-weight: 800; }
+  .schedule-nav { display: flex; gap: 6px; }
+  .schedule-nav button {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--gray);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    display: grid;
+    place-items: center;
+  }
+  .schedule-nav button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+  }
+  .schedule-nav .today-btn { width: auto; padding: 0 14px; font-size: 13px; }
+
+  .schedule-grid-wrap { overflow-x: auto; padding: 0; }
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: 60px repeat(7, minmax(120px, 1fr));
+    min-width: 900px;
+    position: relative;
+  }
+  .sg-cell { border-right: 1px solid var(--border); position: relative; }
+  .sg-corner {
+    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(0,212,184,.05));
+    height: 56px;
+  }
+  .sg-day-head {
+    padding: 10px 8px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(106,76,255,.04), transparent);
+    border-bottom: 2px solid var(--border);
+    height: 56px;
+  }
+  .sg-day-name {
+    font-weight: 800;
+    font-size: 13.5px;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .sg-day-date {
+    font-size: 11.5px;
+    color: var(--gray);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .sg-day-head.today .sg-day-name { color: var(--primary); }
+  .sg-day-head.today .sg-day-date { color: var(--primary); }
+
+  .sg-time-cell {
+    padding: 2px 8px 2px 10px;
+    text-align: right;
+    font-size: 11px;
+    color: var(--gray);
+    font-weight: 700;
+    background: var(--light);
+    border-right: 1.5px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    height: 60px;
+  }
+  html.dark .sg-time-cell { background: #0f0f1e; }
+
+  .sg-day-col {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .sg-day-col:hover { background: rgba(106,76,255,.04); }
+
+  .schedule-event {
+    position: absolute;
+    border-radius: 10px;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all .2s ease;
+    box-shadow: 0 4px 10px -4px rgba(0,0,0,.15);
+    z-index: 2;
+    border-left: 3px solid currentColor;
+    pointer-events: auto;
+  }
+  .schedule-event:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -8px rgba(0,0,0,.3);
+    z-index: 5;
+  }
+  .schedule-event .se-time {
+    font-size: 10.5px;
+    font-weight: 800;
+    opacity: .8;
+    margin-bottom: 1px;
+  }
+  .schedule-event .se-name {
+    font-size: 12.5px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .schedule-event .se-subject {
+    font-size: 10.5px;
+    opacity: .75;
+    font-weight: 600;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .schedule-event.override {
+    border: 2px dashed rgba(255,170,0,.6);
+    border-left: 3px solid #ffaa00;
+  }
+
+  .ev-c0  { background: linear-gradient(135deg, rgba(106,76,255,.16), rgba(106,76,255,.06)); color: #5a3fd8; }
+  .ev-c1  { background: linear-gradient(135deg, rgba(0,212,184,.16), rgba(0,212,184,.06)); color: #008b74; }
+  .ev-c2  { background: linear-gradient(135deg, rgba(255,122,198,.18), rgba(255,122,198,.06)); color: #c4407e; }
+  .ev-c3  { background: linear-gradient(135deg, rgba(255,155,61,.18), rgba(255,155,61,.06)); color: #c47f00; }
+  .ev-c4  { background: linear-gradient(135deg, rgba(74,144,226,.18), rgba(74,144,226,.06)); color: #2a6fc4; }
+  .ev-c5  { background: linear-gradient(135deg, rgba(78,203,113,.18), rgba(78,203,113,.06)); color: #2a8a4a; }
+  .ev-c6  { background: linear-gradient(135deg, rgba(224,67,92,.16), rgba(224,67,92,.06)); color: #c43a3a; }
+  .ev-c7  { background: linear-gradient(135deg, rgba(160,140,255,.20), rgba(160,140,255,.06)); color: #5a3fd8; }
+  .ev-c8  { background: linear-gradient(135deg, rgba(255,216,74,.22), rgba(255,216,74,.06)); color: #8a6a00; }
+  .ev-c9  { background: linear-gradient(135deg, rgba(90,220,200,.20), rgba(90,220,200,.06)); color: #008b74; }
+  .ev-c10 { background: linear-gradient(135deg, rgba(255,143,200,.20), rgba(255,143,200,.06)); color: #c4407e; }
+  .ev-c11 { background: linear-gradient(135deg, rgba(122,122,153,.18), rgba(122,122,153,.06)); color: #5a5a7a; }
+
+  html.dark .ev-c0  { background: linear-gradient(135deg, rgba(122,92,255,.30), rgba(122,92,255,.12)); color: #b8a6ff; }
+  html.dark .ev-c1  { background: linear-gradient(135deg, rgba(0,212,184,.30), rgba(0,212,184,.12)); color: #7affd9; }
+  html.dark .ev-c2  { background: linear-gradient(135deg, rgba(255,122,198,.30), rgba(255,122,198,.12)); color: #ffb0da; }
+  html.dark .ev-c3  { background: linear-gradient(135deg, rgba(255,155,61,.30), rgba(255,155,61,.12)); color: #ffc47a; }
+  html.dark .ev-c4  { background: linear-gradient(135deg, rgba(74,144,226,.30), rgba(74,144,226,.12)); color: #90c0ff; }
+  html.dark .ev-c5  { background: linear-gradient(135deg, rgba(78,203,113,.30), rgba(78,203,113,.12)); color: #a0e8b8; }
+  html.dark .ev-c6  { background: linear-gradient(135deg, rgba(224,67,92,.30), rgba(224,67,92,.12)); color: #ff8fa3; }
+  html.dark .ev-c7  { background: linear-gradient(135deg, rgba(160,140,255,.32), rgba(160,140,255,.12)); color: #c9b6ff; }
+  html.dark .ev-c8  { background: linear-gradient(135deg, rgba(255,216,74,.32), rgba(255,216,74,.12)); color: #ffe28a; }
+  html.dark .ev-c9  { background: linear-gradient(135deg, rgba(90,220,200,.32), rgba(90,220,200,.12)); color: #7affd9; }
+  html.dark .ev-c10 { background: linear-gradient(135deg, rgba(255,143,200,.32), rgba(255,143,200,.12)); color: #ffb0da; }
+  html.dark .ev-c11 { background: linear-gradient(135deg, rgba(122,122,153,.30), rgba(122,122,153,.12)); color: #b0b0c8; }
+
+  .schedule-legend {
+    display: none;
+    padding: 12px 18px;
+    border-top: 1.5px solid var(--border);
+    background: var(--light);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  html.dark .schedule-legend { background: #0f0f1e; }
+  .schedule-legend .lg-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark);
+    border: 1.5px solid var(--border);
+  }
+  .schedule-legend .lg-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .schedule-empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--gray);
+  }
+  .schedule-empty .icon {
+    font-size: 64px;
+    display: block;
+    margin-bottom: 14px;
+    animation: bobIcon 3s ease-in-out infinite;
+  }
+  .schedule-empty h3 {
+    font-size: 20px;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .schedule-empty p { margin-bottom: 20px; font-size: 14px; }
+
+  @media (max-width: 700px) {
+    .grade-row { grid-template-columns: 1fr; }
+    .review-tile { flex-direction: column; align-items: stretch; }
+    .review-actions { justify-content: flex-end; }
+    .access-row { flex-wrap: wrap; }
+    .access-row .switches { width: 100%; justify-content: flex-end; }
+  }
+
+  @media (max-width: 900px) {
+    .schedule-grid { min-width: 700px; }
+    .schedule-legend { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">👨‍🏫</div>
+      <div>Алхимичка</div>
+    </div>
+
+    <button class="search-trigger search-trigger-sidebar" type="button">
+      <span class="ic">🔍</span>
+      <span class="label">Поиск</span>
+      <span class="hint">Ctrl+K</span>
+    </button>
+
+    <button class="nav-item active" data-view="topics">
+      <span class="ic">📚</span> Мои темы
+      <span class="count" id="cnt-topics">0</span>
+    </button>
+    <button class="nav-item" data-view="students">
+      <span class="ic">👩‍🎓</span> Мои ученики
+      <span class="count" id="cnt-students">0</span>
+    </button>
+    <button class="nav-item" id="nav-chat" data-view="chat">
+      <span class="ic">💬</span> Чат
+    </button>
+    <button class="nav-item" id="nav-reviews" data-view="reviews">
+      <span class="ic">🔔</span> Проверка работ
+      <span class="badge-alert" id="cnt-reviews" style="display:none">0</span>
+    </button>
+    <button class="nav-item" data-view="results">
+      <span class="ic">📊</span> Результаты
+    </button>
+    <button class="nav-item" data-view="schedule">
+      <span class="ic">📅</span> Расписание
+    </button>
+
+    <div class="profile-card">
+      <span id="avatar"></span>
+      <div class="profile-info">
+        <div class="profile-name" id="me-name">…</div>
+        <div class="profile-role">Учитель</div>
+      </div>
+      <div data-theme-toggle></div>
+    </div>
+
+    <button class="btn btn-ghost" id="logout" title="Выйти" style="margin-top:10px;padding:10px 14px;font-size:13px;border-radius:10px">
+      Выйти ⎋
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="page-head">
+      <div style="display:flex;align-items:center;">
+        <button class="menu-btn" id="menu-btn">☰</button>
+        <div>
+          <h1 class="page-title" id="page-title">Мои темы</h1>
+          <p class="page-sub" id="page-sub">Управляйте темами, материалами и тестами</p>
+        </div>
+      </div>
+      <div id="head-action"></div>
+    </header>
+
+    <section id="view-topics"></section>
+    <section id="view-students" style="display:none"></section>
+    <section id="view-chat" style="display:none">
+      <div class="chat-view-wrap" id="chat-mount"></div>
+    </section>
+    <section id="view-reviews" style="display:none"></section>
+    <section id="view-results" style="display:none"></section>
+    <section id="view-schedule" style="display:none"></section>
+  </main>
+</div>
+
+<!-- ═══ МОДАЛКА: НОВАЯ ТЕМА ═══ -->
+<div class="modal-backdrop" id="modal-topic">
+  <div class="modal">
+    <h3>📚 Новая тема</h3>
+    <div class="form-group mt-2">
+      <label class="label">Название</label>
+      <input class="input" id="new-topic-title" placeholder="Например: Строение атома">
+    </div>
+    <div class="form-group mt-2">
+      <label class="label">Класс <span style="color:var(--danger)">*</span></label>
+      <select class="input" id="new-topic-grade" required>
+        <option value="">— выберите класс —</option>
+        <option value="junior">Младшая группа</option>
+        <option value="8">8 класс</option>
+        <option value="9">9 класс</option>
+        <option value="10">10 класс</option>
+        <option value="11">11 класс</option>
+        <option value="adult">Старшие</option>
+      </select>
+    </div>
+    <div class="form-group mt-2">
+      <label class="label">Описание (необязательно)</label>
+      <textarea class="textarea" id="new-topic-desc" placeholder="Краткое описание темы"></textarea>
+    </div>
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-primary" id="create-topic">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: НОВЫЙ УЧЕНИК ═══ -->
+<div class="modal-backdrop" id="modal-student">
+  <div class="modal">
+    <h3>👩‍🎓 Новый ученик</h3>
+    <div class="form-group mt-2">
+      <label class="label">Имя ученика</label>
+      <input class="input" id="new-student-name" placeholder="Мария Иванова">
+    </div>
+    <div class="form-group mt-2">
+      <label class="label">Класс <span style="color:var(--danger)">*</span></label>
+      <select class="input" id="new-student-grade" required>
+        <option value="">— выберите класс —</option>
+        <option value="junior">Младшая группа</option>
+        <option value="8">8 класс</option>
+        <option value="9">9 класс</option>
+        <option value="10">10 класс</option>
+        <option value="11">11 класс</option>
+        <option value="adult">Старшие</option>
+      </select>
+    </div>
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-primary" id="create-student">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: КОПИРОВАНИЕ ТЕМЫ ═══ -->
+<div class="modal-backdrop" id="modal-duplicate">
+  <div class="modal">
+    <h3>📋 Скопировать тему</h3>
+    <p class="muted mt-1" style="font-size:13.5px" id="dup-source-info"></p>
+
+    <div class="form-group mt-3">
+      <label class="label">Новое название</label>
+      <input class="input" id="dup-title" placeholder="Название копии">
+    </div>
+
+    <div class="form-group mt-2">
+      <label class="label">Скопировать в класс <span style="color:var(--danger)">*</span></label>
+      <select class="input" id="dup-grade" required>
+        <option value="">— выберите класс —</option>
+        <option value="junior">Младшая группа</option>
+        <option value="8">8 класс</option>
+        <option value="9">9 класс</option>
+        <option value="10">10 класс</option>
+        <option value="11">11 класс</option>
+        <option value="adult">Старшие</option>
+      </select>
+    </div>
+
+    <div class="hint-box mt-2" style="padding:10px 14px;border-radius:10px;background:rgba(106,76,255,.06);border-left:3px solid var(--primary);font-size:12.5px;color:var(--dark);line-height:1.5">
+      💡 Скопируются: материалы, файлы, вопросы. Тест — в черновик.
+      Доступы учеников не переносятся.
+    </div>
+
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-primary" id="do-duplicate">📋 Скопировать</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: ЛОГИН/ПАРОЛЬ ═══ -->
+<div class="modal-backdrop" id="modal-creds">
+  <div class="modal">
+    <h3>🔐 Данные для входа</h3>
+    <p class="muted mt-1" style="font-size:14px">
+      Передайте ученику. Пароль больше не покажется.
+    </p>
+
+    <div class="creds-avatar-wrap mt-3">
+      <span id="cred-avatar"></span>
+      <div class="creds-info">
+        <div class="creds-name" id="cred-name"></div>
+        <div class="creds-sub">🎨 Запомните аватарку — она будет в вашем кабинете</div>
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <label class="label">Логин</label>
+      <div class="copy-field" data-copy="cred-login">
+        <span class="val" id="cred-login"></span>
+        <span class="cpy">копировать</span>
+      </div>
+    </div>
+    <div class="form-group mt-2">
+      <label class="label">Пароль</label>
+      <div class="copy-field accent" data-copy="cred-pass">
+        <span class="val" id="cred-pass"></span>
+        <span class="cpy">копировать</span>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" id="copy-both">Скопировать оба</button>
+      <button class="btn btn-primary" data-close>Готово</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: ДОСТУП УЧЕНИКА К ТЕМАМ ═══ -->
+<div class="modal-backdrop" id="modal-student-access">
+  <div class="modal access-modal">
+    <h3 id="st-access-title">📚 Доступ к темам</h3>
+    <p class="muted mt-1" style="font-size:13.5px" id="st-access-sub">
+      Галочки сохраняются автоматически
+    </p>
+
+    <div id="st-access-body" class="mt-3"></div>
+
+    <div class="flex gap-2 mt-3" style="justify-content:flex-end">
+      <button class="btn btn-ghost" data-close>Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: ПРОВЕРКА РАБОТЫ ═══ -->
+<div class="modal-backdrop" id="modal-review">
+  <div class="modal rv-modal">
+    <div class="rv-head">
+      <div class="rv-head-inner">
+        <div>
+          <h3 id="rv-title">Проверка работы</h3>
+          <div class="rv-sub" id="rv-sub">…</div>
+        </div>
+        <div class="rv-progress-pill" id="rv-progress-pill">0 / 0 проверено</div>
+      </div>
+    </div>
+
+    <div id="rv-body"></div>
+
+    <div class="rv-footer">
+      <div class="rv-footer-hint" id="rv-footer-hint">Оцените все развёрнутые ответы</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" data-close>Закрыть</button>
+        <button class="btn btn-primary" id="rv-save" disabled>Сохранить проверку</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: НОВОЕ ЗАНЯТИЕ ═══ -->
+<div class="modal-backdrop" id="modal-lesson">
+  <div class="modal" style="max-width:520px">
+    <h3 id="lesson-modal-title">📅 Новое занятие</h3>
+    <p class="muted mt-1" style="font-size:13.5px" id="lesson-modal-sub">Настройте еженедельное занятие</p>
+
+    <div class="form-group mt-3">
+      <label class="label">Ученик <span style="color:var(--danger)">*</span></label>
+      <select class="input" id="lesson-student"></select>
+    </div>
+
+    <div class="form-group mt-2">
+      <label class="label">День недели <span style="color:var(--danger)">*</span></label>
+      <select class="input" id="lesson-day">
+        <option value="0">Понедельник</option>
+        <option value="1">Вторник</option>
+        <option value="2">Среда</option>
+        <option value="3">Четверг</option>
+        <option value="4">Пятница</option>
+        <option value="5">Суббота</option>
+        <option value="6">Воскресенье</option>
+      </select>
+    </div>
+
+    <div class="form-group mt-2" style="display:flex;gap:10px">
+      <div style="flex:1">
+        <label class="label">Время начала <span style="color:var(--danger)">*</span></label>
+        <input class="input" type="time" id="lesson-time" value="18:00">
+      </div>
+      <div style="flex:1">
+        <label class="label">Длительность, мин</label>
+        <select class="input" id="lesson-duration">
+          <option value="30">30</option>
+          <option value="45">45</option>
+          <option value="60" selected>60</option>
+          <option value="90">90</option>
+          <option value="120">120</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <label class="label">Предмет / заметка (необязательно)</label>
+      <input class="input" id="lesson-subject" placeholder="Органика, Стехиометрия…">
+    </div>
+
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-primary" id="save-lesson">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА: КАРТОЧКА ЗАНЯТИЯ ═══ -->
+<div class="modal-backdrop" id="modal-lesson-card">
+  <div class="modal" style="max-width:480px">
+    <h3 id="lc-title">Занятие</h3>
+    <p class="muted mt-1" style="font-size:13.5px" id="lc-sub"></p>
+
+    <div class="flex gap-2 mt-3" style="flex-wrap:wrap">
+      <button class="btn btn-ghost" id="lc-cancel-date" style="flex:1;min-width:140px">🚫 Отменить это занятие</button>
+      <button class="btn btn-ghost" id="lc-edit-template" style="flex:1;min-width:140px">✏️ Изменить шаблон</button>
+      <button class="btn btn-ghost" id="lc-delete-template" style="flex:1;min-width:140px;color:var(--danger);border-color:rgba(224,67,92,.3)">🗑 Удалить шаблон</button>
+    </div>
+
+    <div class="flex gap-2 mt-3" style="justify-content:flex-end">
+      <button class="btn btn-ghost" data-close>Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ПОДТВЕРЖДЕНИЕ ═══ -->
+<div class="modal-backdrop" id="modal-confirm">
+  <div class="modal">
+    <h3 id="confirm-title">Подтвердите действие</h3>
+    <p class="mt-2" id="confirm-text" style="color:var(--gray)"></p>
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-danger" id="confirm-ok">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/avatars.js"></script>
+<script src="js/search.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/dashboard-tutor.js"></script>
+</body>
+</html>

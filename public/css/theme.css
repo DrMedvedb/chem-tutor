@@ -1,0 +1,623 @@
+/* public/css/theme.css
+   Тёмная тема. Включается классом .dark на <html>.
+*/
+
+html.dark {
+  --light:   #0f0f1e;
+  --white:   #1a1a2e;
+  --dark:    #e8e8f5;
+  --gray:    #9090a8;
+  --border:  #2a2a45;
+  --primary: #7a5cff;
+  --primary-dark: #6a4cff;
+  --accent:  #00d4b8;
+  --accent-dark: #00b8a0;
+  --danger:  #ff5c7a;
+
+  --shadow:    0 10px 30px -10px rgba(0,0,0,.6);
+  --shadow-lg: 0 25px 60px -15px rgba(0,0,0,.75);
+}
+
+/* ─── База ─── */
+html.dark, html.dark body {
+  background: var(--light);
+  color: var(--dark);
+  color-scheme: dark;
+}
+
+/* ─── Кнопки ─── */
+html.dark .btn-ghost {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--dark);
+}
+html.dark .btn-ghost:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(122,92,255,.12);
+}
+
+/* ─── Инпуты ─── */
+html.dark .input,
+html.dark .textarea,
+html.dark .select {
+  background: #0f0f1e;
+  border-color: var(--border);
+  color: var(--dark);
+}
+html.dark .input::placeholder,
+html.dark .textarea::placeholder { color: #5a5a70; }
+
+/* ─── Модалки и тосты ─── */
+html.dark .modal {
+  background: var(--white);
+  color: var(--dark);
+  border: 1.5px solid var(--border);
+}
+html.dark .modal-backdrop { background: rgba(0,0,0,.78); }
+html.dark .toast {
+  background: #2a2a45;
+  color: #fff;
+  border: 1.5px solid rgba(122,92,255,.35);
+}
+
+/* ─── Главная ─── */
+html.dark .hero {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(122,92,255,.16), transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(0,212,184,.12), transparent 45%),
+    var(--light);
+}
+html.dark .role-card { background: var(--white); border-color: var(--border); }
+html.dark .role-card h2 { color: var(--dark); }
+html.dark .role-card .role-desc { color: var(--gray); }
+html.dark .role-features li { color: var(--dark); border-bottom-color: var(--border); }
+html.dark .hero-tag { background: var(--white); border-color: var(--border); color: var(--gray); }
+html.dark .blob { opacity: .30; }
+html.dark .scroll-dot { border-color: var(--border); }
+html.dark .scroll-hint { color: var(--gray); }
+
+/* ─── Кабинет учителя: сайдбар ─── */
+html.dark .sidebar { background: #12122a; border-color: var(--border); }
+html.dark .brand { color: var(--dark); }
+html.dark .nav-item { color: var(--gray); }
+html.dark .nav-item:hover { background: rgba(122,92,255,.10); color: var(--dark); }
+html.dark .nav-item.active {
+  background: linear-gradient(135deg, rgba(122,92,255,.28), rgba(122,92,255,.10));
+  color: #b8a6ff;
+}
+html.dark .profile-card {
+  background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(0,212,184,.08));
+  border-color: var(--border);
+}
+html.dark .profile-name { color: var(--dark); }
+html.dark .logout-btn { color: var(--gray); }
+html.dark .logout-btn:hover { background: rgba(255,92,122,.15); color: var(--danger); }
+
+html.dark .search-trigger {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--gray);
+}
+html.dark .search-trigger:hover { color: var(--dark); border-color: var(--primary); }
+html.dark .search-trigger .hint { background: #0f0f1e; color: var(--gray); }
+
+/* ─── Ученик: топбар ─── */
+html.dark .topbar {
+  background: rgba(15,15,30,.85);
+  border-color: var(--border);
+}
+html.dark .topbar-tabs { background: #0f0f1e; }
+html.dark .topbar-tab { color: var(--gray); }
+html.dark .topbar-tab:hover { color: var(--dark); }
+html.dark .topbar-tab.active { background: var(--white); color: var(--accent); }
+
+/* ─── Плитки ─── */
+html.dark .tile { background: var(--white); border-color: var(--border); }
+html.dark .tile:hover { border-color: var(--primary); }
+html.dark .tile.accent:hover { border-color: var(--accent); }
+html.dark .tile-title { color: var(--dark); }
+html.dark .tile-desc { color: var(--gray); }
+html.dark .tile-meta { color: var(--gray); }
+html.dark .tile-meta b { color: var(--dark); }
+
+/* ─── Ученик: карточка темы ─── */
+html.dark .topic-tile { background: var(--white); border-color: var(--border); }
+html.dark .topic-tile:hover { border-color: var(--accent); }
+html.dark .topic-tile h3 { color: var(--dark); }
+html.dark .topic-tile .desc { color: var(--gray); }
+html.dark .topic-tile .meta { color: var(--gray); }
+html.dark .topic-tile .meta b { color: var(--dark); }
+
+/* ─── Таблицы ─── */
+html.dark .table-wrap { background: var(--white); border-color: var(--border); }
+html.dark table { color: var(--dark); }
+html.dark th { background: #0f0f1e; color: var(--gray); border-color: var(--border); }
+html.dark td { border-color: var(--border); color: var(--dark); }
+html.dark tbody tr:hover { background: rgba(122,92,255,.06); }
+
+/* ─── Страница темы ─── */
+html.dark .topic-head,
+html.dark .section { background: var(--white); border-color: var(--border); }
+html.dark .topic-head h1 { color: var(--dark); }
+html.dark .topic-head .desc { color: var(--gray); }
+html.dark .back { color: var(--gray); }
+html.dark .back:hover { color: var(--primary); }
+
+html.dark .mat-item { background: #0f0f1e; }
+html.dark .mat-item:hover { background: rgba(122,92,255,.10); }
+html.dark .mat-item .type-icon { background: var(--white); }
+html.dark .mat-item .title { color: var(--dark); }
+html.dark .mat-item .content { color: var(--gray); }
+
+html.dark .q-item { background: #0f0f1e; }
+html.dark .q-item:hover { background: rgba(122,92,255,.06); }
+html.dark .q-text { color: var(--dark); }
+html.dark .q-opt { background: var(--white); border-color: var(--border); color: var(--dark); }
+html.dark .q-opt .key { background: #0f0f1e; color: var(--gray); }
+html.dark .q-open-answer { background: var(--white); border-color: var(--border); color: var(--gray); }
+
+html.dark .empty-test-block {
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.05));
+  border-color: var(--border);
+}
+html.dark .empty-test-block h3 { color: var(--dark); }
+html.dark .empty-test-block p { color: var(--gray); }
+
+html.dark .hint-box { background: rgba(122,92,255,.12); color: var(--dark); }
+html.dark .hint-box.accent { background: rgba(0,212,184,.14); }
+html.dark .hint-box.warn { background: rgba(255,170,0,.16); }
+
+html.dark .welcome-hint {
+  background: linear-gradient(135deg, rgba(255,170,0,.16), rgba(255,170,0,.05));
+}
+html.dark .welcome-hint .wh-body h3 { color: #ffc44d; }
+
+html.dark .file-drop { background: #0f0f1e; border-color: var(--border); }
+html.dark .file-chip { background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(0,212,184,.08)); }
+
+html.dark .settings-block { background: #0f0f1e; border-color: var(--border); }
+html.dark .radio-line { color: var(--dark); }
+html.dark .access-row { background: #0f0f1e; }
+html.dark .access-row:hover { background: rgba(122,92,255,.10); }
+html.dark .access-row .name { color: var(--dark); }
+html.dark .access-switch { background: var(--white); border-color: var(--border); color: var(--gray); }
+html.dark .access-switch.on {
+  background: linear-gradient(135deg, rgba(0,212,184,.20), rgba(0,212,184,.06));
+  color: var(--accent);
+}
+html.dark .access-bulk-row {
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+}
+
+/* ─── Прохождение теста ─── */
+html.dark .question-card { background: var(--white); border-color: var(--border); }
+html.dark .opt { background: #0f0f1e; border-color: var(--border); }
+html.dark .opt:hover { background: rgba(0,212,184,.10); }
+html.dark .opt.selected { background: linear-gradient(135deg, rgba(0,212,184,.20), rgba(0,212,184,.08)); }
+html.dark .opt .key { background: var(--white); border-color: var(--border); }
+html.dark .opt .text { color: var(--dark); }
+
+html.dark .open-textarea { background: #0f0f1e; color: var(--dark); border-color: var(--border); }
+html.dark .open-hint { background: rgba(255,170,0,.14); color: var(--dark); }
+html.dark .open-file-zone { background: #0f0f1e; border-color: var(--border); }
+html.dark .open-file-zone .label { color: var(--dark); }
+
+html.dark .tt-footer { background: rgba(15,15,30,.92); border-color: var(--border); }
+html.dark .tt-progress-wrap { background: var(--white); border-color: var(--border); }
+html.dark .tt-counter { color: var(--gray); }
+
+html.dark .tt-timer-panel {
+  background: linear-gradient(135deg, rgba(122,92,255,.18), rgba(122,92,255,.06));
+  border-color: rgba(122,92,255,.4);
+  color: #b8a6ff;
+}
+html.dark .tt-timer-panel .tt-timer-value { background: rgba(15,15,30,.7); color: #fff; }
+html.dark .tt-timer-panel.tt-timer-warn {
+  background: linear-gradient(135deg, rgba(255,170,0,.20), rgba(255,170,0,.06));
+  border-color: rgba(255,170,0,.45);
+  color: #ffc44d;
+}
+html.dark .tt-timer-panel.tt-timer-warn .tt-timer-value { background: rgba(15,15,30,.7); }
+html.dark .tt-timer-panel.tt-timer-danger {
+  background: linear-gradient(135deg, rgba(224,67,92,.22), rgba(224,67,92,.06));
+  border-color: rgba(224,67,92,.5);
+  color: #ff7a8e;
+}
+html.dark .tt-timer-panel.tt-timer-danger .tt-timer-value { background: rgba(15,15,30,.7); }
+
+html.dark .result-wrap { background: var(--white); border-color: var(--border); }
+html.dark .result-title { color: var(--dark); }
+html.dark .result-sub { color: var(--gray); }
+html.dark .detail-item { background: #0f0f1e; }
+html.dark .detail-answers .val { color: var(--dark); }
+html.dark .detail-answers .lbl { color: var(--gray); }
+html.dark .detail-heading { color: var(--dark); border-color: var(--border); }
+
+html.dark .pending-wrap { background: var(--white); border-color: var(--border); }
+html.dark .pending-sub { color: var(--gray); }
+html.dark .pending-note { background: rgba(255,170,0,.18); color: #ffc44d; }
+
+html.dark .stat-chip { background: var(--white); border-color: var(--border); color: var(--dark); }
+html.dark .stat-chip .num { color: var(--dark); }
+
+/* ─── Шпаргалки ─── */
+html.dark .cheat-fab { background: var(--white); border-color: var(--border); color: var(--primary); }
+html.dark .cheat-fab.accent { color: var(--accent); }
+html.dark .cheat-panel { background: var(--white); border: 1px solid var(--border); }
+html.dark .cheat-head {
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+  border-color: var(--border);
+}
+html.dark .cheat-body { background: var(--white); }
+html.dark .cheat-foot { background: #0f0f1e; border-color: var(--border); }
+html.dark .cheat-overlay { background: rgba(0,0,0,.85); }
+
+/* ═══════════════════════════════════════════════
+   ПЕРИОДИЧЕСКАЯ СИСТЕМА в тёмной теме
+   ═══════════════════════════════════════════════ */
+
+/* Контейнер сетки — тёмно-синий */
+html.dark .periodic-grid,
+html.dark .cheat-periodic-grid {
+  background: #1a1a2e;
+  border-color: var(--border);
+}
+
+/* Ячейки элементов — плотные цвета, не прозрачные */
+html.dark .p-el {
+  background: #2a2a45;
+  border-color: transparent;
+}
+html.dark .p-el .sym { color: #e8e8f5; }
+html.dark .p-el .num { color: #7a7a99; }
+html.dark .p-el .mass-mini { color: #7a7a99; }
+
+html.dark .p-el.cat-alkali      { background: linear-gradient(135deg, #6b2e2e, #4a1f1f); }
+html.dark .p-el.cat-alkaline    { background: linear-gradient(135deg, #7a4a1f, #5c3517); }
+html.dark .p-el.cat-transition  { background: linear-gradient(135deg, #6b5a1a, #4d4012); }
+html.dark .p-el.cat-post-trans  { background: linear-gradient(135deg, #556b2a, #3d4d1e); }
+html.dark .p-el.cat-metalloid   { background: linear-gradient(135deg, #2a4d7a, #1e3a5c); }
+html.dark .p-el.cat-nonmetal    { background: linear-gradient(135deg, #1a5c50, #0f4a40); }
+html.dark .p-el.cat-halogen     { background: linear-gradient(135deg, #4a3a9e, #3a2d7a); }
+html.dark .p-el.cat-noble       { background: linear-gradient(135deg, #7a2a5c, #5c1f45); }
+html.dark .p-el.cat-lanthanide  { background: linear-gradient(135deg, #5c3a7a, #452d5c); }
+html.dark .p-el.cat-actinide    { background: linear-gradient(135deg, #7a3a3a, #5c2d2d); }
+html.dark .p-el.cat-unknown     { background: #3a3a52; }
+
+/* Hover — вспышка белым */
+html.dark .p-el:hover {
+  background: #ffffff !important;
+  border-color: #b8a6ff;
+  box-shadow:
+    0 12px 28px -8px rgba(184, 166, 255, .8),
+    0 0 0 4px rgba(184, 166, 255, .3);
+}
+html.dark .p-el:hover .sym { color: #6a4cff; }
+html.dark .p-el:hover .num,
+html.dark .p-el:hover .mass-mini { color: #7a7a99; }
+
+/* Статичные ячейки Менделеева в шпаргалке */
+html.dark .cheat-p-el { background: #2a2a45; }
+html.dark .cheat-p-el .sym { color: #e8e8f5; }
+html.dark .cheat-p-el .num,
+html.dark .cheat-p-el .mass-mini { color: #7a7a99; }
+
+html.dark .cheat-p-el.cat-alkali     { background: linear-gradient(135deg, #6b2e2e, #4a1f1f); }
+html.dark .cheat-p-el.cat-alkaline   { background: linear-gradient(135deg, #7a4a1f, #5c3517); }
+html.dark .cheat-p-el.cat-transition { background: linear-gradient(135deg, #6b5a1a, #4d4012); }
+html.dark .cheat-p-el.cat-post-trans { background: linear-gradient(135deg, #556b2a, #3d4d1e); }
+html.dark .cheat-p-el.cat-metalloid  { background: linear-gradient(135deg, #2a4d7a, #1e3a5c); }
+html.dark .cheat-p-el.cat-nonmetal   { background: linear-gradient(135deg, #1a5c50, #0f4a40); }
+html.dark .cheat-p-el.cat-halogen    { background: linear-gradient(135deg, #4a3a9e, #3a2d7a); }
+html.dark .cheat-p-el.cat-noble      { background: linear-gradient(135deg, #7a2a5c, #5c1f45); }
+html.dark .cheat-p-el.cat-lanthanide { background: linear-gradient(135deg, #5c3a7a, #452d5c); }
+html.dark .cheat-p-el.cat-actinide   { background: linear-gradient(135deg, #7a3a3a, #5c2d2d); }
+html.dark .cheat-p-el.cat-unknown    { background: #3a3a52; }
+
+/* ═══════════════════════════════════════════════
+   ТАБЛИЦА РАСТВОРИМОСТИ в тёмной теме
+   ═══════════════════════════════════════════════ */
+
+/* Контейнер сетки — тёмно-синий */
+html.dark .solubility-grid,
+html.dark .cheat-sol-grid {
+  background: #1a1a2e;
+  border-color: var(--border);
+}
+
+/* Ячейки — плотные цвета */
+html.dark .sol-cell {
+  background: #2a2a45;
+  color: var(--dark);
+  border-color: transparent;
+}
+
+/* Растворимо — бирюза */
+html.dark .sol-cell.solvable {
+  background: linear-gradient(135deg, #0d5c50, #0a4d43);
+  color: #7affd9;
+}
+/* Малорастворимо — жёлто-песочный */
+html.dark .sol-cell.sparingly {
+  background: linear-gradient(135deg, #6b5210, #5a4410);
+  color: #ffd84a;
+}
+/* Нерастворимо — глубокий красный */
+html.dark .sol-cell.insoluble {
+  background: linear-gradient(135deg, #6b1f2a, #571823);
+  color: #ff8fa3;
+}
+/* Газ — фиолетовый */
+html.dark .sol-cell.gas {
+  background: linear-gradient(135deg, #3f2d7a, #352565);
+  color: #c9b6ff;
+}
+/* Не существует / неизвестно */
+html.dark .sol-cell.decompose { background: #33334a; color: #a0a0b8; }
+html.dark .sol-cell.unknown   { background: #2a2a45; color: #9090a8; }
+
+/* Заголовки катионов и анионов */
+html.dark .sol-cell.sol-header {
+  background: linear-gradient(135deg, #4a3a9e, #3a2d7a);
+  color: #cfc0ff;
+  border-color: rgba(122, 92, 255, .5);
+}
+html.dark .sol-cell.sol-header.accent {
+  background: linear-gradient(135deg, #0a6b5c, #085749);
+  color: #7affd9;
+  border-color: rgba(0, 212, 184, .5);
+}
+html.dark .sol-cell.sol-header .charge { color: rgba(232, 232, 245, .6); }
+html.dark .sol-cell.sol-corner {
+  background: linear-gradient(135deg, #3a2d7a, #0a5c50);
+  color: #b0b0c8;
+}
+
+/* Hover — свечение */
+html.dark .sol-cell:not(.sol-header):not(.sol-corner):hover {
+  transform: scale(1.18);
+  border-color: #b8a6ff;
+  box-shadow:
+    0 12px 26px -8px rgba(184, 166, 255, .7),
+    0 0 0 3px rgba(184, 166, 255, .3);
+  z-index: 15;
+}
+
+/* Статичные ячейки растворимости в шпаргалке */
+html.dark .cheat-sol-cell {
+  background: #2a2a45;
+  color: var(--dark);
+}
+html.dark .cheat-sol-cell.solvable {
+  background: linear-gradient(135deg, #0d5c50, #0a4d43);
+  color: #7affd9;
+}
+html.dark .cheat-sol-cell.sparingly {
+  background: linear-gradient(135deg, #6b5210, #5a4410);
+  color: #ffd84a;
+}
+html.dark .cheat-sol-cell.insoluble {
+  background: linear-gradient(135deg, #6b1f2a, #571823);
+  color: #ff8fa3;
+}
+html.dark .cheat-sol-cell.gas {
+  background: linear-gradient(135deg, #3f2d7a, #352565);
+  color: #c9b6ff;
+}
+html.dark .cheat-sol-cell.decompose { background: #33334a; color: #a0a0b8; }
+
+html.dark .cheat-sol-cell.cheat-header {
+  background: linear-gradient(135deg, #4a3a9e, #3a2d7a);
+  color: #cfc0ff;
+  border-color: rgba(122, 92, 255, .5);
+}
+html.dark .cheat-sol-cell.cheat-header.accent {
+  background: linear-gradient(135deg, #0a6b5c, #085749);
+  color: #7affd9;
+  border-color: rgba(0, 212, 184, .5);
+}
+html.dark .cheat-sol-cell.cheat-corner {
+  background: linear-gradient(135deg, #3a2d7a, #0a5c50);
+  color: #b0b0c8;
+}
+html.dark .cheat-sol-cell .sol-formula { color: rgba(232, 232, 245, .65); }
+
+/* ═══════════════════════════════════════════════
+   TOOLTIP таблиц в тёмной теме
+   ═══════════════════════════════════════════════ */
+
+html.dark .chem-tooltip {
+  background: #1a1a2e;
+  box-shadow:
+    0 20px 45px -12px rgba(0, 0, 0, .9),
+    0 0 0 1px rgba(122, 92, 255, .35);
+  color: #e8e8f5;
+}
+html.dark .chem-tooltip::after {
+  background: #1a1a2e;
+  border-right-color: rgba(122, 92, 255, .35);
+  border-bottom-color: rgba(122, 92, 255, .35);
+}
+
+html.dark .tt-formula {
+  background: linear-gradient(135deg, #b8a6ff, #7affd9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+html.dark .tt-name-main { color: #e8e8f5; }
+html.dark .tt-name-sub { color: rgba(232, 232, 245, .55); }
+html.dark .tt-lbl { color: rgba(232, 232, 245, .5); }
+html.dark .tt-val { color: #e8e8f5; }
+
+html.dark .tt-badge.solvable  { background: rgba(0, 212, 184, .30); color: #7affd9; }
+html.dark .tt-badge.sparingly { background: rgba(255, 205, 86, .30); color: #ffe28a; }
+html.dark .tt-badge.insoluble { background: rgba(255, 120, 120, .32); color: #ff9b9b; }
+html.dark .tt-badge.gas       { background: rgba(160, 140, 255, .30); color: #c9b6ff; }
+html.dark .tt-badge.decompose { background: rgba(180, 180, 200, .28); color: #d0d0e0; }
+
+html.dark .tt-color-circle { box-shadow: 0 0 0 2px rgba(255, 255, 255, .22); }
+html.dark .tt-color-name { color: #e8e8f5; }
+html.dark .tt-color-sub { color: rgba(232, 232, 245, .55); }
+html.dark .tt-note { color: rgba(232, 232, 245, .75); }
+
+/* ─── Чат ─── */
+html.dark .chat-app { background: var(--white); border-color: var(--border); }
+html.dark .chat-sidebar { background: #12122a; border-color: var(--border); }
+html.dark .chat-sidebar-head { background: var(--white); border-color: var(--border); }
+html.dark .chat-search { background: #0f0f1e; color: var(--dark); border-color: var(--border); }
+html.dark .chat-dialog:hover { background: rgba(122,92,255,.10); }
+html.dark .chat-dialog.active {
+  background: linear-gradient(135deg, rgba(122,92,255,.24), rgba(122,92,255,.10));
+}
+html.dark .chat-dialog .name { color: var(--dark); }
+html.dark .chat-dialog .preview { color: var(--gray); }
+
+html.dark .chat-main { background: linear-gradient(180deg, #0f0f1e, #1a1a2e); }
+html.dark .chat-main-head { background: rgba(26,26,46,.85); border-color: var(--border); }
+html.dark .chat-main-head .name { color: var(--dark); }
+html.dark .chat-main-head .status { color: var(--gray); }
+html.dark .chat-main-head .status.online { color: #5fdc8b; }
+
+html.dark .msg-bubble { background: #2a2a45; color: var(--dark); border-color: var(--border); }
+html.dark .msg-row.mine .msg-bubble {
+  background: linear-gradient(135deg, var(--primary), #8a6bff);
+  color: #fff; border-color: transparent;
+}
+html.dark .msg-time { color: var(--gray); }
+html.dark .chat-input-wrap { background: rgba(26,26,46,.85); border-color: var(--border); }
+html.dark .chat-textarea { background: #0f0f1e; color: var(--dark); border-color: var(--border); }
+html.dark .chat-attach-btn { background: var(--white); border-color: var(--border); color: var(--gray); }
+html.dark .chat-hint-under { color: var(--gray); }
+
+html.dark .reaction-chip { background: var(--white); border-color: var(--border); color: var(--dark); }
+html.dark .reaction-chip.mine {
+  background: linear-gradient(135deg, rgba(122,92,255,.28), rgba(122,92,255,.12));
+  color: #b8a6ff; border-color: var(--primary);
+}
+html.dark .reactions-panel { background: var(--white); border-color: var(--border); }
+html.dark .chat-notif-panel { background: var(--white); border-color: var(--border); }
+html.dark .chat-notif-head { border-color: var(--border); }
+html.dark .chat-notif-item:hover { background: rgba(122,92,255,.10); }
+
+/* ─── Поиск ─── */
+html.dark .search-backdrop { background: rgba(0,0,0,.78); }
+html.dark .search-modal { background: var(--white); border: 1px solid var(--border); }
+html.dark .search-input-wrap {
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+  border-color: var(--border);
+}
+html.dark .search-input { color: var(--dark); }
+html.dark .search-item:hover,
+html.dark .search-item.active {
+  background: linear-gradient(90deg, rgba(122,92,255,.18), rgba(122,92,255,.05));
+}
+html.dark .search-item .si-title { color: var(--dark); }
+html.dark .search-item .si-sub { color: var(--gray); }
+html.dark .search-item .si-icon { background: rgba(122,92,255,.16); }
+html.dark .search-foot { background: #0f0f1e; border-color: var(--border); }
+
+/* ─── Форма входа ─── */
+html.dark .auth-card { background: var(--white); border-color: var(--border); }
+html.dark .auth-head h1 { color: var(--dark); }
+html.dark .auth-head p { color: var(--gray); }
+html.dark .auth-logo { background: linear-gradient(135deg, rgba(122,92,255,.18), rgba(122,92,255,.06)); }
+html.dark .tab { color: var(--gray); }
+html.dark .tab.active { background: var(--white); color: var(--primary); }
+html.dark .tabs { background: #0f0f1e; }
+html.dark .back-link { color: var(--gray); }
+
+/* ─── Страница темы ученика ─── */
+html.dark .st-head,
+html.dark .section { background: var(--white); border-color: var(--border); }
+html.dark .st-head h1 { color: var(--dark); }
+html.dark .st-head .desc { color: var(--gray); }
+html.dark .st-back { color: var(--gray); }
+html.dark .st-mat { background: #0f0f1e; }
+html.dark .st-mat-head .ic { background: var(--white); }
+html.dark .st-mat-head .title { color: var(--dark); }
+html.dark .st-mat-body .inner { background: var(--white); color: var(--dark); }
+html.dark .test-cta {
+  background: linear-gradient(135deg, rgba(0,212,184,.10), rgba(122,92,255,.08));
+  border-color: var(--border);
+}
+html.dark .test-cta h3 { color: var(--dark); }
+html.dark .test-cta p { color: var(--gray); }
+html.dark .best-result { background: rgba(0,212,184,.16); color: var(--accent); }
+
+/* ═══════════════════════════════════════════════
+   Кнопка-переключатель темы 🌙 / ☀️
+   ═══════════════════════════════════════════════ */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--gray);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.2,.8,.3,1),
+              border-color .25s ease,
+              box-shadow .25s ease,
+              background-color .35s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 18px -8px rgba(106,76,255,.5);
+}
+
+.theme-toggle:active {
+  transform: translateY(0) scale(.93);
+}
+
+.theme-toggle .icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  line-height: 1;
+  transition: transform .45s cubic-bezier(.2,.8,.3,1), opacity .3s ease;
+}
+
+.theme-toggle .icon-moon {
+  transform: translateY(0) rotate(0deg);
+  opacity: 1;
+}
+.theme-toggle .icon-sun {
+  transform: translateY(120%) rotate(-90deg);
+  opacity: 0;
+}
+
+html.dark .theme-toggle .icon-moon {
+  transform: translateY(-120%) rotate(90deg);
+  opacity: 0;
+}
+html.dark .theme-toggle .icon-sun {
+  transform: translateY(0) rotate(0deg);
+  opacity: 1;
+}
+
+html.dark .theme-toggle {
+  border-color: var(--border);
+}
+html.dark .theme-toggle:hover {
+  border-color: #ffd84a;
+  box-shadow: 0 8px 18px -8px rgba(255,216,74,.5);
+}
+
+@media (max-width: 700px) {
+  .theme-toggle { width: 40px; height: 40px; border-radius: 12px; }
+  .theme-toggle .icon { font-size: 20px; }
+}

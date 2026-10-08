@@ -1,0 +1,530 @@
+/* public/css/home.css — интерактив главной страницы "Алхимичка" */
+
+.home { overflow-x: hidden; }
+
+/* ───── Курсор-блик ───── */
+.cursor-glow {
+  position: fixed;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(106,76,255,.14), transparent 55%);
+  filter: blur(20px);
+  transition: opacity .4s ease;
+  opacity: 0;
+}
+.home:hover .cursor-glow { opacity: 1; }
+
+/* ───── Пузыри ───── */
+.bubbles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bubble {
+  position: absolute;
+  bottom: -120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(106,76,255,.15));
+  box-shadow: inset -4px -4px 12px rgba(106,76,255,.18), 0 0 20px rgba(106,76,255,.15);
+  animation: bubbleRise linear infinite;
+  opacity: 0;
+}
+.bubble.accent {
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(0,212,184,.2));
+  box-shadow: inset -4px -4px 12px rgba(0,212,184,.2), 0 0 20px rgba(0,212,184,.15);
+}
+@keyframes bubbleRise {
+  0%   { transform: translateY(0) scale(.6); opacity: 0; }
+  10%  { opacity: .9; }
+  90%  { opacity: .9; }
+  100% { transform: translateY(-115vh) scale(1.05); opacity: 0; }
+}
+.bubble.pop { animation: bubblePop .45s ease forwards; }
+@keyframes bubblePop {
+  0%   { transform: scale(1); opacity: .9; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ───── Плавающие эмодзи ───── */
+.floaters {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.floater {
+  position: absolute;
+  font-size: 44px;
+  opacity: .32;
+  transition: transform .35s cubic-bezier(.2,.8,.3,1);
+  user-select: none;
+  animation: bob 7s ease-in-out infinite;
+}
+.floater:nth-child(1) { top: 12%; left: 6%;  animation-delay: -1s; }
+.floater:nth-child(2) { top: 68%; left: 10%; animation-delay: -2.5s; }
+.floater:nth-child(3) { top: 20%; right: 8%;  animation-delay: -0.5s; }
+.floater:nth-child(4) { top: 72%; right: 12%; animation-delay: -3.5s; }
+.floater:nth-child(5) { top: 42%; left: 3%;  animation-delay: -4s; font-size: 34px; }
+.floater:nth-child(6) { top: 38%; right: 3%; animation-delay: -1.8s; font-size: 34px; }
+.floater:nth-child(7) { top: 55%; left: 48%; animation-delay: -2.2s; font-size: 30px; opacity: .2; }
+.floater:nth-child(8) { top: 8%;  right: 42%; animation-delay: -3.3s; font-size: 30px; opacity: .22; }
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50%      { transform: translateY(-22px) rotate(4deg); }
+}
+
+/* ───── Hero ───── */
+.hero { position: relative; z-index: 2; }
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray);
+  margin: 0 auto 22px;
+  box-shadow: 0 6px 20px -8px rgba(106,76,255,.25);
+}
+.hero-inner { display: flex; flex-direction: column; align-items: center; }
+.hero-tag .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(0,212,184,.6);
+  animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+  0%   { box-shadow: 0 0 0 0 rgba(0,212,184,.55); }
+  70%  { box-shadow: 0 0 0 12px rgba(0,212,184,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,212,184,0); }
+}
+
+.hero-title {
+  background-size: 200% 200%;
+  animation: gradShift 8s ease infinite;
+}
+.hero-title .grad {
+  background: linear-gradient(120deg, var(--primary), #a678ff, var(--accent), var(--primary));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradShift 6s ease infinite;
+}
+@keyframes gradShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ───── Карточки выбора роли ───── */
+.cards { perspective: 1200px; }
+
+.role-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s ease, border-color .3s ease;
+  will-change: transform;
+}
+.role-card.tilt { transform: perspective(1000px) rotateX(0) rotateY(0); }
+.role-card:hover { border-color: var(--primary); box-shadow: var(--shadow-lg); }
+.role-card.accent:hover { border-color: var(--accent); box-shadow: 0 25px 60px -15px rgba(0,212,184,.4); }
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s ease;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(106,76,255,.14),
+    transparent 45%
+  );
+}
+.role-card.accent .card-glow {
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0,212,184,.16),
+    transparent 45%
+  );
+}
+.role-card:hover .card-glow { opacity: 1; }
+
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%);
+  background-size: 250% 250%;
+  background-position: 200% 0;
+  transition: opacity .3s ease;
+  mix-blend-mode: overlay;
+}
+.role-card:hover .card-shine {
+  opacity: 1;
+  animation: shine 1.1s ease;
+}
+@keyframes shine {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.role-icon { position: relative; }
+.icon-emoji {
+  display: inline-block;
+  transition: transform .35s cubic-bezier(.2,.8,.3,1);
+}
+.role-card:hover .icon-emoji { transform: scale(1.15) rotate(-6deg); }
+
+.icon-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 30px;
+  border: 2px solid transparent;
+  pointer-events: none;
+  opacity: 0;
+}
+.role-card:hover .icon-ring {
+  opacity: 1;
+  border-color: rgba(106,76,255,.35);
+  animation: ringPulse 1.6s ease-out infinite;
+}
+.role-card.accent:hover .icon-ring { border-color: rgba(0,212,184,.4); }
+@keyframes ringPulse {
+  0%   { transform: scale(.95); opacity: .8; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.role-features li {
+  position: relative;
+  transform: translateX(0);
+  transition: transform .3s ease, color .3s ease;
+}
+.role-card:hover .role-features li { transform: translateX(4px); }
+.role-card:hover .role-features li:nth-child(1) { transition-delay: .02s; }
+.role-card:hover .role-features li:nth-child(2) { transition-delay: .07s; }
+.role-card:hover .role-features li:nth-child(3) { transition-delay: .12s; }
+.role-card:hover .role-features li:nth-child(4) { transition-delay: .17s; }
+
+.btn .arrow { display: inline-block; transition: transform .3s ease; }
+.role-card:hover .btn .arrow { transform: translateX(6px); }
+.btn { position: relative; overflow: hidden; }
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  transform: translate(-50%, -50%);
+  transition: width .5s ease, height .5s ease;
+}
+.btn:hover::after { width: 340px; height: 340px; }
+
+/* ───── Появление ───── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: revealUp .9s cubic-bezier(.2,.8,.3,1) forwards;
+}
+.reveal:nth-of-type(1) { animation-delay: .05s; }
+.reveal:nth-of-type(2) { animation-delay: .15s; }
+.reveal:nth-of-type(3) { animation-delay: .25s; }
+.cards .reveal:nth-child(1) { animation-delay: .35s; }
+.cards .reveal:nth-child(2) { animation-delay: .5s; }
+.periodic-section.reveal { animation-delay: .6s; }
+.scroll-hint.reveal { animation-delay: .7s; }
+
+@keyframes revealUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ───── Подсказка снизу ───── */
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 55px;
+  font-size: 13px;
+  color: var(--gray);
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+.scroll-dot {
+  width: 26px; height: 42px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  position: relative;
+}
+.scroll-dot::after {
+  content: '';
+  position: absolute;
+  top: 8px; left: 50%;
+  width: 4px; height: 8px;
+  border-radius: 2px;
+  background: var(--primary);
+  transform: translateX(-50%);
+  animation: scrollDown 1.6s ease infinite;
+}
+@keyframes scrollDown {
+  0%   { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, 16px); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ТАБЛИЦА МЕНДЕЛЕЕВА
+   ═══════════════════════════════════════════════════════ */
+
+.periodic-section {
+  width: 100%;
+  max-width: 1180px;
+  margin: 72px auto 0;
+  padding: 0 20px;
+}
+
+.periodic-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.periodic-title {
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 800;
+  letter-spacing: -.5px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--primary), #a678ff, var(--accent));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradShift 8s ease infinite;
+}
+.periodic-sub {
+  color: var(--gray);
+  font-size: 15px;
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Общий контейнер с сеткой и карточкой */
+.periodic-wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ─── Сетка 18 × 7 ─── */
+.periodic-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  grid-template-rows: repeat(7, auto);
+  gap: 4px;
+  position: relative;
+  background: rgba(255,255,255,.5);
+  border-radius: 18px;
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 40px -20px rgba(106,76,255,.3);
+}
+
+/* ─── Ячейка элемента ─── */
+.p-el {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  background: rgba(122,122,153,.08);
+  border: 1.5px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform .22s cubic-bezier(.2,.8,.3,1),
+              box-shadow .22s ease,
+              border-color .22s ease,
+              background .22s ease,
+              z-index 0s;
+  font-weight: 800;
+  user-select: none;
+  will-change: transform;
+  z-index: 1;
+}
+.p-el .num {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--gray);
+  line-height: 1;
+}
+.p-el .sym {
+  font-size: clamp(11px, 1vw, 15px);
+  line-height: 1;
+  color: var(--dark);
+}
+.p-el .mass-mini {
+  font-size: 7.5px;
+  font-weight: 600;
+  color: var(--gray);
+  margin-top: 1px;
+  line-height: 1;
+}
+
+/* ─── При наведении: увеличение + вылет вперёд ─── */
+.p-el:hover,
+.p-el.is-hovered {
+  transform: scale(1.85);
+  z-index: 20;
+  border-color: var(--primary);
+  box-shadow:
+    0 12px 28px -8px rgba(106,76,255,.55),
+    0 0 0 4px rgba(106,76,255,.15);
+  background: var(--white) !important;
+}
+.p-el:hover .sym,
+.p-el.is-hovered .sym {
+  color: var(--primary);
+  font-size: 15px;
+}
+
+/* ─── Цвета по группам ─── */
+.p-el.cat-alkali       { background: rgba(255,99,99,.16); }
+.p-el.cat-alkaline     { background: rgba(255,159,64,.18); }
+.p-el.cat-transition   { background: rgba(255,205,86,.16); }
+.p-el.cat-post-trans   { background: rgba(176,214,109,.16); }
+.p-el.cat-metalloid    { background: rgba(140,200,255,.20); }
+.p-el.cat-nonmetal     { background: rgba(90,220,200,.20); }
+.p-el.cat-halogen      { background: rgba(160,140,255,.20); }
+.p-el.cat-noble        { background: rgba(255,140,210,.20); }
+.p-el.cat-lanthanide   { background: rgba(200,140,255,.16); }
+.p-el.cat-actinide     { background: rgba(255,140,140,.16); }
+.p-el.cat-unknown      { background: rgba(180,180,200,.18); }
+
+/* Разрыв между основным блоком и лантаноидами/актиноидами */
+.p-el.spacer { visibility: hidden; pointer-events: none; }
+
+/* Отступы для нижних рядов (лантаноиды/актиноиды) */
+.p-el.row-9  { grid-row: 9; }
+.p-el.row-10 { grid-row: 10; }
+
+/* ─── Карточка с инфой об элементе ─── */
+.element-card {
+  position: sticky;
+  top: 24px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 20px 50px -20px rgba(106,76,255,.35);
+  opacity: 0;
+  transform: translateX(20px) scale(.96);
+  transition: opacity .28s ease, transform .28s cubic-bezier(.2,.8,.3,1);
+  pointer-events: none;
+  min-height: 260px;
+}
+.element-card.show {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+.ec-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1.5px dashed var(--border);
+}
+.ec-num {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(106,76,255,.04));
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 15px;
+}
+.ec-sym {
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ec-names { margin-bottom: 18px; }
+.ec-name-ru { font-size: 22px; font-weight: 800; margin-bottom: 2px; }
+.ec-name-en { font-size: 14px; color: var(--gray); font-weight: 600; letter-spacing: .3px; }
+
+.ec-rows { display: flex; flex-direction: column; gap: 10px; }
+.ec-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--light);
+  font-size: 13.5px;
+}
+.ec-lbl { color: var(--gray); font-weight: 600; }
+.ec-val { font-weight: 700; color: var(--dark); text-align: right; }
+
+/* ─── Плейсхолдер, пока ничего не наведено ─── */
+.element-card .ec-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--gray);
+  text-align: center;
+  padding: 30px 10px;
+  min-height: 220px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.element-card .ec-placeholder .ph-emoji {
+  font-size: 42px;
+  margin-bottom: 6px;
+  animation: bob 4s ease-in-out infinite;
+}
+
+/* ─── Адаптив ─── */
+@media (max-width: 1100px) {
+  .periodic-wrap { grid-template-columns: 1fr; }
+  .element-card { position: relative; top: 0; min-height: 0; }
+  .element-card .ec-placeholder { min-height: 100px; }
+}
+@media (max-width: 860px) {
+  .cursor-glow { display: none; }
+  .floater { font-size: 34px; opacity: .25; }
+  .periodic-grid { gap: 3px; padding: 8px; }
+  .p-el .mass-mini { display: none; }
+  .p-el .num { font-size: 7px; }
+}
+@media (max-width: 640px) {
+  .periodic-grid { gap: 2px; padding: 6px; }
+  .p-el { border-radius: 5px; }
+  .p-el .num { display: none; }
+  .p-el .sym { font-size: 9px; }
+  .p-el:hover { transform: scale(2.4); }
+}
