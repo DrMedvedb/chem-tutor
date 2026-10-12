@@ -9,6 +9,21 @@
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  .ico {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-xl { width: 34px; height: 34px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+  .btn .ico { margin-right: 4px; }
+
   .auth-wrap {
     min-height: 100vh;
     display: flex;
@@ -18,15 +33,15 @@
     position: relative;
     overflow: hidden;
     background:
-      radial-gradient(circle at 20% 30%, rgba(0,212,184,.12), transparent 45%),
-      radial-gradient(circle at 80% 70%, rgba(0,168,148,.10), transparent 45%),
+      radial-gradient(circle at 20% 30%, rgba(14,165,233,.12), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(2,132,199,.10), transparent 45%),
       var(--light);
     transition: background .35s ease;
   }
   html.dark .auth-wrap {
     background:
-      radial-gradient(circle at 20% 30%, rgba(0,212,184,.16), transparent 45%),
-      radial-gradient(circle at 80% 70%, rgba(0,212,184,.10), transparent 45%),
+      radial-gradient(circle at 20% 30%, rgba(14,165,233,.16), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(14,165,233,.10), transparent 45%),
       var(--light);
   }
   .auth-card {
@@ -37,7 +52,7 @@
     padding: 44px 40px;
     max-width: 460px;
     width: 100%;
-    box-shadow: 0 25px 60px -15px rgba(0,212,184,.35);
+    box-shadow: 0 25px 60px -15px rgba(14,165,233,.35);
     border: 1.5px solid var(--border);
   }
   html.dark .auth-card {
@@ -50,25 +65,28 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 34px;
-    background: linear-gradient(135deg, rgba(0,212,184,.16), rgba(0,212,184,.04));
+    background: linear-gradient(135deg, rgba(14,165,233,.16), rgba(14,165,233,.04));
     margin-bottom: 14px;
+    color: var(--accent-dark);
   }
   .auth-head h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; color: var(--dark); }
   .auth-head p  { color: var(--gray); font-size: 14px; }
   .form-group { margin-bottom: 16px; }
   .hint {
-    background: rgba(0,212,184,.08);
+    background: rgba(14,165,233,.08);
     border-left: 3px solid var(--accent);
     padding: 12px 16px;
     border-radius: 10px;
     font-size: 13px;
     color: var(--dark);
     margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
   }
+  .hint .ico { color: var(--accent-dark); flex-shrink: 0; margin-top: 2px; }
   html.dark .hint {
-    background: rgba(0,212,184,.14);
-    color: var(--dark);
+    background: rgba(14,165,233,.14);
   }
   .error-msg {
     background: rgba(224,67,92,.1);
@@ -90,7 +108,6 @@
   }
   .back-link:hover { color: var(--accent-dark); }
 
-  /* Кнопка темы */
   .theme-toggle-float {
     position: fixed;
     top: 20px;
@@ -105,7 +122,28 @@
 </head>
 <body>
 
-<!-- 🎨 Переключатель темы -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-graduation" viewBox="0 0 24 24">
+      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+      <path d="M22 10v6"/>
+      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24">
+      <path d="M5 12h14"/>
+      <path d="m12 5 7 7-7 7"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="m12 19-7-7 7-7"/>
+      <path d="M19 12H5"/>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="theme-toggle-float" data-theme-toggle></div>
 
 <div class="auth-wrap">
@@ -113,13 +151,16 @@
 
   <div class="auth-card">
     <div class="auth-head">
-      <div class="auth-logo">👩‍🎓</div>
+      <div class="auth-logo">
+        <svg class="ico ico-xl"><use href="#i-graduation"/></svg>
+      </div>
       <h1>Вход для ученика</h1>
       <p>Введите данные, которые выдал учитель</p>
     </div>
 
     <div class="hint">
-      🔐 Логин и пароль выдаёт учитель. Если вы их не получили — обратитесь к нему.
+      <svg class="ico ico-sm"><use href="#i-lock"/></svg>
+      <span>Логин и пароль выдаёт учитель. Если вы их не получили — обратитесь к нему.</span>
     </div>
 
     <div class="error-msg" id="error"></div>
@@ -133,10 +174,14 @@
         <label class="label">Пароль</label>
         <input class="input" type="text" name="password" placeholder="oxygen7392" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn btn-accent btn-block mt-2">Войти →</button>
+      <button type="submit" class="btn btn-accent btn-block mt-2">
+        Войти <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
+      </button>
     </form>
 
-    <a href="index.html" class="back-link">← На главную</a>
+    <a href="index.html" class="back-link">
+      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg> На главную
+    </a>
   </div>
 </div>
 

@@ -5,12 +5,16 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Алхимичка — платформа для учителя и ученика</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Алхимичка">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
-  /* Кнопка темы на главной — фиксированная в углу */
   .theme-toggle-float {
     position: fixed;
     top: 20px;
@@ -21,14 +25,61 @@
   html.dark .theme-toggle-float {
     box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
   }
+
+  /* ═══ ИКОНКИ ═══ */
+  .ico {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-xl {
+    width: 48px;
+    height: 48px;
+    stroke-width: 1.25;
+  }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+
+  .role-icon .ico-xl {
+    color: var(--primary);
+  }
+  .role-card.accent .role-icon .ico-xl {
+    color: var(--accent);
+  }
+  .btn .ico { margin-left: 4px; }
 </style>
 </head>
 <body class="home">
 
+<!-- ═══════════════════════════════════════════════════
+     SVG-СПРАЙТ ИКОНОК (Lucide)
+     ═══════════════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-teacher" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </symbol>
+    <symbol id="i-student" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24">
+      <path d="M5 12h14"/>
+      <path d="m12 5 7 7-7 7"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="cursor-glow" id="cursorGlow"></div>
 <div class="bubbles" id="bubbles"></div>
 
-<!-- 🎨 Переключатель темы -->
 <div class="theme-toggle-float" data-theme-toggle></div>
 
 <div class="floaters" id="floaters">
@@ -66,7 +117,7 @@
         <div class="card-glow"></div>
         <div class="card-shine"></div>
         <div class="role-icon">
-          <span class="icon-emoji">👨‍🏫</span>
+          <svg class="ico ico-xl"><use href="#i-teacher"/></svg>
           <span class="icon-ring"></span>
         </div>
         <h2>Я учитель</h2>
@@ -77,14 +128,14 @@
           <li><span>Автогенерация логинов и паролей</span></li>
           <li><span>Просмотр результатов учеников</span></li>
         </ul>
-        <button class="btn btn-primary btn-block">Войти как учитель <span class="arrow">→</span></button>
+        <button class="btn btn-primary btn-block">Войти как учитель <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg></button>
       </a>
 
       <a href="student-login.html" class="role-card accent tilt reveal" data-tilt>
         <div class="card-glow"></div>
         <div class="card-shine"></div>
         <div class="role-icon">
-          <span class="icon-emoji">👩‍🎓</span>
+          <svg class="ico ico-xl"><use href="#i-student"/></svg>
           <span class="icon-ring"></span>
         </div>
         <h2>Я ученик</h2>
@@ -95,7 +146,7 @@
           <li><span>Прохождение тестов онлайн</span></li>
           <li><span>История попыток и лучший результат</span></li>
         </ul>
-        <button class="btn btn-accent btn-block">Войти как ученик <span class="arrow">→</span></button>
+        <button class="btn btn-accent btn-block">Войти как ученик <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg></button>
       </a>
     </div>
 

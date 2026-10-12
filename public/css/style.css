@@ -3,8 +3,8 @@
 :root {
   --primary: #6a4cff;
   --primary-dark: #4d34d6;
-  --accent: #00d4b8;
-  --accent-dark: #00a894;
+  --accent: #0ea5e9;
+  --accent-dark: #0284c7;
   --dark: #1a1a2e;
   --gray: #7a7a99;
   --light: #f5f6ff;
@@ -54,9 +54,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-accent {
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: var(--white);
-  box-shadow: 0 8px 20px -8px rgba(0, 212, 184, .5);
+  box-shadow: 0 8px 20px -8px rgba(14, 165, 233, .5);
 }
-.btn-accent:hover { transform: translateY(-3px); box-shadow: 0 12px 26px -8px rgba(0, 212, 184, .7); }
+.btn-accent:hover { transform: translateY(-3px); box-shadow: 0 12px 26px -8px rgba(14, 165, 233, .7); }
 
 .btn-ghost {
   background: var(--white);
@@ -134,7 +134,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   overflow: hidden;
   background:
     radial-gradient(circle at 10% 20%, rgba(106, 76, 255, .08), transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(0, 212, 184, .10), transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(14, 165, 233, .10), transparent 45%),
     var(--light);
 }
 
@@ -148,7 +148,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   animation: float 12s ease-in-out infinite;
 }
 .blob-1 { width: 380px; height: 380px; background: #6a4cff; top: -100px; left: -120px; }
-.blob-2 { width: 320px; height: 320px; background: #00d4b8; bottom: -80px; right: -100px; animation-delay: -3s; }
+.blob-2 { width: 320px; height: 320px; background: #0ea5e9; bottom: -80px; right: -100px; animation-delay: -3s; }
 .blob-3 { width: 260px; height: 260px; background: #ff7ac6; top: 40%; right: 15%; opacity: .35; animation-delay: -6s; }
 
 @keyframes float {
@@ -185,7 +185,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: -1.5px;
   text-align: center;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, var(--primary) 0%, #a678ff 45%, var(--accent) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -235,7 +235,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .role-card.accent:hover {
   border-color: var(--accent);
-  box-shadow: 0 25px 60px -15px rgba(0, 212, 184, .4);
+  box-shadow: 0 25px 60px -15px rgba(14, 165, 233, .4);
 }
 
 .role-icon {
@@ -250,7 +250,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: linear-gradient(135deg, rgba(106, 76, 255, .12), rgba(106, 76, 255, .04));
 }
 .role-card.accent .role-icon {
-  background: linear-gradient(135deg, rgba(0, 212, 184, .14), rgba(0, 212, 184, .04));
+  background: linear-gradient(135deg, rgba(14, 165, 233, .14), rgba(14, 165, 233, .04));
 }
 
 .role-card h2 {
@@ -369,6 +369,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: rgba(106, 76, 255, .1);
   color: var(--primary);
 }
-.badge.accent { background: rgba(0, 212, 184, .12); color: var(--accent-dark); }
+.badge.accent { background: rgba(14, 165, 233, .12); color: var(--accent-dark); }
 .badge.danger { background: rgba(224, 67, 92, .12); color: var(--danger); }
 .badge.gray { background: rgba(122, 122, 153, .12); color: var(--gray); }

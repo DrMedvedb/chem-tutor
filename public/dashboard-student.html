@@ -5,16 +5,46 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Кабинет ученика — Алхимичка</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Алхимичка">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
 <link rel="stylesheet" href="css/tables.css">
 <link rel="stylesheet" href="css/search.css">
 <link rel="stylesheet" href="css/avatars.css">
 <link rel="stylesheet" href="css/chat.css">
-<link rel="stylesheet" href="css/molar.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  /* ═══ ИКОНКИ ═══ */
+  .ico {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+
+  .topbar-tab .ico { margin-right: 4px; vertical-align: -3px; }
+  .search-trigger .ico { margin-right: 0; }
+
+  .topbar-logo .ico {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.75;
+    stroke: #fff;
+  }
+
   .topbar {
     position: sticky;
     top: 0;
@@ -44,7 +74,7 @@
     font-size: 20px;
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     color: #fff;
-    box-shadow: 0 8px 18px -8px rgba(0,212,184,.6);
+    box-shadow: 0 8px 18px -8px rgba(14,165,233,.6);
   }
   .topbar-tabs {
     display: flex;
@@ -73,7 +103,7 @@
   .topbar-tab.active {
     background: var(--white);
     color: var(--accent-dark);
-    box-shadow: 0 4px 10px -4px rgba(0,212,184,.4);
+    box-shadow: 0 4px 10px -4px rgba(14,165,233,.4);
   }
   .topbar-user {
     display: flex;
@@ -125,14 +155,14 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--accent), #48e0c6, var(--primary));
+    background: linear-gradient(90deg, var(--accent), #38bdf8, var(--primary));
     transform: scaleX(0);
     transform-origin: left;
     transition: transform .4s ease;
   }
   .topic-tile:hover {
     transform: translateY(-6px);
-    box-shadow: 0 25px 50px -20px rgba(0,212,184,.3);
+    box-shadow: 0 25px 50px -20px rgba(14,165,233,.3);
     border-color: var(--accent);
   }
   .topic-tile:hover::before { transform: scaleX(1); }
@@ -170,7 +200,7 @@
     align-items: center;
     gap: 5px;
   }
-  .best-badge.excellent { background: linear-gradient(135deg, rgba(0,212,184,.16), rgba(0,212,184,.06)); color: var(--accent-dark); }
+  .best-badge.excellent { background: linear-gradient(135deg, rgba(14,165,233,.16), rgba(14,165,233,.06)); color: var(--accent-dark); }
   .best-badge.good      { background: rgba(106,76,255,.12); color: var(--primary); }
   .best-badge.weak      { background: rgba(224,67,92,.12); color: var(--danger); }
   .best-badge.new       { background: rgba(255,170,0,.14); color: #c47f00; }
@@ -186,8 +216,8 @@
 
   .topic-tile.fresh { animation: freshPulse 3s ease-in-out infinite; }
   @keyframes freshPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,184,.25); }
-    50%      { box-shadow: 0 0 0 12px rgba(0,212,184,0); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(14,165,233,.25); }
+    50%      { box-shadow: 0 0 0 12px rgba(14,165,233,0); }
   }
 
   .history-score {
@@ -199,7 +229,7 @@
     font-weight: 700;
     font-size: 13px;
   }
-  .history-score.excellent { background: rgba(0,212,184,.15); color: var(--accent-dark); }
+  .history-score.excellent { background: rgba(14,165,233,.15); color: var(--accent-dark); }
   .history-score.good      { background: rgba(106,76,255,.12); color: var(--primary); }
   .history-score.weak      { background: rgba(224,67,92,.12); color: var(--danger); }
 
@@ -234,7 +264,7 @@
   .subtab.active {
     background: var(--white);
     color: var(--accent-dark);
-    box-shadow: 0 4px 12px -4px rgba(0,212,184,.45);
+    box-shadow: 0 4px 12px -4px rgba(14,165,233,.45);
   }
 
   .tab-content { animation: fadeTab .35s ease; }
@@ -265,14 +295,14 @@
   .grade-badge.g-9      { background: rgba(78,203,113,.16); color: #2a8a4a; }
   .grade-badge.g-10     { background: rgba(106,76,255,.16); color: var(--primary); }
   .grade-badge.g-11     { background: rgba(255,107,107,.16); color: #c43a3a; }
-  .grade-badge.g-adult  { background: rgba(0,212,184,.16); color: var(--accent-dark); }
+  .grade-badge.g-adult  { background: rgba(14,165,233,.16); color: var(--accent-dark); }
 
   html.dark .grade-badge.g-junior { background: rgba(255,170,0,.22); color: #ffc44d; }
   html.dark .grade-badge.g-8      { background: rgba(74,144,226,.22); color: #7ab4ff; }
   html.dark .grade-badge.g-9      { background: rgba(78,203,113,.22); color: #7de29a; }
   html.dark .grade-badge.g-10     { background: rgba(122,92,255,.22); color: #b8a6ff; }
   html.dark .grade-badge.g-11     { background: rgba(255,107,107,.22); color: #ff9b9b; }
-  html.dark .grade-badge.g-adult  { background: rgba(0,212,184,.22); color: #7affd9; }
+  html.dark .grade-badge.g-adult  { background: rgba(14,165,233,.22); color: #7ad8f8; }
 
   /* ─── БАННЕР: скоро занятие ─── */
   .next-lesson-banner {
@@ -280,12 +310,12 @@
     margin-bottom: 20px;
     padding: 16px 20px;
     border-radius: 16px;
-    background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(0,212,184,.08));
+    background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(14,165,233,.08));
     border: 1.5px solid rgba(106,76,255,.3);
     animation: bannerPulse 2s ease-in-out infinite;
   }
   html.dark .next-lesson-banner {
-    background: linear-gradient(135deg, rgba(122,92,255,.18), rgba(0,212,184,.12));
+    background: linear-gradient(135deg, rgba(122,92,255,.18), rgba(14,165,233,.12));
     border-color: rgba(122,92,255,.5);
   }
   .next-lesson-banner.show { display: block; }
@@ -356,7 +386,7 @@
   }
   .msl-day-group.today {
     border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(0,212,184,.06), rgba(0,212,184,.02));
+    background: linear-gradient(135deg, rgba(14,165,233,.06), rgba(14,165,233,.02));
   }
   .msl-day-group.today .msl-day-title {
     color: var(--accent-dark);
@@ -424,7 +454,7 @@
     flex-shrink: 0;
   }
   .msl-lesson .msl-status.soon {
-    background: rgba(0,212,184,.16);
+    background: rgba(14,165,233,.16);
     color: var(--accent-dark);
   }
   .msl-lesson .msl-status.past {
@@ -445,23 +475,89 @@
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════════════
+     SVG-СПРАЙТ ИКОНОК (Lucide)
+     ═══════════════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-flask" viewBox="0 0 24 24">
+      <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+      <path d="M8.5 2h7"/>
+      <path d="M7 16h10"/>
+    </symbol>
+    <symbol id="i-book" viewBox="0 0 24 24">
+      <path d="M12 7v14"/>
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24">
+      <path d="M8 2v4"/>
+      <path d="M16 2v4"/>
+      <rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M3 10h18"/>
+    </symbol>
+    <symbol id="i-flask2" viewBox="0 0 24 24">
+      <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+      <path d="M8.5 2h7"/>
+      <path d="M7 16h10"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24">
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+    </symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24">
+      <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+      <path d="M7 16h8"/>
+      <path d="M7 11h12"/>
+      <path d="M7 6h3"/>
+    </symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="1"/>
+      <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/>
+      <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/>
+    </symbol>
+    <symbol id="i-droplet" viewBox="0 0 24 24">
+      <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.3-4.3"/>
+    </symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" x2="9" y1="12" y2="12"/>
+    </symbol>
+  </defs>
+</svg>
+
 <header class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-logo">🧪</div>
+    <div class="topbar-logo">
+      <svg class="ico"><use href="#i-flask"/></svg>
+    </div>
     <div>Алхимичка</div>
   </div>
 
   <div class="topbar-tabs">
-    <button class="topbar-tab active" data-view="topics">📚 Мои темы</button>
-    <button class="topbar-tab" data-view="schedule">📅 Расписание</button>
-    <button class="topbar-tab" data-view="tables">🔬 Таблицы</button>
-    <button class="topbar-tab" id="nav-chat" data-view="chat">💬 Чат</button>
-    <button class="topbar-tab" data-view="history">📊 История</button>
+    <button class="topbar-tab active" data-view="topics">
+      <svg class="ico"><use href="#i-book"/></svg> Мои темы
+    </button>
+    <button class="topbar-tab" data-view="schedule">
+      <svg class="ico"><use href="#i-calendar"/></svg> Расписание
+    </button>
+    <button class="topbar-tab" data-view="tables">
+      <svg class="ico"><use href="#i-atom"/></svg> Таблицы
+    </button>
+    <button class="topbar-tab" id="nav-chat" data-view="chat">
+      <svg class="ico"><use href="#i-message"/></svg> Чат
+    </button>
+    <button class="topbar-tab" data-view="history">
+      <svg class="ico"><use href="#i-chart"/></svg> История
+    </button>
   </div>
 
   <div class="topbar-user">
     <button class="search-trigger topbar-search" type="button">
-      <span class="ic">🔍</span>
+      <svg class="ico"><use href="#i-search"/></svg>
       <span class="label">Поиск</span>
       <span class="hint">Ctrl+K</span>
     </button>
@@ -469,7 +565,7 @@
     <svg width="0" height="0" style="position:absolute">
       <defs>
         <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#00d4b8"/>
+          <stop offset="0%" stop-color="#0ea5e9"/>
           <stop offset="100%" stop-color="#6a4cff"/>
         </linearGradient>
       </defs>
@@ -492,14 +588,14 @@
     <div data-theme-toggle></div>
 
     <button class="btn btn-ghost" id="logout" title="Выйти" style="padding:8px 14px;font-size:13px;border-radius:10px">
-      Выйти ⎋
+      <svg class="ico ico-sm"><use href="#i-logout"/></svg> Выйти
     </button>
   </div>
 </header>
 
 <main class="student-content">
 
-  <!-- 🔔 Баннер «скоро занятие» -->
+  <!-- Баннер «скоро занятие» -->
   <div class="next-lesson-banner" id="next-lesson-banner"></div>
 
   <section id="view-topics">
@@ -531,8 +627,12 @@
     </div>
 
     <div class="subtabs">
-      <button class="subtab active" data-subtab="periodic">⚛️ Периодическая система</button>
-      <button class="subtab" data-subtab="solubility">💧 Таблица растворимости</button>
+      <button class="subtab active" data-subtab="periodic">
+        <svg class="ico ico-sm"><use href="#i-atom"/></svg> Периодическая система
+      </button>
+      <button class="subtab" data-subtab="solubility">
+        <svg class="ico ico-sm"><use href="#i-droplet"/></svg> Таблица растворимости
+      </button>
     </div>
 
     <div class="tab-content" data-subpane="periodic">
@@ -581,150 +681,6 @@
   </section>
 </main>
 
-<!-- ═══ FAB МОЛЯРНОГО КАЛЬКУЛЯТОРА ═══ -->
-<div class="cheat-fab-wrap">
-  <div class="cheat-fab molar-fab-inline" id="molar-fab" title="Молярный калькулятор">
-    <span>⚖️</span>
-    <span class="fab-label">моль</span>
-  </div>
-</div>
-
-<!-- ═══ OVERLAY МОЛЯРНОГО КАЛЬКУЛЯТОРА ═══ -->
-<div class="molar-overlay" id="molar-overlay">
-  <aside class="molar-panel">
-    <header class="molar-head">
-      <h2 class="molar-title">⚖️ Химический калькулятор</h2>
-      <button class="molar-close" id="molar-close" type="button">✕</button>
-    </header>
-
-    <nav class="molar-tabs">
-      <button class="molar-tab active" data-mtab="mass" type="button">⚖️ Масса</button>
-      <button class="molar-tab" data-mtab="solution" type="button">💧 Растворы</button>
-      <button class="molar-tab" data-mtab="dilution" type="button">🔄 Разв.</button>
-      <button class="molar-tab" data-mtab="mole" type="button">🧮 Моль</button>
-    </nav>
-
-    <div class="molar-body">
-
-      <section class="molar-pane active" data-mtab="mass">
-        <form id="mm-form">
-          <div class="molar-field">
-            <label class="molar-label">Формула вещества</label>
-            <input class="molar-input" id="mm-formula" placeholder="H2SO4, Ca(OH)2, CuSO4·5H2O" autocomplete="off">
-            <div class="molar-hint">Скобки, гидраты через <code>·</code> или <code>*</code></div>
-          </div>
-          <div class="molar-examples" id="mm-examples">
-            <span class="molar-chip">H2O</span>
-            <span class="molar-chip">H2SO4</span>
-            <span class="molar-chip">Ca(OH)2</span>
-            <span class="molar-chip">Al2(SO4)3</span>
-            <span class="molar-chip">CuSO4·5H2O</span>
-          </div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="mm-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="solution">
-        <form id="sol-form">
-          <div class="molar-field">
-            <label class="molar-label">Формула вещества (опционально)</label>
-            <input class="molar-input" id="sol-formula" placeholder="NaCl" autocomplete="off">
-            <div class="molar-hint">Если указать — M подставится автоматически</div>
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Масса вещества, г</label>
-            <input class="molar-input" id="sol-mass" inputmode="decimal" placeholder="m">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Масса раствора, г</label>
-            <input class="molar-input" id="sol-msolution" inputmode="decimal" placeholder="m(р-ра)">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Объём раствора, л</label>
-            <input class="molar-input" id="sol-volume" inputmode="decimal" placeholder="V">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярность, моль/л</label>
-            <input class="molar-input" id="sol-molarity" inputmode="decimal" placeholder="C">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярная масса, г/моль</label>
-            <input class="molar-input" id="sol-M" inputmode="decimal" placeholder="M">
-          </div>
-          <div class="molar-hint">Заполните <b>3 поля</b> — остальное найдётся</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="sol-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="dilution">
-        <form id="dil-form">
-          <div class="molar-field">
-            <label class="molar-label">C₁ — начальная концентрация, моль/л</label>
-            <input class="molar-input" id="dil-c1" inputmode="decimal" placeholder="C₁">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">V₁ — начальный объём, мл или л</label>
-            <input class="molar-input" id="dil-v1" inputmode="decimal" placeholder="V₁">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">C₂ — конечная концентрация, моль/л</label>
-            <input class="molar-input" id="dil-c2" inputmode="decimal" placeholder="C₂">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">V₂ — конечный объём, мл или л</label>
-            <input class="molar-input" id="dil-v2" inputmode="decimal" placeholder="V₂">
-          </div>
-          <div class="molar-hint">3 поля из 4 по формуле C₁V₁ = C₂V₂</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="dil-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="mole">
-        <form id="mol-form">
-          <div class="molar-field">
-            <label class="molar-label">Масса, г</label>
-            <input class="molar-input" id="mol-mass" inputmode="decimal" placeholder="m">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярная масса, г/моль</label>
-            <input class="molar-input" id="mol-M" inputmode="decimal" placeholder="M">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Количество вещества, моль</label>
-            <input class="molar-input" id="mol-n" inputmode="decimal" placeholder="n">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Число частиц, N</label>
-            <input class="molar-input" id="mol-N" inputmode="decimal" placeholder="N">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Объём газа при н.у., л</label>
-            <input class="molar-input" id="mol-V" inputmode="decimal" placeholder="V">
-          </div>
-          <div class="molar-hint">Любые 2 поля — остальные найдутся</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="mol-result"></div>
-      </section>
-    </div>
-  </aside>
-</div>
-
 <div class="chem-tooltip" id="chem-tooltip"></div>
 
 <div class="toast" id="toast"></div>
@@ -735,6 +691,5 @@
 <script src="js/search.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/dashboard-student.js"></script>
-<script src="js/molar-calc.js"></script>
 </body>
 </html>

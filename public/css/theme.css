@@ -10,8 +10,8 @@ html.dark {
   --border:  #2a2a45;
   --primary: #7a5cff;
   --primary-dark: #6a4cff;
-  --accent:  #00d4b8;
-  --accent-dark: #00b8a0;
+  --accent:  #38bdf8;
+  --accent-dark: #0ea5e9;
   --danger:  #ff5c7a;
 
   --shadow:    0 10px 30px -10px rgba(0,0,0,.6);
@@ -65,7 +65,7 @@ html.dark .toast {
 html.dark .hero {
   background:
     radial-gradient(circle at 10% 20%, rgba(122,92,255,.16), transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(0,212,184,.12), transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(14,165,233,.12), transparent 45%),
     var(--light);
 }
 html.dark .role-card { background: var(--white); border-color: var(--border); }
@@ -87,7 +87,7 @@ html.dark .nav-item.active {
   color: #b8a6ff;
 }
 html.dark .profile-card {
-  background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(0,212,184,.08));
+  background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(14,165,233,.08));
   border-color: var(--border);
 }
 html.dark .profile-name { color: var(--dark); }
@@ -158,14 +158,14 @@ html.dark .q-opt .key { background: #0f0f1e; color: var(--gray); }
 html.dark .q-open-answer { background: var(--white); border-color: var(--border); color: var(--gray); }
 
 html.dark .empty-test-block {
-  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.05));
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.05));
   border-color: var(--border);
 }
 html.dark .empty-test-block h3 { color: var(--dark); }
 html.dark .empty-test-block p { color: var(--gray); }
 
 html.dark .hint-box { background: rgba(122,92,255,.12); color: var(--dark); }
-html.dark .hint-box.accent { background: rgba(0,212,184,.14); }
+html.dark .hint-box.accent { background: rgba(14,165,233,.14); }
 html.dark .hint-box.warn { background: rgba(255,170,0,.16); }
 
 html.dark .welcome-hint {
@@ -174,7 +174,7 @@ html.dark .welcome-hint {
 html.dark .welcome-hint .wh-body h3 { color: #ffc44d; }
 
 html.dark .file-drop { background: #0f0f1e; border-color: var(--border); }
-html.dark .file-chip { background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(0,212,184,.08)); }
+html.dark .file-chip { background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(14,165,233,.08)); }
 
 html.dark .settings-block { background: #0f0f1e; border-color: var(--border); }
 html.dark .radio-line { color: var(--dark); }
@@ -183,18 +183,18 @@ html.dark .access-row:hover { background: rgba(122,92,255,.10); }
 html.dark .access-row .name { color: var(--dark); }
 html.dark .access-switch { background: var(--white); border-color: var(--border); color: var(--gray); }
 html.dark .access-switch.on {
-  background: linear-gradient(135deg, rgba(0,212,184,.20), rgba(0,212,184,.06));
+  background: linear-gradient(135deg, rgba(14,165,233,.20), rgba(14,165,233,.06));
   color: var(--accent);
 }
 html.dark .access-bulk-row {
-  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.06));
 }
 
 /* ─── Прохождение теста ─── */
 html.dark .question-card { background: var(--white); border-color: var(--border); }
 html.dark .opt { background: #0f0f1e; border-color: var(--border); }
-html.dark .opt:hover { background: rgba(0,212,184,.10); }
-html.dark .opt.selected { background: linear-gradient(135deg, rgba(0,212,184,.20), rgba(0,212,184,.08)); }
+html.dark .opt:hover { background: rgba(14,165,233,.10); }
+html.dark .opt.selected { background: linear-gradient(135deg, rgba(14,165,233,.20), rgba(14,165,233,.08)); }
 html.dark .opt .key { background: var(--white); border-color: var(--border); }
 html.dark .opt .text { color: var(--dark); }
 
@@ -246,7 +246,7 @@ html.dark .cheat-fab { background: var(--white); border-color: var(--border); co
 html.dark .cheat-fab.accent { color: var(--accent); }
 html.dark .cheat-panel { background: var(--white); border: 1px solid var(--border); }
 html.dark .cheat-head {
-  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.06));
   border-color: var(--border);
 }
 html.dark .cheat-body { background: var(--white); }
@@ -257,14 +257,12 @@ html.dark .cheat-overlay { background: rgba(0,0,0,.85); }
    ПЕРИОДИЧЕСКАЯ СИСТЕМА в тёмной теме
    ═══════════════════════════════════════════════ */
 
-/* Контейнер сетки — тёмно-синий */
 html.dark .periodic-grid,
 html.dark .cheat-periodic-grid {
   background: #1a1a2e;
   border-color: var(--border);
 }
 
-/* Ячейки элементов — плотные цвета, не прозрачные */
 html.dark .p-el {
   background: #2a2a45;
   border-color: transparent;
@@ -285,7 +283,6 @@ html.dark .p-el.cat-lanthanide  { background: linear-gradient(135deg, #5c3a7a, #
 html.dark .p-el.cat-actinide    { background: linear-gradient(135deg, #7a3a3a, #5c2d2d); }
 html.dark .p-el.cat-unknown     { background: #3a3a52; }
 
-/* Hover — вспышка белым */
 html.dark .p-el:hover {
   background: #ffffff !important;
   border-color: #b8a6ff;
@@ -297,7 +294,6 @@ html.dark .p-el:hover .sym { color: #6a4cff; }
 html.dark .p-el:hover .num,
 html.dark .p-el:hover .mass-mini { color: #7a7a99; }
 
-/* Статичные ячейки Менделеева в шпаргалке */
 html.dark .cheat-p-el { background: #2a2a45; }
 html.dark .cheat-p-el .sym { color: #e8e8f5; }
 html.dark .cheat-p-el .num,
@@ -319,62 +315,53 @@ html.dark .cheat-p-el.cat-unknown    { background: #3a3a52; }
    ТАБЛИЦА РАСТВОРИМОСТИ в тёмной теме
    ═══════════════════════════════════════════════ */
 
-/* Контейнер сетки — тёмно-синий */
 html.dark .solubility-grid,
 html.dark .cheat-sol-grid {
   background: #1a1a2e;
   border-color: var(--border);
 }
 
-/* Ячейки — плотные цвета */
 html.dark .sol-cell {
   background: #2a2a45;
   color: var(--dark);
   border-color: transparent;
 }
 
-/* Растворимо — бирюза */
 html.dark .sol-cell.solvable {
-  background: linear-gradient(135deg, #0d5c50, #0a4d43);
-  color: #7affd9;
+  background: linear-gradient(135deg, #0d4a5c, #0a3d4d);
+  color: #7ad8f8;
 }
-/* Малорастворимо — жёлто-песочный */
 html.dark .sol-cell.sparingly {
   background: linear-gradient(135deg, #6b5210, #5a4410);
   color: #ffd84a;
 }
-/* Нерастворимо — глубокий красный */
 html.dark .sol-cell.insoluble {
   background: linear-gradient(135deg, #6b1f2a, #571823);
   color: #ff8fa3;
 }
-/* Газ — фиолетовый */
 html.dark .sol-cell.gas {
   background: linear-gradient(135deg, #3f2d7a, #352565);
   color: #c9b6ff;
 }
-/* Не существует / неизвестно */
 html.dark .sol-cell.decompose { background: #33334a; color: #a0a0b8; }
 html.dark .sol-cell.unknown   { background: #2a2a45; color: #9090a8; }
 
-/* Заголовки катионов и анионов */
 html.dark .sol-cell.sol-header {
   background: linear-gradient(135deg, #4a3a9e, #3a2d7a);
   color: #cfc0ff;
   border-color: rgba(122, 92, 255, .5);
 }
 html.dark .sol-cell.sol-header.accent {
-  background: linear-gradient(135deg, #0a6b5c, #085749);
-  color: #7affd9;
-  border-color: rgba(0, 212, 184, .5);
+  background: linear-gradient(135deg, #0a4a5c, #083a49);
+  color: #7ad8f8;
+  border-color: rgba(14, 165, 233, .5);
 }
 html.dark .sol-cell.sol-header .charge { color: rgba(232, 232, 245, .6); }
 html.dark .sol-cell.sol-corner {
-  background: linear-gradient(135deg, #3a2d7a, #0a5c50);
+  background: linear-gradient(135deg, #3a2d7a, #0a3a5c);
   color: #b0b0c8;
 }
 
-/* Hover — свечение */
 html.dark .sol-cell:not(.sol-header):not(.sol-corner):hover {
   transform: scale(1.18);
   border-color: #b8a6ff;
@@ -384,14 +371,13 @@ html.dark .sol-cell:not(.sol-header):not(.sol-corner):hover {
   z-index: 15;
 }
 
-/* Статичные ячейки растворимости в шпаргалке */
 html.dark .cheat-sol-cell {
   background: #2a2a45;
   color: var(--dark);
 }
 html.dark .cheat-sol-cell.solvable {
-  background: linear-gradient(135deg, #0d5c50, #0a4d43);
-  color: #7affd9;
+  background: linear-gradient(135deg, #0d4a5c, #0a3d4d);
+  color: #7ad8f8;
 }
 html.dark .cheat-sol-cell.sparingly {
   background: linear-gradient(135deg, #6b5210, #5a4410);
@@ -413,12 +399,12 @@ html.dark .cheat-sol-cell.cheat-header {
   border-color: rgba(122, 92, 255, .5);
 }
 html.dark .cheat-sol-cell.cheat-header.accent {
-  background: linear-gradient(135deg, #0a6b5c, #085749);
-  color: #7affd9;
-  border-color: rgba(0, 212, 184, .5);
+  background: linear-gradient(135deg, #0a4a5c, #083a49);
+  color: #7ad8f8;
+  border-color: rgba(14, 165, 233, .5);
 }
 html.dark .cheat-sol-cell.cheat-corner {
-  background: linear-gradient(135deg, #3a2d7a, #0a5c50);
+  background: linear-gradient(135deg, #3a2d7a, #0a3a5c);
   color: #b0b0c8;
 }
 html.dark .cheat-sol-cell .sol-formula { color: rgba(232, 232, 245, .65); }
@@ -441,7 +427,7 @@ html.dark .chem-tooltip::after {
 }
 
 html.dark .tt-formula {
-  background: linear-gradient(135deg, #b8a6ff, #7affd9);
+  background: linear-gradient(135deg, #b8a6ff, #7ad8f8);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -451,7 +437,7 @@ html.dark .tt-name-sub { color: rgba(232, 232, 245, .55); }
 html.dark .tt-lbl { color: rgba(232, 232, 245, .5); }
 html.dark .tt-val { color: #e8e8f5; }
 
-html.dark .tt-badge.solvable  { background: rgba(0, 212, 184, .30); color: #7affd9; }
+html.dark .tt-badge.solvable  { background: rgba(14, 165, 233, .30); color: #7ad8f8; }
 html.dark .tt-badge.sparingly { background: rgba(255, 205, 86, .30); color: #ffe28a; }
 html.dark .tt-badge.insoluble { background: rgba(255, 120, 120, .32); color: #ff9b9b; }
 html.dark .tt-badge.gas       { background: rgba(160, 140, 255, .30); color: #c9b6ff; }
@@ -505,7 +491,7 @@ html.dark .chat-notif-item:hover { background: rgba(122,92,255,.10); }
 html.dark .search-backdrop { background: rgba(0,0,0,.78); }
 html.dark .search-modal { background: var(--white); border: 1px solid var(--border); }
 html.dark .search-input-wrap {
-  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+  background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.06));
   border-color: var(--border);
 }
 html.dark .search-input { color: var(--dark); }
@@ -539,12 +525,12 @@ html.dark .st-mat-head .ic { background: var(--white); }
 html.dark .st-mat-head .title { color: var(--dark); }
 html.dark .st-mat-body .inner { background: var(--white); color: var(--dark); }
 html.dark .test-cta {
-  background: linear-gradient(135deg, rgba(0,212,184,.10), rgba(122,92,255,.08));
+  background: linear-gradient(135deg, rgba(14,165,233,.10), rgba(122,92,255,.08));
   border-color: var(--border);
 }
 html.dark .test-cta h3 { color: var(--dark); }
 html.dark .test-cta p { color: var(--gray); }
-html.dark .best-result { background: rgba(0,212,184,.16); color: var(--accent); }
+html.dark .best-result { background: rgba(14,165,233,.16); color: var(--accent); }
 
 /* ═══════════════════════════════════════════════
    Кнопка-переключатель темы 🌙 / ☀️

@@ -1,5 +1,6 @@
 // server/index.js
 const path = require('path');
+const crypto = require('crypto');
 const express = require('express');
 const session = require('express-session');
 
@@ -10,7 +11,7 @@ const db = require('./db/connection');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ⭐ Для работы за прокси Render (HTTPS)
+// ⭐ Для работы за прокси (туннель, Render и т.п.)
 app.set('trust proxy', 1);
 
 initDb();
@@ -18,16 +19,26 @@ initDb();
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ⭐ Сессия с поддержкой HTTPS на продакшене
+// ⭐ SESSION_SECRET: из env, иначе генерируем при старте
+const SESSION_SECRET = process.env.SESSION_SECRET
+  || crypto.randomBytes(32).toString('hex');
+
+if (!process.env.SESSION_SECRET) {
+  console.log('⚠️  SESSION_SECRET не задан — сгенерирован случайный.');
+  console.log('   При перезапуске сервера все сессии сбросятся.');
+  console.log('   Для постоянных сессий создай .env с SESSION_SECRET=...');
+}
+
+// ⭐ Сессия с auto-secure — работает и на localhost, и за HTTPS-туннелем
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'chem-tutor-secret-change-me',
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',  // ⭐ HTTPS
+    secure: 'auto',        // ⭐ secure только если req.secure (HTTPS)
     sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24 * 7
+    maxAge: 1000 * 60 * 60 * 24 * 7  // 7 дней
   }
 }));
 

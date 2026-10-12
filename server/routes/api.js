@@ -53,7 +53,15 @@ function isModerator(req) {
   return !!(req.session && req.session.userId && req.session.role === 'moderator');
 }
 
+// ⭐ Кэш last_seen: пишем в БД не чаще раза в 60 сек на юзера
+const LAST_SEEN_CACHE = new Map();
+const LAST_SEEN_TTL_MS = 60 * 1000;
+
 function touchLastSeen(userId) {
+  const now = Date.now();
+  const last = LAST_SEEN_CACHE.get(userId) || 0;
+  if (now - last < LAST_SEEN_TTL_MS) return;
+  LAST_SEEN_CACHE.set(userId, now);
   try {
     db.prepare("UPDATE users SET last_seen = datetime('now') WHERE id = ?").run(userId);
   } catch (e) {}
@@ -1051,7 +1059,6 @@ router.post('/students', (req, res) => {
   });
 });
 
-// ⭐ УЧИТЕЛЬ УДАЛЯЕТ УЧЕНИКА — НАВСЕГДА
 router.delete('/students/:id', (req, res) => {
   if (!isTutor(req)) return res.status(403).json({ error: 'Только для учителя' });
   const id = Number(req.params.id);
@@ -1826,10 +1833,8 @@ router.get('/chat/with/:userId', (req, res) => {
     reactionsByMsg[r.message_id][r.emoji].push({ user_id: r.user_id, display_name: r.display_name });
   }
 
-  db.prepare(`
-    UPDATE messages SET read_at = datetime('now')
-    WHERE to_user_id = ? AND from_user_id = ? AND read_at IS NULL
-  `).run(meId, otherId);
+  // ⭐ РАНЬШЕ ТУТ БЫЛ UPDATE messages SET read_at — удалено,
+  //    отметка "прочитано" делается через POST /chat/read/:userId
 
   const decorated = messages.map(m => ({
     id: m.id, from_user_id: m.from_user_id, to_user_id: m.to_user_id,
@@ -2508,7 +2513,6 @@ router.post('/moder/users/:id/reset-password', (req, res) => {
   });
 });
 
-// ⭐ МОДЕР: МЯГКОЕ УДАЛЕНИЕ (в корзину)
 router.delete('/moder/users/:id', (req, res) => {
   if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
   const userId = Number(req.params.id);
@@ -2546,7 +2550,6 @@ router.delete('/moder/users/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// ⭐ МОДЕР: ВОССТАНОВЛЕНИЕ ИЗ КОРЗИНЫ
 router.post('/moder/users/:id/restore', (req, res) => {
   if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
   const userId = Number(req.params.id);
@@ -2578,7 +2581,6 @@ router.post('/moder/users/:id/restore', (req, res) => {
   res.json({ ok: true });
 });
 
-// ⭐ МОДЕР: УДАЛИТЬ НАВСЕГДА
 router.delete('/moder/users/:id/purge', (req, res) => {
   if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
   const userId = Number(req.params.id);

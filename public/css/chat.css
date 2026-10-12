@@ -1,9 +1,5 @@
 /* public/css/chat.css — стили чата (диалоги, пузыри, файлы, реакции) */
 
-/* ═══════════════════════════════════════════════════
-   СТРАНИЦА ЧАТА
-   ═══════════════════════════════════════════════════ */
-
 .chat-app {
   display: grid;
   grid-template-columns: 340px 1fr;
@@ -17,7 +13,6 @@
   box-shadow: 0 20px 50px -30px rgba(106,76,255,.28);
 }
 
-/* ─── Левая колонка: список диалогов ─── */
 .chat-sidebar {
   display: flex;
   flex-direction: column;
@@ -98,15 +93,15 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #4ecb71;
+  background: #0ea5e9;
   border: 2px solid var(--white);
-  box-shadow: 0 0 0 0 rgba(78,203,113,.6);
+  box-shadow: 0 0 0 0 rgba(14,165,233,.6);
   animation: onlinePulse 2s infinite;
 }
 @keyframes onlinePulse {
-  0%   { box-shadow: 0 0 0 0 rgba(78,203,113,.55); }
-  70%  { box-shadow: 0 0 0 8px rgba(78,203,113,0); }
-  100% { box-shadow: 0 0 0 0 rgba(78,203,113,0); }
+  0%   { box-shadow: 0 0 0 0 rgba(14,165,233,.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(14,165,233,0); }
+  100% { box-shadow: 0 0 0 0 rgba(14,165,233,0); }
 }
 
 .chat-dialog .info {
@@ -162,7 +157,6 @@
   box-shadow: 0 4px 10px -2px rgba(106,76,255,.5);
 }
 
-/* ─── Правая колонка: чат ─── */
 .chat-main {
   display: flex;
   flex-direction: column;
@@ -194,10 +188,10 @@
   font-weight: 600;
   margin-top: 2px;
 }
-.chat-main-head .status.online { color: #2a9d4a; }
+.chat-main-head .status.online { color: #0369a1; }
 .chat-main-head .status.online::before {
   content: '● ';
-  color: #4ecb71;
+  color: #0ea5e9;
 }
 
 .chat-main-body {
@@ -209,7 +203,6 @@
   gap: 4px;
 }
 
-/* ─── Заглушка, если диалог не выбран ─── */
 .chat-placeholder {
   flex: 1;
   display: flex;
@@ -242,9 +235,6 @@
   max-width: 380px;
 }
 
-/* ═══════════════════════════════════════════════════
-   РАЗДЕЛИТЕЛЬ ДАТ
-   ═══════════════════════════════════════════════════ */
 .chat-date-sep {
   display: flex;
   justify-content: center;
@@ -260,9 +250,6 @@
   letter-spacing: .3px;
 }
 
-/* ═══════════════════════════════════════════════════
-   СООБЩЕНИЕ (пузырь)
-   ═══════════════════════════════════════════════════ */
 .msg-row {
   display: flex;
   gap: 10px;
@@ -315,7 +302,6 @@
 }
 .msg-row.mine .msg-bubble a { color: #fff; text-decoration: underline; }
 
-/* Время под пузырём */
 .msg-time {
   font-size: 11px;
   color: var(--gray);
@@ -328,7 +314,6 @@
   text-align: right;
 }
 
-/* Кнопка открытия панели реакций */
 .msg-react-trigger {
   position: absolute;
   top: 50%;
@@ -358,9 +343,6 @@
   transform: translateY(-50%) scale(1.1);
 }
 
-/* ═══════════════════════════════════════════════════
-   ФАЙЛ В ПУЗЫРЕ
-   ═══════════════════════════════════════════════════ */
 .msg-file {
   display: flex;
   align-items: center;
@@ -417,7 +399,6 @@
   color: #fff;
 }
 
-/* Картинка-превью */
 .msg-image {
   display: block;
   max-width: 260px;
@@ -432,7 +413,6 @@
   transform: scale(1.02);
 }
 
-/* Только картинка (без текста) — пузырь-минимум */
 .msg-bubble.image-only {
   padding: 6px;
   background: transparent;
@@ -447,9 +427,6 @@
   margin: 0;
 }
 
-/* ═══════════════════════════════════════════════════
-   РЕАКЦИИ ПОД СООБЩЕНИЕМ
-   ═══════════════════════════════════════════════════ */
 .msg-reactions {
   display: flex;
   flex-wrap: wrap;
@@ -490,9 +467,6 @@
   opacity: .85;
 }
 
-/* ═══════════════════════════════════════════════════
-   ПАНЕЛЬ РЕАКЦИЙ (при клике на «+»)
-   ═══════════════════════════════════════════════════ */
 .reactions-panel {
   position: fixed;
   z-index: 10000;
@@ -532,9 +506,6 @@
   transform: scale(1.25);
 }
 
-/* ═══════════════════════════════════════════════════
-   ПОЛЕ ВВОДА
-   ═══════════════════════════════════════════════════ */
 .chat-input-wrap {
   padding: 12px 20px 16px;
   background: rgba(255,255,255,.7);
@@ -549,7 +520,7 @@
   padding: 10px 12px;
   margin-bottom: 10px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(0,212,184,.05));
+  background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(14,165,233,.05));
   border: 1.5px solid var(--border);
   animation: attachIn .25s cubic-bezier(.2,.8,.3,1);
 }
@@ -668,9 +639,6 @@
   text-align: right;
 }
 
-/* ═══════════════════════════════════════════════════
-   БЕЙДЖ-СЧЁТЧИК В САЙДБАРЕ / ТОПБАРЕ
-   ═══════════════════════════════════════════════════ */
 .chat-nav-badge {
   margin-left: auto;
   min-width: 22px;
@@ -700,7 +668,6 @@
   0%   { transform: scale(1); opacity: .8; }
   100% { transform: scale(1.8); opacity: 0; }
 }
-/* Активная вкладка с непрочитанными — красная */
 .nav-item.has-chat,
 .topbar-tab.has-chat {
   background: linear-gradient(135deg, rgba(224,67,92,.14), rgba(224,67,92,.04)) !important;
@@ -719,9 +686,6 @@
   50%      { transform: rotate(0); }
 }
 
-/* ═══════════════════════════════════════════════════
-   ВЫПАДАЮЩАЯ ПАНЕЛЬ УВЕДОМЛЕНИЙ
-   ═══════════════════════════════════════════════════ */
 .chat-notif-panel {
   position: fixed;
   top: 74px;
@@ -752,7 +716,7 @@
 .chat-notif-head {
   padding: 16px 18px 12px;
   border-bottom: 1.5px solid var(--border);
-  background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(0,212,184,.03));
+  background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(14,165,233,.03));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -829,9 +793,6 @@
   animation: bobIcon 3s ease-in-out infinite;
 }
 
-/* ═══════════════════════════════════════════════════
-   АДАПТИВ
-   ═══════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .chat-app {
     grid-template-columns: 1fr;

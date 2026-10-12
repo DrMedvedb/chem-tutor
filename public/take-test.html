@@ -8,20 +8,35 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
 <link rel="stylesheet" href="css/tables.css">
-<link rel="stylesheet" href="css/molar.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  /* ═══ ИКОНКИ ═══ */
+  .ico {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+  .tt-back .ico { margin-right: 4px; vertical-align: -3px; }
+
   body {
     background:
-      radial-gradient(circle at 15% 20%, rgba(0,212,184,.08), transparent 40%),
+      radial-gradient(circle at 15% 20%, rgba(14,165,233,.08), transparent 40%),
       radial-gradient(circle at 85% 80%, rgba(106,76,255,.08), transparent 40%),
       var(--light);
     min-height: 100vh;
   }
   html.dark body {
     background:
-      radial-gradient(circle at 15% 20%, rgba(0,212,184,.12), transparent 40%),
+      radial-gradient(circle at 15% 20%, rgba(14,165,233,.12), transparent 40%),
       radial-gradient(circle at 85% 80%, rgba(122,92,255,.12), transparent 40%),
       var(--light);
   }
@@ -57,7 +72,7 @@
   .tt-progress {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, var(--accent), #48e0c6, var(--primary));
+    background: linear-gradient(90deg, var(--accent), #38bdf8, var(--primary));
     transition: width .5s cubic-bezier(.2,.8,.3,1);
   }
   .tt-counter {
@@ -82,12 +97,13 @@
     margin-bottom: 16px;
     transition: all .3s ease;
   }
+  .tt-timer-panel .ico { color: var(--primary); }
   html.dark .tt-timer-panel {
     background: linear-gradient(135deg, rgba(122,92,255,.18), rgba(122,92,255,.06));
     border-color: rgba(122,92,255,.4);
     color: #b8a6ff;
   }
-  .tt-timer-panel .tt-timer-ic { font-size: 20px; }
+  html.dark .tt-timer-panel .ico { color: #b8a6ff; }
   .tt-timer-panel .tt-timer-label { font-size: 14px; opacity: .8; }
   .tt-timer-panel .tt-timer-value {
     font-family: 'Consolas', monospace;
@@ -107,34 +123,16 @@
     border-color: rgba(255,170,0,.32);
     color: #c47f00;
   }
-  html.dark .tt-timer-panel.tt-timer-warn {
-    background: linear-gradient(135deg, rgba(255,170,0,.20), rgba(255,170,0,.06));
-    border-color: rgba(255,170,0,.45);
-    color: #ffc44d;
-  }
-  .tt-timer-panel.tt-timer-warn .tt-timer-value {
-    background: rgba(255,255,255,.7);
-  }
-  html.dark .tt-timer-panel.tt-timer-warn .tt-timer-value {
-    background: rgba(15,15,30,.7);
-  }
+  .tt-timer-panel.tt-timer-warn .ico { color: #c47f00; }
+  .tt-timer-panel.tt-timer-warn .tt-timer-value { background: rgba(255,255,255,.7); }
   .tt-timer-panel.tt-timer-danger {
     background: linear-gradient(135deg, rgba(224,67,92,.16), rgba(224,67,92,.05));
     border-color: rgba(224,67,92,.38);
     color: var(--danger);
     animation: timerPulse 1s ease-in-out infinite;
   }
-  html.dark .tt-timer-panel.tt-timer-danger {
-    background: linear-gradient(135deg, rgba(224,67,92,.22), rgba(224,67,92,.06));
-    border-color: rgba(224,67,92,.5);
-    color: #ff7a8e;
-  }
-  .tt-timer-panel.tt-timer-danger .tt-timer-value {
-    background: rgba(255,255,255,.75);
-  }
-  html.dark .tt-timer-panel.tt-timer-danger .tt-timer-value {
-    background: rgba(15,15,30,.7);
-  }
+  .tt-timer-panel.tt-timer-danger .ico { color: var(--danger); }
+  .tt-timer-panel.tt-timer-danger .tt-timer-value { background: rgba(255,255,255,.75); }
   @keyframes timerPulse {
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.03); }
@@ -159,7 +157,7 @@
     gap: 8px;
     padding: 6px 14px;
     border-radius: 999px;
-    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.04));
+    background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(14,165,233,.04));
     color: var(--accent-dark);
     font-size: 13px;
     font-weight: 700;
@@ -177,8 +175,9 @@
     vertical-align: middle;
   }
   .q-type-hint.single { background: rgba(106,76,255,.12); color: var(--primary); }
-  .q-type-hint.multi  { background: rgba(0,212,184,.14); color: var(--accent-dark); }
+  .q-type-hint.multi  { background: rgba(14,165,233,.14); color: var(--accent-dark); }
   .q-type-hint.open   { background: rgba(255,170,0,.15); color: #c47f00; }
+  .q-type-hint .ico { width: 12px; height: 12px; stroke-width: 2.5; margin-right: 3px; vertical-align: -2px; }
 
   .q-text {
     font-size: 20px;
@@ -204,21 +203,15 @@
     user-select: none;
   }
   .opt:hover {
-    background: rgba(0,212,184,.06);
-    border-color: rgba(0,212,184,.3);
+    background: rgba(14,165,233,.06);
+    border-color: rgba(14,165,233,.3);
     transform: translateX(4px);
   }
-  html.dark .opt:hover {
-    background: rgba(0,212,184,.10);
-  }
   .opt.selected {
-    background: linear-gradient(135deg, rgba(0,212,184,.12), rgba(0,212,184,.04));
+    background: linear-gradient(135deg, rgba(14,165,233,.12), rgba(14,165,233,.04));
     border-color: var(--accent);
     transform: translateX(6px);
-    box-shadow: 0 12px 24px -14px rgba(0,212,184,.5);
-  }
-  html.dark .opt.selected {
-    background: linear-gradient(135deg, rgba(0,212,184,.20), rgba(0,212,184,.08));
+    box-shadow: 0 12px 24px -14px rgba(14,165,233,.5);
   }
   .opt .key {
     width: 36px; height: 36px;
@@ -245,11 +238,11 @@
     border: 2px solid var(--border);
     background: var(--white);
     display: grid; place-items: center;
-    font-size: 14px;
     color: transparent;
     flex-shrink: 0;
     transition: all .2s;
   }
+  .opt .mark .ico { width: 14px; height: 14px; stroke-width: 3; }
   .opt.selected .mark {
     background: var(--accent);
     border-color: var(--accent);
@@ -266,9 +259,6 @@
     font-size: 13px;
     color: var(--dark);
   }
-  html.dark .open-hint {
-    background: rgba(255,170,0,.14);
-  }
   .open-textarea {
     width: 100%;
     min-height: 140px;
@@ -284,12 +274,10 @@
     outline: none;
     transition: all .2s;
   }
-  html.dark .open-textarea {
-    background: #0f0f1e;
-  }
+  html.dark .open-textarea { background: #0f0f1e; }
   .open-textarea:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(0,212,184,.12);
+    box-shadow: 0 0 0 4px rgba(14,165,233,.12);
   }
   .open-file-zone {
     border: 2px dashed var(--border);
@@ -300,15 +288,17 @@
     cursor: pointer;
     transition: all .2s;
   }
-  html.dark .open-file-zone {
-    background: #0f0f1e;
-  }
   .open-file-zone:hover,
   .open-file-zone.dragover {
     border-color: var(--accent);
-    background: rgba(0,212,184,.06);
+    background: rgba(14,165,233,.06);
   }
-  .open-file-zone .icon { font-size: 30px; margin-bottom: 6px; }
+  .open-file-zone .icon {
+    display: grid; place-items: center;
+    margin-bottom: 6px;
+    color: var(--accent-dark);
+  }
+  .open-file-zone .icon .ico { width: 30px; height: 30px; stroke-width: 1.5; }
   .open-file-zone .label { font-size: 14px; font-weight: 700; color: var(--dark); }
   .open-file-zone .sub   { font-size: 12px; color: var(--gray); margin-top: 4px; }
 
@@ -318,13 +308,14 @@
     gap: 12px;
     padding: 12px 16px;
     border-radius: 12px;
-    background: linear-gradient(135deg, rgba(0,212,184,.08), rgba(106,76,255,.05));
+    background: linear-gradient(135deg, rgba(14,165,233,.08), rgba(106,76,255,.05));
     border: 1.5px solid var(--border);
   }
-  html.dark .file-attached {
-    background: linear-gradient(135deg, rgba(0,212,184,.12), rgba(122,92,255,.08));
+  .file-attached .fi {
+    display: grid; place-items: center;
+    color: var(--accent-dark);
   }
-  .file-attached .fi { font-size: 24px; }
+  .file-attached .fi .ico { width: 24px; height: 24px; }
   .file-attached .fn { flex: 1; font-weight: 700; font-size: 14px; word-break: break-all; color: var(--dark); }
   .file-attached .fs { font-size: 12px; color: var(--gray); }
   .file-attached .fx {
@@ -337,6 +328,7 @@
     cursor: pointer;
     transition: all .2s;
   }
+  .file-attached .fx .ico { width: 14px; height: 14px; }
   .file-attached .fx:hover {
     background: rgba(224,67,92,.1);
     border-color: var(--danger);
@@ -355,9 +347,7 @@
     gap: 12px;
     z-index: 40;
   }
-  html.dark .tt-footer {
-    background: rgba(15,15,30,.92);
-  }
+  html.dark .tt-footer { background: rgba(15,15,30,.92); }
   .tt-footer .inner {
     max-width: 820px;
     width: 100%;
@@ -382,15 +372,17 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 5px;
-    background: linear-gradient(90deg, var(--accent), #48e0c6, var(--primary));
+    background: linear-gradient(90deg, var(--accent), #38bdf8, var(--primary));
   }
   .result-emoji {
-    font-size: 88px;
-    line-height: 1;
+    display: grid; place-items: center;
     margin-bottom: 16px;
-    display: block;
     animation: popEmoji .6s cubic-bezier(.2,.8,.3,1);
   }
+  .result-emoji .ico { width: 80px; height: 80px; stroke-width: 1; }
+  .result-emoji.trophy .ico { color: #ffaa00; }
+  .result-emoji.good .ico { color: var(--accent-dark); }
+  .result-emoji.weak .ico { color: var(--danger); }
   @keyframes popEmoji {
     0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
@@ -428,7 +420,7 @@
     transform: rotate(-90deg);
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 12px 30px rgba(0,212,184,.25));
+    filter: drop-shadow(0 12px 30px rgba(14,165,233,.25));
   }
   .donut .donut-bg { stroke: var(--border); fill: none; }
   .donut .donut-fg { fill: none; stroke-linecap: round; }
@@ -483,10 +475,10 @@
     width: 32px; height: 32px;
     border-radius: 10px;
     display: grid; place-items: center;
-    font-size: 16px;
     flex-shrink: 0;
   }
-  .stat-chip.correct .ic { background: rgba(0,212,184,.15); color: var(--accent-dark); }
+  .stat-chip .ic .ico { width: 16px; height: 16px; }
+  .stat-chip.correct .ic { background: rgba(14,165,233,.15); color: var(--accent-dark); }
   .stat-chip.wrong   .ic { background: rgba(224,67,92,.12); color: var(--danger); }
   .stat-chip.total   .ic { background: rgba(106,76,255,.12); color: var(--primary); }
   .stat-chip .num {
@@ -511,7 +503,7 @@
     font-weight: 700;
     margin-bottom: 12px;
   }
-  .verdict.excellent { background: rgba(0,212,184,.14); color: var(--accent-dark); }
+  .verdict.excellent { background: rgba(14,165,233,.14); color: var(--accent-dark); }
   .verdict.good      { background: rgba(106,76,255,.12); color: var(--primary); }
   .verdict.weak      { background: rgba(224,67,92,.12); color: var(--danger); }
 
@@ -531,10 +523,8 @@
     background: var(--light);
     border-left: 4px solid var(--gray);
   }
-  html.dark .detail-item {
-    background: #0f0f1e;
-  }
-  .detail-item.correct { border-left-color: var(--accent); background: rgba(0,212,184,.05); }
+  html.dark .detail-item { background: #0f0f1e; }
+  .detail-item.correct { border-left-color: var(--accent); background: rgba(14,165,233,.05); }
   .detail-item.wrong   { border-left-color: var(--danger); background: rgba(224,67,92,.05); }
   .detail-item.partial { border-left-color: #ffaa00; background: rgba(255,170,0,.06); }
   .detail-item.pending { border-left-color: #6a4cff; background: rgba(106,76,255,.05); }
@@ -547,6 +537,7 @@
     gap: 10px;
     color: var(--dark);
   }
+  .detail-q .ico { flex-shrink: 0; margin-top: 2px; }
   .detail-answers {
     display: flex;
     flex-direction: column;
@@ -579,9 +570,6 @@
     line-height: 1.5;
     color: var(--dark);
   }
-  html.dark .teacher-comment {
-    background: rgba(122,92,255,.12);
-  }
   .teacher-comment .tc-head {
     font-weight: 700;
     color: var(--primary);
@@ -609,11 +597,12 @@
     background: linear-gradient(90deg, #ffaa00, #ff7ac6, #6a4cff);
   }
   .hourglass {
-    font-size: 90px;
-    display: inline-block;
-    animation: flip 3s ease-in-out infinite;
+    display: inline-grid; place-items: center;
     margin-bottom: 20px;
+    color: #c47f00;
+    animation: flip 3s ease-in-out infinite;
   }
+  .hourglass .ico { width: 80px; height: 80px; stroke-width: 1; }
   @keyframes flip {
     0%, 100% { transform: rotate(0deg); }
     50%      { transform: rotate(180deg); }
@@ -646,10 +635,8 @@
     font-weight: 700;
     margin-bottom: 28px;
   }
-  html.dark .pending-note {
-    background: rgba(255,170,0,.18);
-    color: #ffc44d;
-  }
+  .pending-note .ico { color: #c47f00; }
+  html.dark .pending-note { background: rgba(255,170,0,.18); color: #ffc44d; }
 
   .cheat-fab-wrap {
     position: fixed;
@@ -676,9 +663,9 @@
     transition: all .25s cubic-bezier(.2,.8,.3,1);
     box-shadow: 0 8px 20px -8px rgba(106,76,255,.3);
     color: var(--primary);
-    font-size: 22px;
     position: relative;
   }
+  .cheat-fab .ico { width: 22px; height: 22px; }
   .cheat-fab.accent { color: var(--accent-dark); }
   .cheat-fab:hover {
     transform: translateY(-3px) scale(1.05);
@@ -709,26 +696,6 @@
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.25); }
   }
-  .cheat-fab.molar-fab-inline {
-    color: #c47f00;
-    border-color: var(--border);
-    box-shadow: 0 8px 20px -8px rgba(255,170,0,.4);
-  }
-  .cheat-fab.molar-fab-inline:hover {
-    border-color: #ffaa00;
-    box-shadow: 0 12px 28px -8px rgba(255,170,0,.6);
-  }
-  .cheat-fab.molar-fab-inline::before {
-    background: linear-gradient(135deg, #ffd84a, #ff9b3d);
-    box-shadow: 0 0 0 3px rgba(255,216,74,.25);
-  }
-  html.dark .cheat-fab.molar-fab-inline {
-    color: #ffd84a;
-  }
-  html.dark .cheat-fab.molar-fab-inline:hover {
-    border-color: #ffd84a;
-    box-shadow: 0 12px 28px -8px rgba(255,216,74,.55);
-  }
 
   .cheat-overlay {
     position: fixed;
@@ -740,7 +707,6 @@
     padding: 24px;
     background: rgba(26, 26, 46, .72);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     opacity: 0;
     pointer-events: none;
     transition: opacity .25s ease;
@@ -748,9 +714,6 @@
   .cheat-overlay.open {
     opacity: 1;
     pointer-events: auto;
-  }
-  html.dark .cheat-overlay {
-    background: rgba(0,0,0,.85);
   }
   .cheat-panel {
     background: var(--white);
@@ -779,10 +742,7 @@
     gap: 12px;
     padding: 20px 28px;
     border-bottom: 1.5px solid var(--border);
-    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(0,212,184,.03));
-  }
-  html.dark .cheat-head {
-    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(14,165,233,.03));
   }
   .cheat-title {
     font-size: 20px;
@@ -801,12 +761,11 @@
     background: var(--white);
     border: 1.5px solid var(--border);
     color: var(--gray);
-    font-size: 18px;
-    font-weight: 700;
     cursor: pointer;
     transition: all .2s;
     flex-shrink: 0;
   }
+  .cheat-close .ico { width: 16px; height: 16px; }
   .cheat-close:hover {
     background: rgba(224,67,92,.1);
     border-color: var(--danger);
@@ -824,9 +783,6 @@
     border-top: 1.5px dashed var(--border);
     background: var(--light);
     text-align: center;
-  }
-  html.dark .cheat-foot {
-    background: #0f0f1e;
   }
   .cheat-hint {
     font-size: 12.5px;
@@ -859,7 +815,7 @@
       transform: none;
       flex-direction: row;
     }
-    .cheat-fab { width: 48px; height: 48px; font-size: 18px; }
+    .cheat-fab { width: 48px; height: 48px; }
     .cheat-fab .fab-label { display: none; }
     .result-wrap { padding: 32px 20px; }
     .pending-wrap { padding: 40px 20px; }
@@ -868,9 +824,84 @@
 </head>
 <body>
 
+<!-- ═══ SVG-СПРАЙТ ═══ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="m12 19-7-7 7-7"/>
+      <path d="M19 12H5"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="i-circle-dot" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="2" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-check-square" viewBox="0 0 24 24">
+      <polyline points="9 11 12 14 22 4"/>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24">
+      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+      <path d="m15 5 4 4"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="M18 6 6 18"/>
+      <path d="m6 6 12 12"/>
+    </symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24">
+      <path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>
+    </symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="1"/>
+      <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/>
+      <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/>
+    </symbol>
+    <symbol id="i-droplet" viewBox="0 0 24 24">
+      <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+    </symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24">
+      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+      <path d="M4 22h16"/>
+      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+    </symbol>
+    <symbol id="i-thumbs-up" viewBox="0 0 24 24">
+      <path d="M7 10v12"/>
+      <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>
+    </symbol>
+    <symbol id="i-book-open" viewBox="0 0 24 24">
+      <path d="M12 7v14"/>
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+    </symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24">
+      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+    </symbol>
+    <symbol id="i-hourglass" viewBox="0 0 24 24">
+      <path d="M5 22h14"/>
+      <path d="M5 2h14"/>
+      <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/>
+      <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="tt-wrap">
   <header class="tt-head">
-    <a href="dashboard-student.html" class="tt-back">← Назад</a>
+    <a href="dashboard-student.html" class="tt-back">
+      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg> Назад
+    </a>
     <div style="display:flex;gap:12px;align-items:center">
       <div id="tt-topic-name" class="muted" style="font-weight:600"></div>
       <div data-theme-toggle></div>
@@ -887,19 +918,15 @@
   <div id="content"></div>
 </div>
 
-<!-- ═══ ПЛАВАЮЩИЕ КНОПКИ: ШПАРГАЛКИ + КАЛЬКУЛЯТОР ═══ -->
+<!-- ═══ ПЛАВАЮЩИЕ КНОПКИ: ШПАРГАЛКИ ═══ -->
 <div class="cheat-fab-wrap" id="cheat-fab-wrap" style="display:none">
   <div class="cheat-fab" id="fab-periodic" title="Периодическая система">
-    <span>⚛️</span>
+    <svg class="ico"><use href="#i-atom"/></svg>
     <span class="fab-label">таблица</span>
   </div>
   <div class="cheat-fab accent" id="fab-solubility" title="Таблица растворимости">
-    <span>💧</span>
+    <svg class="ico"><use href="#i-droplet"/></svg>
     <span class="fab-label">формулы</span>
-  </div>
-  <div class="cheat-fab molar-fab-inline" id="molar-fab" title="Молярный калькулятор">
-    <span>⚖️</span>
-    <span class="fab-label">моль</span>
   </div>
 </div>
 
@@ -908,149 +935,15 @@
   <div class="cheat-panel">
     <div class="cheat-head">
       <h3 class="cheat-title" id="cheat-title">Таблица</h3>
-      <button class="cheat-close" id="cheat-close" title="Закрыть (Esc)">✕</button>
+      <button class="cheat-close" id="cheat-close" title="Закрыть (Esc)">
+        <svg class="ico"><use href="#i-x"/></svg>
+      </button>
     </div>
     <div class="cheat-body" id="cheat-body"></div>
     <div class="cheat-foot">
-      <span class="cheat-hint">💡 Нажми <b>Esc</b> или кликни по фону, чтобы закрыть</span>
+      <span class="cheat-hint">Нажми <b>Esc</b> или кликни по фону, чтобы закрыть</span>
     </div>
   </div>
-</div>
-
-<!-- ═══ OVERLAY МОЛЯРНОГО КАЛЬКУЛЯТОРА ═══ -->
-<div class="molar-overlay" id="molar-overlay">
-  <aside class="molar-panel">
-    <header class="molar-head">
-      <h2 class="molar-title">⚖️ Химический калькулятор</h2>
-      <button class="molar-close" id="molar-close" type="button">✕</button>
-    </header>
-
-    <nav class="molar-tabs">
-      <button class="molar-tab active" data-mtab="mass" type="button">⚖️ Масса</button>
-      <button class="molar-tab" data-mtab="solution" type="button">💧 Растворы</button>
-      <button class="molar-tab" data-mtab="dilution" type="button">🔄 Разв.</button>
-      <button class="molar-tab" data-mtab="mole" type="button">🧮 Моль</button>
-    </nav>
-
-    <div class="molar-body">
-
-      <section class="molar-pane active" data-mtab="mass">
-        <form id="mm-form">
-          <div class="molar-field">
-            <label class="molar-label">Формула вещества</label>
-            <input class="molar-input" id="mm-formula" placeholder="H2SO4, Ca(OH)2, CuSO4·5H2O" autocomplete="off">
-            <div class="molar-hint">Скобки, гидраты через <code>·</code> или <code>*</code></div>
-          </div>
-          <div class="molar-examples" id="mm-examples">
-            <span class="molar-chip">H2O</span>
-            <span class="molar-chip">H2SO4</span>
-            <span class="molar-chip">Ca(OH)2</span>
-            <span class="molar-chip">Al2(SO4)3</span>
-            <span class="molar-chip">CuSO4·5H2O</span>
-          </div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="mm-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="solution">
-        <form id="sol-form">
-          <div class="molar-field">
-            <label class="molar-label">Формула вещества (опционально)</label>
-            <input class="molar-input" id="sol-formula" placeholder="NaCl" autocomplete="off">
-            <div class="molar-hint">Если указать — M подставится автоматически</div>
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Масса вещества, г</label>
-            <input class="molar-input" id="sol-mass" inputmode="decimal" placeholder="m">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Масса раствора, г</label>
-            <input class="molar-input" id="sol-msolution" inputmode="decimal" placeholder="m(р-ра)">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Объём раствора, л</label>
-            <input class="molar-input" id="sol-volume" inputmode="decimal" placeholder="V">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярность, моль/л</label>
-            <input class="molar-input" id="sol-molarity" inputmode="decimal" placeholder="C">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярная масса, г/моль</label>
-            <input class="molar-input" id="sol-M" inputmode="decimal" placeholder="M">
-          </div>
-          <div class="molar-hint">Заполните <b>3 поля</b> — остальное найдётся</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="sol-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="dilution">
-        <form id="dil-form">
-          <div class="molar-field">
-            <label class="molar-label">C₁ — начальная концентрация, моль/л</label>
-            <input class="molar-input" id="dil-c1" inputmode="decimal" placeholder="C₁">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">V₁ — начальный объём, мл или л</label>
-            <input class="molar-input" id="dil-v1" inputmode="decimal" placeholder="V₁">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">C₂ — конечная концентрация, моль/л</label>
-            <input class="molar-input" id="dil-c2" inputmode="decimal" placeholder="C₂">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">V₂ — конечный объём, мл или л</label>
-            <input class="molar-input" id="dil-v2" inputmode="decimal" placeholder="V₂">
-          </div>
-          <div class="molar-hint">3 поля из 4 по формуле C₁V₁ = C₂V₂</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="dil-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="mole">
-        <form id="mol-form">
-          <div class="molar-field">
-            <label class="molar-label">Масса, г</label>
-            <input class="molar-input" id="mol-mass" inputmode="decimal" placeholder="m">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярная масса, г/моль</label>
-            <input class="molar-input" id="mol-M" inputmode="decimal" placeholder="M">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Количество вещества, моль</label>
-            <input class="molar-input" id="mol-n" inputmode="decimal" placeholder="n">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Число частиц, N</label>
-            <input class="molar-input" id="mol-N" inputmode="decimal" placeholder="N">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Объём газа при н.у., л</label>
-            <input class="molar-input" id="mol-V" inputmode="decimal" placeholder="V">
-          </div>
-          <div class="molar-hint">Любые 2 поля — остальные найдутся</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="mol-result"></div>
-      </section>
-    </div>
-  </aside>
 </div>
 
 <div class="tt-footer" id="tt-footer" style="display:none">
@@ -1064,6 +957,5 @@
 
 <script src="js/cheatsheet.js"></script>
 <script src="js/take-test.js"></script>
-<script src="js/molar-calc.js"></script>
 </body>
 </html>

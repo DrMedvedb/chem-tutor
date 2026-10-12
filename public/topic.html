@@ -7,10 +7,28 @@
 <title>Тема — Алхимичка</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
-<link rel="stylesheet" href="css/molar.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  /* ═══ ИКОНКИ ═══ */
+  .ico {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+  h2 .ico, h3 .ico { margin-right: 8px; vertical-align: -3px; }
+  .btn .ico { margin-right: 4px; }
+  .btn-only-icon { padding: 10px !important; }
+  .btn-only-icon .ico { margin: 0; }
+
   .topic-head {
     background: var(--white);
     border-radius: 24px;
@@ -45,7 +63,6 @@
   }
   .topic-head .desc { color: var(--gray); font-size: 15px; margin-top: 6px; }
 
-  /* ⭐ Бейдж класса */
   .grade-badge {
     display: inline-flex;
     align-items: center;
@@ -62,14 +79,14 @@
   .grade-badge.g-9      { background: rgba(78,203,113,.16); color: #2a8a4a; }
   .grade-badge.g-10     { background: rgba(106,76,255,.16); color: var(--primary); }
   .grade-badge.g-11     { background: rgba(255,107,107,.16); color: #c43a3a; }
-  .grade-badge.g-adult  { background: rgba(0,212,184,.16); color: var(--accent-dark); }
+  .grade-badge.g-adult  { background: rgba(14,165,233,.16); color: var(--accent-dark); }
 
   html.dark .grade-badge.g-junior { background: rgba(255,170,0,.22); color: #ffc44d; }
   html.dark .grade-badge.g-8      { background: rgba(74,144,226,.22); color: #7ab4ff; }
   html.dark .grade-badge.g-9      { background: rgba(78,203,113,.22); color: #7de29a; }
   html.dark .grade-badge.g-10     { background: rgba(122,92,255,.22); color: #b8a6ff; }
   html.dark .grade-badge.g-11     { background: rgba(255,107,107,.22); color: #ff9b9b; }
-  html.dark .grade-badge.g-adult  { background: rgba(0,212,184,.22); color: #7affd9; }
+  html.dark .grade-badge.g-adult  { background: rgba(14,165,233,.22); color: #7ad8f8; }
 
   .back {
     display: inline-flex;
@@ -141,9 +158,9 @@
     border-radius: 12px;
     background: var(--white);
     display: grid; place-items: center;
-    font-size: 20px;
     flex-shrink: 0;
     box-shadow: 0 4px 10px -4px rgba(26,26,46,.1);
+    color: var(--primary);
   }
   .mat-item .body { flex: 1; overflow: hidden; min-width: 0; }
   .mat-item .title {
@@ -170,7 +187,6 @@
     display: grid; place-items: center;
     color: var(--gray);
     transition: all .2s;
-    font-size: 15px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -226,8 +242,9 @@
     vertical-align: middle;
   }
   .q-type-badge.single { background: rgba(106,76,255,.12); color: var(--primary); }
-  .q-type-badge.multi  { background: rgba(0,212,184,.14); color: var(--accent-dark); }
+  .q-type-badge.multi  { background: rgba(14,165,233,.14); color: var(--accent-dark); }
   .q-type-badge.open   { background: rgba(255,170,0,.15); color: #c47f00; }
+  .q-type-badge .ico { width: 12px; height: 12px; stroke-width: 2.5; margin: 0; }
 
   .q-options {
     display: grid;
@@ -257,7 +274,7 @@
     flex-shrink: 0;
   }
   .q-opt.correct {
-    background: rgba(0,212,184,.08);
+    background: rgba(14,165,233,.08);
     border-color: var(--accent);
   }
   .q-opt.correct .key {
@@ -280,17 +297,21 @@
   .empty-test-block {
     text-align: center;
     padding: 40px 20px;
-    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(0,212,184,.04));
+    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(14,165,233,.04));
     border: 2px dashed var(--border);
     border-radius: 18px;
   }
   html.dark .empty-test-block {
-    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.05));
   }
   .empty-test-block .icon {
-    font-size: 60px;
+    display: grid; place-items: center;
     margin-bottom: 14px;
-    display: block;
+    color: var(--primary);
+  }
+  .empty-test-block .icon .ico {
+    width: 60px; height: 60px;
+    stroke-width: 1;
     animation: bobIcon 3s ease-in-out infinite;
   }
   @keyframes bobIcon {
@@ -331,10 +352,11 @@
     background: linear-gradient(135deg, rgba(255,170,0,.16), rgba(255,170,0,.05));
   }
   .welcome-hint .wh-icon {
-    font-size: 32px;
     flex-shrink: 0;
-    line-height: 1;
+    color: #c47f00;
+    display: grid; place-items: center;
   }
+  .welcome-hint .wh-icon .ico { width: 28px; height: 28px; stroke-width: 1.75; }
   .welcome-hint .wh-body h3 {
     font-size: 16px;
     font-weight: 800;
@@ -364,7 +386,12 @@
     background: rgba(106,76,255,.05);
   }
   .file-drop.dragover { transform: scale(1.01); }
-  .file-drop-icon { font-size: 36px; margin-bottom: 8px; }
+  .file-drop-icon {
+    display: grid; place-items: center;
+    margin-bottom: 8px;
+    color: var(--primary);
+  }
+  .file-drop-icon .ico { width: 36px; height: 36px; stroke-width: 1.5; }
   .file-drop-text { color: var(--dark); font-size: 14px; line-height: 1.5; }
 
   .file-chip {
@@ -373,13 +400,14 @@
     gap: 12px;
     padding: 12px 16px;
     border-radius: 12px;
-    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(14,165,233,.05));
     border: 1.5px solid var(--border);
   }
   html.dark .file-chip {
-    background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(0,212,184,.08));
+    background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(14,165,233,.08));
   }
-  .file-chip .fc-icon { font-size: 24px; }
+  .file-chip .fc-icon { color: var(--primary); display: grid; place-items: center; }
+  .file-chip .fc-icon .ico { width: 24px; height: 24px; }
   .file-chip .fc-info { flex: 1; overflow: hidden; }
   .file-chip .fc-name { font-weight: 700; font-size: 14px; word-break: break-all; color: var(--dark); }
   .file-chip .fc-size { font-size: 12px; color: var(--gray); }
@@ -406,23 +434,27 @@
     color: var(--gray);
     text-align: center;
   }
-  .type-btn .ti { font-size: 22px; }
+  .type-btn .ti { color: var(--gray); display: grid; place-items: center; }
+  .type-btn .ti .ico { width: 22px; height: 22px; }
   .type-btn:hover { background: rgba(106,76,255,.05); color: var(--dark); }
   .type-btn.active {
     background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(106,76,255,.04));
     border-color: var(--primary);
     color: var(--primary);
   }
+  .type-btn.active .ti { color: var(--primary); }
   .type-btn.active.accent {
-    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.04));
+    background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(14,165,233,.04));
     border-color: var(--accent);
     color: var(--accent-dark);
   }
+  .type-btn.active.accent .ti { color: var(--accent-dark); }
   .type-btn.active.warn {
     background: linear-gradient(135deg, rgba(255,170,0,.14), rgba(255,170,0,.04));
     border-color: #ffaa00;
     color: #c47f00;
   }
+  .type-btn.active.warn .ti { color: #c47f00; }
 
   .opt-row {
     display: flex;
@@ -454,12 +486,12 @@
     background: var(--light);
     border: 1.5px solid var(--border);
     display: grid; place-items: center;
-    font-size: 16px;
     color: var(--gray);
     cursor: pointer;
     transition: all .2s;
     flex-shrink: 0;
   }
+  .opt-row .mark-correct .ico { width: 16px; height: 16px; }
   .opt-row .mark-correct:hover {
     border-color: var(--accent);
     color: var(--accent-dark);
@@ -475,12 +507,12 @@
     background: var(--light);
     border: 1.5px solid var(--border);
     display: grid; place-items: center;
-    font-size: 14px;
     color: var(--gray);
     cursor: pointer;
     transition: all .2s;
     flex-shrink: 0;
   }
+  .opt-row .del-opt .ico { width: 14px; height: 14px; }
   .opt-row .del-opt:hover {
     background: rgba(224,67,92,.1);
     border-color: var(--danger);
@@ -519,7 +551,7 @@
     margin-bottom: 14px;
   }
   .hint-box.accent {
-    background: rgba(0,212,184,.08);
+    background: rgba(14,165,233,.08);
     border-left-color: var(--accent);
   }
   .hint-box.warn {
@@ -546,9 +578,9 @@
     border: 1.5px solid rgba(255,170,0,.28);
   }
   .published-chip {
-    background: rgba(0,212,184,.14);
+    background: rgba(14,165,233,.14);
     color: var(--accent-dark);
-    border: 1.5px solid rgba(0,212,184,.28);
+    border: 1.5px solid rgba(14,165,233,.28);
   }
   .welcome-chip {
     background: linear-gradient(135deg, rgba(255,170,0,.16), rgba(255,170,0,.05));
@@ -604,14 +636,14 @@
     gap: 8px;
     flex-wrap: wrap;
     padding: 14px 16px;
-    background: linear-gradient(135deg, rgba(106,76,255,.05), rgba(0,212,184,.03));
+    background: linear-gradient(135deg, rgba(106,76,255,.05), rgba(14,165,233,.03));
     border-radius: 14px;
     border: 1.5px solid var(--border);
     margin-bottom: 16px;
     align-items: center;
   }
   html.dark .access-bulk-row {
-    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.06));
   }
   .access-bulk-row .lbl {
     font-weight: 700;
@@ -688,7 +720,7 @@
     transition: all .2s;
   }
   .access-switch.on {
-    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(14,165,233,.05));
     border-color: var(--accent);
     color: var(--accent-dark);
   }
@@ -710,95 +742,7 @@
     line-height: 1.5;
   }
 
-  /* ─── FAB-кнопки ─── */
-  .cheat-fab-wrap {
-    position: fixed;
-    right: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 45;
-  }
-  .cheat-fab {
-    width: 56px;
-    height: 56px;
-    border-radius: 18px;
-    background: var(--white);
-    border: 1.5px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    cursor: pointer;
-    transition: all .25s cubic-bezier(.2,.8,.3,1);
-    box-shadow: 0 8px 20px -8px rgba(106,76,255,.3);
-    color: var(--primary);
-    font-size: 22px;
-    position: relative;
-  }
-  .cheat-fab:hover {
-    transform: translateY(-3px) scale(1.05);
-    border-color: var(--primary);
-    box-shadow: 0 12px 28px -8px rgba(106,76,255,.5);
-  }
-  .cheat-fab .fab-label {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    color: var(--gray);
-    margin-top: -2px;
-  }
-  .cheat-fab::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    right: -3px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ffaa00, #ff7ac6);
-    box-shadow: 0 0 0 3px rgba(255,170,0,.25);
-    animation: fabPulse 2s ease-in-out infinite;
-  }
-  @keyframes fabPulse {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.25); }
-  }
-  .cheat-fab.molar-fab-inline {
-    color: #c47f00;
-    border-color: var(--border);
-    box-shadow: 0 8px 20px -8px rgba(255,170,0,.4);
-  }
-  .cheat-fab.molar-fab-inline:hover {
-    border-color: #ffaa00;
-    box-shadow: 0 12px 28px -8px rgba(255,170,0,.6);
-  }
-  .cheat-fab.molar-fab-inline::before {
-    background: linear-gradient(135deg, #ffd84a, #ff9b3d);
-    box-shadow: 0 0 0 3px rgba(255,216,74,.25);
-  }
-  html.dark .cheat-fab.molar-fab-inline {
-    color: #ffd84a;
-  }
-  html.dark .cheat-fab.molar-fab-inline:hover {
-    border-color: #ffd84a;
-    box-shadow: 0 12px 28px -8px rgba(255,216,74,.55);
-  }
-
   @media (max-width: 700px) {
-    .cheat-fab-wrap {
-      right: 12px;
-      top: auto;
-      bottom: 24px;
-      transform: none;
-      flex-direction: row;
-    }
-    .cheat-fab { width: 48px; height: 48px; font-size: 18px; }
-    .cheat-fab .fab-label { display: none; }
     .q-options { grid-template-columns: 1fr; }
     .type-switch { grid-template-columns: 1fr; }
     .access-row { flex-wrap: wrap; }
@@ -809,22 +753,107 @@
 </head>
 <body>
 
+<!-- ═══ SVG-СПРАЙТ ═══ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-flask" viewBox="0 0 24 24">
+      <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+      <path d="M8.5 2h7"/>
+      <path d="M7 16h10"/>
+    </symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <path d="M10 9H8"/>
+      <path d="M16 13H8"/>
+      <path d="M16 17H8"/>
+    </symbol>
+    <symbol id="i-help" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+      <path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24">
+      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+      <path d="m15 5 4 4"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M3 6h18"/>
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+      <line x1="10" x2="10" y1="11" y2="17"/>
+      <line x1="14" x2="14" y1="11" y2="17"/>
+    </symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24">
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24">
+      <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="M18 6 6 18"/>
+      <path d="m6 6 12 12"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-link" viewBox="0 0 24 24">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+    </symbol>
+    <symbol id="i-file-plus" viewBox="0 0 24 24">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <path d="M9 15h6"/>
+      <path d="M12 12v6"/>
+    </symbol>
+    <symbol id="i-circle-dot" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="2" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-check-square" viewBox="0 0 24 24">
+      <polyline points="9 11 12 14 22 4"/>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </symbol>
+    <symbol id="i-file-pen" viewBox="0 0 24 24">
+      <path d="M12.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v9.5"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <path d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="m12 19-7-7 7-7"/>
+      <path d="M19 12H5"/>
+    </symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24">
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="backdrop" id="backdrop"></div>
 
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="brand-logo">👨‍🏫</div>
+      <div class="brand-logo">
+        <svg class="ico" style="stroke:#fff"><use href="#i-flask"/></svg>
+      </div>
       <div>Алхимичка</div>
     </div>
     <a class="nav-item" href="dashboard-tutor.html">
-      <span class="ic">📚</span> Мои темы
+      <svg class="ico"><use href="#i-book"/></svg> Мои темы
     </a>
     <a class="nav-item" href="dashboard-tutor.html">
-      <span class="ic">👩‍🎓</span> Мои ученики
+      <svg class="ico"><use href="#i-users"/></svg> Мои ученики
     </a>
     <a class="nav-item" href="dashboard-tutor.html">
-      <span class="ic">📊</span> Результаты
+      <svg class="ico"><use href="#i-chart"/></svg> Результаты
     </a>
     <div class="profile-card">
       <span id="avatar"></span>
@@ -834,14 +863,16 @@
       </div>
       <div data-theme-toggle></div>
       <button class="btn btn-ghost" id="logout" title="Выйти" style="padding:8px 14px;font-size:13px;border-radius:10px">
-        Выйти ⎋
+        <svg class="ico ico-sm"><use href="#i-logout"/></svg>
       </button>
     </div>
   </aside>
 
   <main class="main">
-    <button class="menu-btn" id="menu-btn" style="margin-bottom:16px">☰ Меню</button>
-    <a href="dashboard-tutor.html" class="back">← Все темы</a>
+    <button class="menu-btn" id="menu-btn" style="margin-bottom:16px"><svg class="ico"><use href="#i-menu"/></svg> Меню</button>
+    <a href="dashboard-tutor.html" class="back">
+      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg> Все темы
+    </a>
 
     <header class="topic-head">
       <div class="topic-head-top">
@@ -851,7 +882,7 @@
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap" id="topic-head-actions">
           <button class="btn btn-ghost" id="dup-topic-btn" title="Скопировать в другой класс" style="display:none">
-            📋 Скопировать
+            <svg class="ico ico-sm"><use href="#i-copy"/></svg> Скопировать
           </button>
           <div data-theme-toggle></div>
         </div>
@@ -861,15 +892,17 @@
 
     <section class="section">
       <div class="section-head">
-        <h2>📄 Материалы <span class="count-badge" id="cnt-materials">0</span></h2>
-        <button class="btn btn-primary" id="add-material">+ Добавить</button>
+        <h2><svg class="ico ico-lg"><use href="#i-file-text"/></svg> Материалы <span class="count-badge" id="cnt-materials">0</span></h2>
+        <button class="btn btn-primary" id="add-material">
+          <svg class="ico ico-sm"><use href="#i-plus"/></svg> Добавить
+        </button>
       </div>
       <div id="materials-wrap"></div>
     </section>
 
     <section class="section" id="test-section">
       <div class="section-head">
-        <h2>❓ Вопросы теста <span class="count-badge" id="cnt-questions">0</span></h2>
+        <h2><svg class="ico ico-lg"><use href="#i-help"/></svg> Вопросы теста <span class="count-badge" id="cnt-questions">0</span></h2>
         <div id="test-action"></div>
       </div>
       <div id="questions-wrap"></div>
@@ -877,154 +910,10 @@
   </main>
 </div>
 
-<!-- ═══ ПЛАВАЮЩАЯ КНОПКА КАЛЬКУЛЯТОРА ═══ -->
-<div class="cheat-fab-wrap">
-  <div class="cheat-fab molar-fab-inline" id="molar-fab" title="Молярный калькулятор">
-    <span>⚖️</span>
-    <span class="fab-label">моль</span>
-  </div>
-</div>
-
-<!-- ═══ OVERLAY МОЛЯРНОГО КАЛЬКУЛЯТОРА ═══ -->
-<div class="molar-overlay" id="molar-overlay">
-  <aside class="molar-panel">
-    <header class="molar-head">
-      <h2 class="molar-title">⚖️ Химический калькулятор</h2>
-      <button class="molar-close" id="molar-close" type="button">✕</button>
-    </header>
-
-    <nav class="molar-tabs">
-      <button class="molar-tab active" data-mtab="mass" type="button">⚖️ Масса</button>
-      <button class="molar-tab" data-mtab="solution" type="button">💧 Растворы</button>
-      <button class="molar-tab" data-mtab="dilution" type="button">🔄 Разв.</button>
-      <button class="molar-tab" data-mtab="mole" type="button">🧮 Моль</button>
-    </nav>
-
-    <div class="molar-body">
-
-      <section class="molar-pane active" data-mtab="mass">
-        <form id="mm-form">
-          <div class="molar-field">
-            <label class="molar-label">Формула вещества</label>
-            <input class="molar-input" id="mm-formula" placeholder="H2SO4, Ca(OH)2, CuSO4·5H2O" autocomplete="off">
-            <div class="molar-hint">Скобки, гидраты через <code>·</code> или <code>*</code></div>
-          </div>
-          <div class="molar-examples" id="mm-examples">
-            <span class="molar-chip">H2O</span>
-            <span class="molar-chip">H2SO4</span>
-            <span class="molar-chip">Ca(OH)2</span>
-            <span class="molar-chip">Al2(SO4)3</span>
-            <span class="molar-chip">CuSO4·5H2O</span>
-          </div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="mm-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="solution">
-        <form id="sol-form">
-          <div class="molar-field">
-            <label class="molar-label">Формула вещества (опционально)</label>
-            <input class="molar-input" id="sol-formula" placeholder="NaCl" autocomplete="off">
-            <div class="molar-hint">Если указать — M подставится автоматически</div>
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Масса вещества, г</label>
-            <input class="molar-input" id="sol-mass" inputmode="decimal" placeholder="m">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Масса раствора, г</label>
-            <input class="molar-input" id="sol-msolution" inputmode="decimal" placeholder="m(р-ра)">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Объём раствора, л</label>
-            <input class="molar-input" id="sol-volume" inputmode="decimal" placeholder="V">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярность, моль/л</label>
-            <input class="molar-input" id="sol-molarity" inputmode="decimal" placeholder="C">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярная масса, г/моль</label>
-            <input class="molar-input" id="sol-M" inputmode="decimal" placeholder="M">
-          </div>
-          <div class="molar-hint">Заполните <b>3 поля</b> — остальное найдётся</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="sol-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="dilution">
-        <form id="dil-form">
-          <div class="molar-field">
-            <label class="molar-label">C₁ — начальная концентрация, моль/л</label>
-            <input class="molar-input" id="dil-c1" inputmode="decimal" placeholder="C₁">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">V₁ — начальный объём, мл или л</label>
-            <input class="molar-input" id="dil-v1" inputmode="decimal" placeholder="V₁">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">C₂ — конечная концентрация, моль/л</label>
-            <input class="molar-input" id="dil-c2" inputmode="decimal" placeholder="C₂">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">V₂ — конечный объём, мл или л</label>
-            <input class="molar-input" id="dil-v2" inputmode="decimal" placeholder="V₂">
-          </div>
-          <div class="molar-hint">3 поля из 4 по формуле C₁V₁ = C₂V₂</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="dil-result"></div>
-      </section>
-
-      <section class="molar-pane" data-mtab="mole">
-        <form id="mol-form">
-          <div class="molar-field">
-            <label class="molar-label">Масса, г</label>
-            <input class="molar-input" id="mol-mass" inputmode="decimal" placeholder="m">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Молярная масса, г/моль</label>
-            <input class="molar-input" id="mol-M" inputmode="decimal" placeholder="M">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Количество вещества, моль</label>
-            <input class="molar-input" id="mol-n" inputmode="decimal" placeholder="n">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Число частиц, N</label>
-            <input class="molar-input" id="mol-N" inputmode="decimal" placeholder="N">
-          </div>
-          <div class="molar-field">
-            <label class="molar-label">Объём газа при н.у., л</label>
-            <input class="molar-input" id="mol-V" inputmode="decimal" placeholder="V">
-          </div>
-          <div class="molar-hint">Любые 2 поля — остальные найдутся</div>
-          <div class="molar-actions">
-            <button type="submit" class="molar-btn primary">Рассчитать</button>
-            <button type="reset" class="molar-btn ghost">Сброс</button>
-          </div>
-        </form>
-        <div class="molar-result" id="mol-result"></div>
-      </section>
-    </div>
-  </aside>
-</div>
-
 <!-- ═══ МОДАЛКА: КОПИРОВАНИЕ ТЕМЫ ═══ -->
 <div class="modal-backdrop" id="modal-duplicate">
   <div class="modal">
-    <h3>📋 Скопировать тему</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-copy"/></svg> Скопировать тему</h3>
     <p class="muted mt-1" style="font-size:13.5px" id="dup-source-info"></p>
 
     <div class="form-group mt-3">
@@ -1045,14 +934,17 @@
       </select>
     </div>
 
-    <div class="hint-box mt-2" style="padding:10px 14px;border-radius:10px;background:rgba(106,76,255,.06);border-left:3px solid var(--primary);font-size:12.5px;color:var(--dark);line-height:1.5">
-      💡 Скопируются: материалы, файлы, вопросы. Тест — в черновик.
+    <div class="hint-box mt-2">
+      <svg class="ico ico-sm" style="vertical-align:-3px"><use href="#i-sparkle"/></svg>
+      Скопируются: материалы, файлы, вопросы. Тест — в черновик.
       Доступы учеников не переносятся.
     </div>
 
     <div class="flex gap-2 mt-3">
       <button class="btn btn-ghost" data-close>Отмена</button>
-      <button class="btn btn-primary" id="do-duplicate">📋 Скопировать</button>
+      <button class="btn btn-primary" id="do-duplicate">
+        <svg class="ico ico-sm"><use href="#i-copy"/></svg> Скопировать
+      </button>
     </div>
   </div>
 </div>
@@ -1060,12 +952,18 @@
 <!-- ═══ МОДАЛКА: МАТЕРИАЛ ═══ -->
 <div class="modal-backdrop" id="modal-material">
   <div class="modal">
-    <h3 id="mat-modal-title">📄 Новый материал</h3>
+    <h3 id="mat-modal-title"><svg class="ico ico-lg"><use href="#i-file-text"/></svg> Новый материал</h3>
 
-    <div class="tabs" style="margin-bottom:20px">
-      <button class="tab active" data-mat-tab="text" type="button">📝 Текст</button>
-      <button class="tab" data-mat-tab="link" type="button">🔗 Ссылка</button>
-      <button class="tab" data-mat-tab="file" type="button">📎 Файл</button>
+    <div class="tabs" style="margin-bottom:20px;display:flex;background:var(--light);border-radius:14px;padding:5px;gap:0">
+      <button class="tab active" data-mat-tab="text" type="button" style="flex:1;padding:11px;border-radius:10px;font-weight:600;font-size:14px;color:var(--gray);background:transparent;border:none;cursor:pointer">
+        <svg class="ico ico-sm"><use href="#i-file-text"/></svg> Текст
+      </button>
+      <button class="tab" data-mat-tab="link" type="button" style="flex:1;padding:11px;border-radius:10px;font-weight:600;font-size:14px;color:var(--gray);background:transparent;border:none;cursor:pointer">
+        <svg class="ico ico-sm"><use href="#i-link"/></svg> Ссылка
+      </button>
+      <button class="tab" data-mat-tab="file" type="button" style="flex:1;padding:11px;border-radius:10px;font-weight:600;font-size:14px;color:var(--gray);background:transparent;border:none;cursor:pointer">
+        <svg class="ico ico-sm"><use href="#i-paperclip"/></svg> Файл
+      </button>
     </div>
 
     <div class="form-group">
@@ -1094,7 +992,9 @@
           <input type="file" id="mat-file" hidden
                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.md,.rtf,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg">
           <div class="file-drop-inner">
-            <div class="file-drop-icon">📎</div>
+            <div class="file-drop-icon">
+              <svg class="ico"><use href="#i-paperclip"/></svg>
+            </div>
             <div class="file-drop-text">
               <b>Нажми или перетащи файл сюда</b><br>
               <span class="muted" style="font-size:13px">PDF, DOCX, PPTX, XLSX, изображения</span>
@@ -1115,19 +1015,19 @@
 <!-- ═══ МОДАЛКА: ВОПРОС ═══ -->
 <div class="modal-backdrop" id="modal-question">
   <div class="modal" style="max-width:680px">
-    <h3 id="q-modal-title">❓ Новый вопрос</h3>
+    <h3 id="q-modal-title"><svg class="ico ico-lg"><use href="#i-help"/></svg> Новый вопрос</h3>
 
     <div class="type-switch" id="type-switch">
       <div class="type-btn active" data-qtype="single">
-        <span class="ti">🔘</span>
+        <span class="ti"><svg class="ico"><use href="#i-circle-dot"/></svg></span>
         <span>Один вариант</span>
       </div>
       <div class="type-btn" data-qtype="multi">
-        <span class="ti">☑️</span>
+        <span class="ti"><svg class="ico"><use href="#i-check-square"/></svg></span>
         <span>Несколько</span>
       </div>
       <div class="type-btn" data-qtype="open">
-        <span class="ti">✍️</span>
+        <span class="ti"><svg class="ico"><use href="#i-file-pen"/></svg></span>
         <span>Развёрнутый</span>
       </div>
     </div>
@@ -1139,24 +1039,24 @@
 
     <div data-qpane="single">
       <div class="hint-box">
-        🔘 Ровно 4 варианта, один правильный.
+        Ровно 4 варианта, один правильный.
       </div>
       <div id="single-options"></div>
     </div>
 
     <div data-qpane="multi" style="display:none">
       <div class="hint-box accent">
-        ☑️ От 4 до 9 вариантов. Правильных — от 2 до N−1.
+        От 4 до 9 вариантов. Правильных — от 2 до N−1.
       </div>
       <div id="multi-options"></div>
       <button class="add-opt-btn" id="add-multi-opt" type="button">
-        <span>＋</span> Добавить вариант
+        <svg class="ico ico-sm"><use href="#i-plus"/></svg> Добавить вариант
       </button>
     </div>
 
     <div data-qpane="open" style="display:none">
       <div class="hint-box warn">
-        ✍️ Ученик напишет ответ в свободной форме и сможет прикрепить файл.
+        Ученик напишет ответ в свободной форме и сможет прикрепить файл.
       </div>
       <div class="form-group">
         <label class="label">Эталонный ответ (для себя, необязательно)</label>
@@ -1175,11 +1075,11 @@
 <!-- ═══ МОДАЛКА: НАСТРОЙКИ ТЕСТА ═══ -->
 <div class="modal-backdrop" id="modal-test-settings">
   <div class="modal" style="max-width:520px">
-    <h3>⚙️ Настройки теста</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-settings"/></svg> Настройки теста</h3>
     <p class="muted mt-1" style="font-size:13.5px">Эти настройки применятся ко всем ученикам</p>
 
     <div class="settings-block mt-3">
-      <label class="label" style="font-size:15px;font-weight:800">⏱ Ограничение по времени</label>
+      <label class="label" style="font-size:15px;font-weight:800">Ограничение по времени</label>
       <div class="settings-row mt-2">
         <label class="radio-line">
           <input type="radio" name="timer-mode" value="off" id="timer-off">
@@ -1199,7 +1099,7 @@
     </div>
 
     <div class="settings-block mt-3">
-      <label class="label" style="font-size:15px;font-weight:800">🔁 Количество попыток</label>
+      <label class="label" style="font-size:15px;font-weight:800">Количество попыток</label>
       <div class="settings-row mt-2">
         <label class="radio-line">
           <input type="radio" name="attempts-mode" value="1">
@@ -1234,7 +1134,7 @@
 <!-- ═══ МОДАЛКА: ДОСТУП ═══ -->
 <div class="modal-backdrop" id="modal-access">
   <div class="modal access-modal">
-    <h3 id="access-modal-title">🔐 Доступ к теме</h3>
+    <h3 id="access-modal-title"><svg class="ico ico-lg"><use href="#i-folder"/></svg> Доступ к теме</h3>
     <p class="muted mt-1" style="font-size:13.5px" id="access-modal-sub">
       Отметьте, кому открыть материалы и тест
     </p>
@@ -1263,6 +1163,5 @@
 
 <script src="js/avatars.js"></script>
 <script src="js/topic.js"></script>
-<script src="js/molar-calc.js"></script>
 </body>
 </html>

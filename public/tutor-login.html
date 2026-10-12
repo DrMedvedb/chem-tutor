@@ -9,6 +9,20 @@
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  .ico {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-xl { width: 34px; height: 34px; stroke-width: 1.5; }
+  .btn .ico { margin-right: 4px; }
+
   .auth-wrap {
     min-height: 100vh;
     display: flex;
@@ -47,9 +61,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 34px;
     background: linear-gradient(135deg, rgba(106,76,255,.14), rgba(106,76,255,.04));
     margin-bottom: 14px;
+    color: var(--primary);
   }
   .auth-head h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; color: var(--dark); }
   .auth-head p  { color: var(--gray); font-size: 14px; }
@@ -101,7 +115,6 @@
   }
   .back-link:hover { color: var(--primary); }
 
-  /* Кнопка темы */
   .theme-toggle-float {
     position: fixed;
     top: 20px;
@@ -116,7 +129,24 @@
 </head>
 <body>
 
-<!-- 🎨 Переключатель темы -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-graduation" viewBox="0 0 24 24">
+      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+      <path d="M22 10v6"/>
+      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24">
+      <path d="M5 12h14"/>
+      <path d="m12 5 7 7-7 7"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="m12 19-7-7 7-7"/>
+      <path d="M19 12H5"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="theme-toggle-float" data-theme-toggle></div>
 
 <div class="auth-wrap">
@@ -125,7 +155,9 @@
 
   <div class="auth-card">
     <div class="auth-head">
-      <div class="auth-logo">👨‍🏫</div>
+      <div class="auth-logo">
+        <svg class="ico ico-xl"><use href="#i-graduation"/></svg>
+      </div>
       <h1>Кабинет учителя</h1>
       <p>Войдите или создайте аккаунт</p>
     </div>
@@ -146,7 +178,9 @@
         <label class="label">Пароль</label>
         <input class="input" type="password" name="password" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn btn-primary btn-block mt-2">Войти →</button>
+      <button type="submit" class="btn btn-primary btn-block mt-2">
+        Войти <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
+      </button>
     </form>
 
     <form id="register-form" style="display:none">
@@ -162,10 +196,14 @@
         <label class="label">Пароль</label>
         <input class="input" type="password" name="password" autocomplete="new-password" required>
       </div>
-      <button type="submit" class="btn btn-primary btn-block mt-2">Создать аккаунт →</button>
+      <button type="submit" class="btn btn-primary btn-block mt-2">
+        Создать аккаунт <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
+      </button>
     </form>
 
-    <a href="index.html" class="back-link">← На главную</a>
+    <a href="index.html" class="back-link">
+      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg> На главную
+    </a>
   </div>
 </div>
 

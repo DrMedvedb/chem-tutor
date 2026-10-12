@@ -5,12 +5,36 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Панель модератора — Алхимичка</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Алхимичка">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
 <link rel="stylesheet" href="css/avatars.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  .ico {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+  .ico-xl { width: 34px; height: 34px; stroke-width: 1.5; }
+  .moder-tab .ico { margin-right: 2px; }
+  .moder-logo .ico { stroke: #fff; }
+  .moder-empty .ic .ico { width: 60px; height: 60px; stroke-width: 1; }
+  h3 .ico { margin-right: 8px; vertical-align: -3px; }
+
   body {
     background:
       radial-gradient(circle at 15% 20%, rgba(255,216,74,.08), transparent 40%),
@@ -51,7 +75,6 @@
     width: 40px; height: 40px;
     border-radius: 12px;
     display: grid; place-items: center;
-    font-size: 22px;
     background: linear-gradient(135deg, #ffd84a, #ff9b3d);
     color: #fff;
     box-shadow: 0 8px 18px -8px rgba(255,170,0,.6);
@@ -109,7 +132,6 @@
     padding: 32px 32px 80px;
   }
 
-  /* ─── Статистика ─── */
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -137,7 +159,7 @@
     background: linear-gradient(90deg, #ffd84a, #ff9b3d);
   }
   .stat-card.accent::before  { background: linear-gradient(90deg, #6a4cff, #a678ff); }
-  .stat-card.success::before { background: linear-gradient(90deg, #00d4b8, #48e0c6); }
+  .stat-card.success::before { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
   .stat-card.danger::before  { background: linear-gradient(90deg, #e0435c, #ff7a8e); }
   .stat-card .sc-label {
     font-size: 12.5px;
@@ -146,7 +168,11 @@
     text-transform: uppercase;
     letter-spacing: .4px;
     margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
+  .stat-card .sc-label .ico { width: 14px; height: 14px; }
   .stat-card .sc-value {
     font-size: 32px;
     font-weight: 900;
@@ -158,7 +184,7 @@
     line-height: 1.1;
   }
   .stat-card.accent .sc-value  { background: linear-gradient(135deg, #5a3fd8, #a678ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .stat-card.success .sc-value { background: linear-gradient(135deg, #008b74, #48e0c6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.success .sc-value { background: linear-gradient(135deg, #0369a1, #38bdf8); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .stat-card.danger .sc-value  { background: linear-gradient(135deg, #c43a3a, #ff7a8e); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .stat-card .sc-sub {
     font-size: 12.5px;
@@ -167,7 +193,6 @@
     margin-top: 6px;
   }
 
-  /* ─── Поиск ─── */
   .moder-search {
     display: flex;
     gap: 8px;
@@ -175,7 +200,7 @@
   }
   .moder-search input {
     flex: 1;
-    padding: 12px 16px;
+    padding: 12px 16px 12px 42px;
     border-radius: 12px;
     border: 1.5px solid var(--border);
     background: var(--white);
@@ -183,14 +208,16 @@
     outline: none;
     transition: all .2s;
     font-family: inherit;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7a99' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>");
+    background-repeat: no-repeat;
+    background-position: 14px center;
   }
-  html.dark .moder-search input { background: var(--white); color: var(--dark); }
+  html.dark .moder-search input { background-color: var(--white); color: var(--dark); }
   .moder-search input:focus {
     border-color: #ffaa00;
     box-shadow: 0 0 0 4px rgba(255,170,0,.12);
   }
 
-  /* ─── Карточка пользователя ─── */
   .user-card {
     background: var(--white);
     border-radius: 18px;
@@ -244,11 +271,11 @@
     color: var(--primary);
   }
   .user-card .uc-role.student {
-    background: rgba(0,212,184,.14);
+    background: rgba(14,165,233,.14);
     color: var(--accent-dark);
   }
   html.dark .user-card .uc-role.tutor { background: rgba(122,92,255,.22); color: #b8a6ff; }
-  html.dark .user-card .uc-role.student { background: rgba(0,212,184,.22); color: #7affd9; }
+  html.dark .user-card .uc-role.student { background: rgba(14,165,233,.22); color: #7ad8f8; }
   .user-card .uc-login {
     font-family: 'Consolas', monospace;
     background: var(--light);
@@ -269,6 +296,7 @@
     align-items: center;
     margin-top: 6px;
   }
+  .user-card .uc-meta .ico { width: 13px; height: 13px; }
   .user-card .uc-meta b { color: var(--dark); font-weight: 700; }
   .user-card .uc-actions {
     display: flex;
@@ -291,6 +319,7 @@
     gap: 5px;
     white-space: nowrap;
   }
+  .user-card .uc-actions button .ico { width: 14px; height: 14px; }
   html.dark .user-card .uc-actions button { background: var(--white); }
   .user-card .uc-actions button:hover {
     border-color: #ffaa00;
@@ -306,7 +335,7 @@
   .user-card .uc-actions button.restore:hover {
     border-color: var(--accent);
     color: var(--accent-dark);
-    background: rgba(0,212,184,.06);
+    background: rgba(14,165,233,.06);
   }
 
   .user-card .uc-days {
@@ -318,7 +347,6 @@
     font-size: 12px;
   }
 
-  /* ─── Пустое состояние ─── */
   .moder-empty {
     text-align: center;
     padding: 60px 20px;
@@ -327,10 +355,14 @@
     border: 1.5px dashed var(--border);
   }
   .moder-empty .ic {
-    font-size: 64px;
     margin-bottom: 14px;
-    display: block;
+    display: grid; place-items: center;
+    color: var(--gray);
     animation: bobIcon 3s ease-in-out infinite;
+  }
+  @keyframes bobIcon {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
   }
   .moder-empty h3 {
     font-size: 20px;
@@ -340,7 +372,6 @@
   }
   .moder-empty p { color: var(--gray); font-size: 14px; }
 
-  /* ─── Модалка: показать новый пароль ─── */
   .newpass-box {
     padding: 20px;
     border-radius: 16px;
@@ -387,39 +418,96 @@
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      <path d="m9 12 2 2 4-4"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M3 6h18"/>
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+      <line x1="10" x2="10" y1="11" y2="17"/>
+      <line x1="14" x2="14" y1="11" y2="17"/>
+    </symbol>
+    <symbol id="i-key" viewBox="0 0 24 24">
+      <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/>
+      <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+      <path d="M21 3v5h-5"/>
+      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+      <path d="M8 16H3v5"/>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" x2="9" y1="12" y2="12"/>
+    </symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24">
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+    </symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24">
+      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </symbol>
+  </defs>
+</svg>
+
 <header class="moder-topbar">
   <div class="moder-brand">
-    <div class="moder-logo">👑</div>
+    <div class="moder-logo">
+      <svg class="ico ico-lg"><use href="#i-shield"/></svg>
+    </div>
     <div>Панель модератора</div>
   </div>
 
   <div class="moder-tabs">
-    <button class="moder-tab active" data-view="tutors">👨‍🏫 Учителя <span class="cnt" id="cnt-tutors">0</span></button>
-    <button class="moder-tab" data-view="students">👩‍🎓 Ученики <span class="cnt" id="cnt-students">0</span></button>
-    <button class="moder-tab" data-view="trash">🗑 Корзина <span class="cnt" id="cnt-trash">0</span></button>
+    <button class="moder-tab active" data-view="tutors">
+      <svg class="ico ico-sm"><use href="#i-users"/></svg> Учителя <span class="cnt" id="cnt-tutors">0</span>
+    </button>
+    <button class="moder-tab" data-view="students">
+      <svg class="ico ico-sm"><use href="#i-users"/></svg> Ученики <span class="cnt" id="cnt-students">0</span>
+    </button>
+    <button class="moder-tab" data-view="trash">
+      <svg class="ico ico-sm"><use href="#i-trash"/></svg> Корзина <span class="cnt" id="cnt-trash">0</span>
+    </button>
   </div>
 
   <div class="moder-user">
     <div data-theme-toggle></div>
     <button class="btn btn-ghost" id="btn-change-moder-pass" title="Сменить пароль" style="padding:8px 14px;font-size:13px;border-radius:10px">
-      🔐
+      <svg class="ico ico-sm"><use href="#i-lock"/></svg>
     </button>
     <button class="btn btn-ghost" id="logout" title="Выйти" style="padding:8px 14px;font-size:13px;border-radius:10px">
-      Выйти ⎋
+      <svg class="ico ico-sm"><use href="#i-logout"/></svg> Выйти
     </button>
   </div>
 </header>
 
 <main class="moder-content">
-  <!-- Статистика -->
   <div class="stats-grid" id="stats-grid"></div>
 
-  <!-- Поиск -->
   <div class="moder-search">
-    <input type="text" id="moder-search" placeholder="🔍 Поиск по имени или логину…" autocomplete="off">
+    <input type="text" id="moder-search" placeholder="Поиск по имени или логину…" autocomplete="off">
   </div>
 
-  <!-- Вью -->
   <section id="view-tutors"></section>
   <section id="view-students" style="display:none"></section>
   <section id="view-trash" style="display:none"></section>
@@ -428,7 +516,7 @@
 <!-- ═══ МОДАЛКА: ПОКАЗАТЬ НОВЫЙ ПАРОЛЬ ═══ -->
 <div class="modal-backdrop" id="modal-newpass">
   <div class="modal" style="max-width:480px">
-    <h3 id="np-title">🔐 Новый пароль</h3>
+    <h3 id="np-title"><svg class="ico ico-lg"><use href="#i-lock"/></svg> Новый пароль</h3>
     <p class="muted mt-1" style="font-size:13.5px" id="np-sub"></p>
 
     <div class="newpass-box">
@@ -438,7 +526,9 @@
     </div>
 
     <div class="flex gap-2 mt-3" style="justify-content:flex-end">
-      <button class="btn btn-ghost" id="np-copy">📋 Скопировать</button>
+      <button class="btn btn-ghost" id="np-copy">
+        <svg class="ico ico-sm"><use href="#i-copy"/></svg> Скопировать
+      </button>
       <button class="btn btn-primary" data-close>Готово</button>
     </div>
   </div>
@@ -447,7 +537,7 @@
 <!-- ═══ МОДАЛКА: СМЕНА ПАРОЛЯ МОДЕРА ═══ -->
 <div class="modal-backdrop" id="modal-change-moder-pass">
   <div class="modal" style="max-width:480px">
-    <h3>🔐 Смена пароля модератора</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-lock"/></svg> Смена пароля модератора</h3>
     <p class="muted mt-1" style="font-size:13.5px">Минимум 6 символов.</p>
 
     <div class="form-group mt-3">

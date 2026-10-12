@@ -162,7 +162,7 @@
 
 /* Угловая ячейка (верхний левый угол) */
 .sol-corner {
-  background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(0,212,184,.08));
+  background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(14,165,233,.08));
   color: var(--gray);
   font-size: 11px;
   font-weight: 800;
@@ -193,17 +193,17 @@
 }
 
 .sol-header.accent {
-  background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.04));
+  background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(14,165,233,.04));
   color: var(--accent-dark);
-  border-color: rgba(0,212,184,.22);
+  border-color: rgba(14,165,233,.22);
 }
 .sol-header.accent:hover {
-  background: linear-gradient(135deg, rgba(0,212,184,.22), rgba(0,212,184,.08));
-  box-shadow: 0 6px 14px -6px rgba(0,212,184,.5);
+  background: linear-gradient(135deg, rgba(14,165,233,.22), rgba(14,165,233,.08));
+  box-shadow: 0 6px 14px -6px rgba(14,165,233,.5);
 }
 
 /* Ячейки с реактивами — красивые градиенты по свойству */
-.sol-cell.solvable     { background: linear-gradient(135deg, rgba(90,220,200,.18), rgba(90,220,200,.06)); color: #008b74; }
+.sol-cell.solvable     { background: linear-gradient(135deg, rgba(14,165,233,.18), rgba(14,165,233,.06)); color: #0369a1; }
 .sol-cell.sparingly    { background: linear-gradient(135deg, rgba(255,205,86,.22), rgba(255,205,86,.06)); color: #8a6a00; }
 .sol-cell.insoluble    { background: linear-gradient(135deg, rgba(255,120,120,.20), rgba(255,120,120,.06)); color: #b02b2b; }
 .sol-cell.gas          { background: linear-gradient(135deg, rgba(160,140,255,.22), rgba(160,140,255,.06)); color: #5a3fd8; }
@@ -263,7 +263,7 @@
   border-radius: 7px;
   border: 1.5px solid rgba(0,0,0,.05);
 }
-.sol-legend-chip.solvable  { background: linear-gradient(135deg, rgba(90,220,200,.55), rgba(90,220,200,.25)); }
+.sol-legend-chip.solvable  { background: linear-gradient(135deg, rgba(14,165,233,.55), rgba(14,165,233,.25)); }
 .sol-legend-chip.sparingly { background: linear-gradient(135deg, rgba(255,205,86,.65), rgba(255,205,86,.30)); }
 .sol-legend-chip.insoluble { background: linear-gradient(135deg, rgba(255,120,120,.65), rgba(255,120,120,.30)); }
 .sol-legend-chip.gas       { background: linear-gradient(135deg, rgba(160,140,255,.65), rgba(160,140,255,.30)); }
@@ -297,7 +297,6 @@
   transform: translate(-50%, -100%) translateY(-20px) scale(1);
 }
 
-/* маленький хвостик снизу */
 .chem-tooltip::after {
   content: '';
   position: absolute;
@@ -312,7 +311,6 @@
   border-bottom: 1px solid rgba(106,76,255,.4);
 }
 
-/* Содержимое tooltip */
 .tt-head {
   display: flex;
   align-items: center;
@@ -335,7 +333,7 @@
   font-size: 24px;
   font-weight: 900;
   line-height: 1;
-  background: linear-gradient(135deg, #a678ff, #48e0c6);
+  background: linear-gradient(135deg, #a678ff, #38bdf8);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -345,7 +343,7 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: -.3px;
-  background: linear-gradient(135deg, #a678ff, #48e0c6);
+  background: linear-gradient(135deg, #a678ff, #38bdf8);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -396,7 +394,7 @@
   text-transform: uppercase;
   letter-spacing: .4px;
 }
-.tt-badge.solvable  { background: rgba(90,220,200,.25); color: #7affd9; }
+.tt-badge.solvable  { background: rgba(14,165,233,.25); color: #7ad8f8; }
 .tt-badge.sparingly { background: rgba(255,205,86,.25); color: #ffe28a; }
 .tt-badge.insoluble { background: rgba(255,120,120,.25); color: #ff9b9b; }
 .tt-badge.gas       { background: rgba(160,140,255,.25); color: #c9b6ff; }
@@ -462,7 +460,6 @@
 
 /* ═══════════════════════════════════════════════════════
    CHEATSHEET OVERLAY (шпаргалки в тесте)
-   — добавляется в конец файла, существующие стили не затронуты
    ═══════════════════════════════════════════════════════ */
 
 .cheat-overlay {
@@ -513,7 +510,7 @@
   gap: 12px;
   padding: 20px 28px;
   border-bottom: 1.5px solid var(--border);
-  background: linear-gradient(135deg, rgba(106, 76, 255, .04), rgba(0, 212, 184, .03));
+  background: linear-gradient(135deg, rgba(106, 76, 255, .04), rgba(14, 165, 233, .03));
 }
 .cheat-title {
   font-size: 20px;
@@ -618,7 +615,6 @@
   line-height: 1;
 }
 
-/* Цвета категорий — те же, что и в интерактивной версии */
 .cheat-p-el.cat-alkali     { background: rgba(255, 99, 99, .16); }
 .cheat-p-el.cat-alkaline   { background: rgba(255, 159, 64, .18); }
 .cheat-p-el.cat-transition { background: rgba(255, 205, 86, .16); }
@@ -676,8 +672,7 @@
   letter-spacing: -.1px;
 }
 
-/* Цвета по свойству (те же, что и в интерактивной таблице) */
-.cheat-sol-cell.solvable     { background: linear-gradient(135deg, rgba(90, 220, 200, .18), rgba(90, 220, 200, .06)); color: #008b74; }
+.cheat-sol-cell.solvable     { background: linear-gradient(135deg, rgba(14, 165, 233, .18), rgba(14, 165, 233, .06)); color: #0369a1; }
 .cheat-sol-cell.sparingly    { background: linear-gradient(135deg, rgba(255, 205, 86, .22), rgba(255, 205, 86, .06)); color: #8a6a00; }
 .cheat-sol-cell.insoluble    { background: linear-gradient(135deg, rgba(255, 120, 120, .20), rgba(255, 120, 120, .06)); color: #b02b2b; }
 .cheat-sol-cell.gas          { background: linear-gradient(135deg, rgba(160, 140, 255, .22), rgba(160, 140, 255, .06)); color: #5a3fd8; }
@@ -703,7 +698,6 @@
 .cheat-sol-cell .sol-dot.gray   { background: #9a9ab0; }
 .cheat-sol-cell .sol-dot.pink   { background: #ff8fc8; }
 
-/* Заголовки (катионы сверху, анионы слева) */
 .cheat-sol-cell.cheat-header {
   background: linear-gradient(135deg, rgba(106, 76, 255, .12), rgba(106, 76, 255, .04));
   color: var(--primary);
@@ -719,12 +713,12 @@
   margin-top: 1px;
 }
 .cheat-sol-cell.cheat-header.accent {
-  background: linear-gradient(135deg, rgba(0, 212, 184, .14), rgba(0, 212, 184, .04));
+  background: linear-gradient(135deg, rgba(14, 165, 233, .14), rgba(14, 165, 233, .04));
   color: var(--accent-dark);
-  border-color: rgba(0, 212, 184, .22);
+  border-color: rgba(14, 165, 233, .22);
 }
 .cheat-sol-cell.cheat-corner {
-  background: linear-gradient(135deg, rgba(106, 76, 255, .12), rgba(0, 212, 184, .08));
+  background: linear-gradient(135deg, rgba(106, 76, 255, .12), rgba(14, 165, 233, .08));
   color: var(--gray);
   font-size: 10px;
   font-weight: 800;
@@ -733,7 +727,6 @@
   line-height: 1.2;
 }
 
-/* Подсветка строки и столбца при наведении */
 .cheat-sol-cell.hl-row,
 .cheat-sol-cell.hl-col {
   border-color: rgba(106, 76, 255, .45);
@@ -754,13 +747,10 @@
   border-color: var(--primary);
 }
 .cheat-sol-cell.cheat-header.accent.hl-row {
-  background: linear-gradient(135deg, rgba(0, 212, 184, .28), rgba(0, 212, 184, .12));
+  background: linear-gradient(135deg, rgba(14, 165, 233, .28), rgba(14, 165, 233, .12));
   border-color: var(--accent);
 }
 
-/* ═══════════════════════════════════════════════════════
-   АДАПТИВ
-   ═══════════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
   .cheat-p-el .mass-mini { display: none; }
   .cheat-sol-cell .sol-formula { display: none; }

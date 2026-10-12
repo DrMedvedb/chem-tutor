@@ -5,6 +5,11 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Кабинет учителя — Алхимичка</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Алхимичка">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
 <link rel="stylesheet" href="css/search.css">
@@ -13,6 +18,46 @@
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
+  /* ═══ ИКОНКИ ═══ */
+  .ico {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+
+  .nav-item .ico { margin-right: 2px; }
+  .search-trigger .ico { margin-right: 0; }
+
+  .brand-logo .ico {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.75;
+    stroke: #fff;
+  }
+
+  .btn .ico { margin-right: 2px; }
+  .btn-only-icon { padding: 10px !important; }
+  .btn-only-icon .ico { margin: 0; }
+
+  .modal h3 .ico,
+  h2 .ico,
+  h3 .ico {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    vertical-align: -3px;
+  }
+
+  /* ═══ Сайдбар: badge-alert ═══ */
   .nav-item .badge-alert {
     margin-left: auto;
     min-width: 22px;
@@ -46,7 +91,7 @@
     background: linear-gradient(135deg, rgba(224,67,92,.10), rgba(224,67,92,.04));
     color: var(--danger);
   }
-  .nav-item.has-alert .ic { animation: bellRing 2.2s ease-in-out infinite; }
+  .nav-item.has-alert .ico { animation: bellRing 2.2s ease-in-out infinite; }
   @keyframes bellRing {
     0%, 100% { transform: rotate(0); }
     10%, 30% { transform: rotate(-12deg); }
@@ -123,14 +168,14 @@
   .grade-badge.g-9      { background: rgba(78,203,113,.16); color: #2a8a4a; }
   .grade-badge.g-10     { background: rgba(106,76,255,.16); color: var(--primary); }
   .grade-badge.g-11     { background: rgba(255,107,107,.16); color: #c43a3a; }
-  .grade-badge.g-adult  { background: rgba(0,212,184,.16); color: var(--accent-dark); }
+  .grade-badge.g-adult  { background: rgba(14,165,233,.16); color: var(--accent-dark); }
 
   html.dark .grade-badge.g-junior { background: rgba(255,170,0,.22); color: #ffc44d; }
   html.dark .grade-badge.g-8      { background: rgba(74,144,226,.22); color: #7ab4ff; }
   html.dark .grade-badge.g-9      { background: rgba(78,203,113,.22); color: #7de29a; }
   html.dark .grade-badge.g-10     { background: rgba(122,92,255,.22); color: #b8a6ff; }
   html.dark .grade-badge.g-11     { background: rgba(255,107,107,.22); color: #ff9b9b; }
-  html.dark .grade-badge.g-adult  { background: rgba(0,212,184,.22); color: #7affd9; }
+  html.dark .grade-badge.g-adult  { background: rgba(14,165,233,.22); color: #7ad8f8; }
 
   .review-tile {
     background: var(--white);
@@ -216,7 +261,7 @@
     transition: all .3s ease;
   }
   .rv-progress-pill.done {
-    background: rgba(0,212,184,.14);
+    background: rgba(14,165,233,.14);
     color: var(--accent-dark);
   }
   .rv-student-head {
@@ -225,12 +270,12 @@
     gap: 14px;
     padding: 14px 18px;
     border-radius: 16px;
-    background: linear-gradient(135deg, rgba(106,76,255,.06), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(106,76,255,.06), rgba(14,165,233,.05));
     border: 1.5px solid var(--border);
     margin-bottom: 20px;
   }
   html.dark .rv-student-head {
-    background: linear-gradient(135deg, rgba(122,92,255,.12), rgba(0,212,184,.08));
+    background: linear-gradient(135deg, rgba(122,92,255,.12), rgba(14,165,233,.08));
   }
   .rv-student-head .info { flex: 1; min-width: 0; }
   .rv-student-head .name {
@@ -252,7 +297,7 @@
     border-left: 4px solid var(--border);
     margin-bottom: 14px;
   }
-  .rv-q.auto-correct { border-left-color: var(--accent); background: rgba(0,212,184,.05); }
+  .rv-q.auto-correct { border-left-color: var(--accent); background: rgba(14,165,233,.05); }
   .rv-q.auto-wrong   { border-left-color: var(--danger); background: rgba(224,67,92,.05); }
   .rv-q.open-q       { border-left-color: #ffaa00; background: rgba(255,170,0,.05); }
 
@@ -283,7 +328,7 @@
     letter-spacing: .4px;
   }
   .rv-q-type.single { background: rgba(106,76,255,.12); color: var(--primary); }
-  .rv-q-type.multi  { background: rgba(0,212,184,.14); color: var(--accent-dark); }
+  .rv-q-type.multi  { background: rgba(14,165,233,.14); color: var(--accent-dark); }
   .rv-q-type.open   { background: rgba(255,170,0,.15); color: #c47f00; }
 
   .rv-opt {
@@ -297,7 +342,7 @@
     border: 1.5px solid var(--border);
     margin-bottom: 6px;
   }
-  .rv-opt.correct  { background: rgba(0,212,184,.08); border-color: var(--accent); }
+  .rv-opt.correct  { background: rgba(14,165,233,.08); border-color: var(--accent); }
   .rv-opt.given    { background: rgba(106,76,255,.06); border-color: var(--primary); }
   .rv-opt.bad-give { background: rgba(224,67,92,.07); border-color: var(--danger); }
   .rv-opt .key {
@@ -320,7 +365,7 @@
     padding: 2px 8px;
     border-radius: 999px;
   }
-  .rv-opt.correct  .mark-badge { background: rgba(0,212,184,.18); color: var(--accent-dark); }
+  .rv-opt.correct  .mark-badge { background: rgba(14,165,233,.18); color: var(--accent-dark); }
   .rv-opt.given    .mark-badge { background: rgba(106,76,255,.15); color: var(--primary); }
   .rv-opt.bad-give .mark-badge { background: rgba(224,67,92,.15); color: var(--danger); }
 
@@ -344,7 +389,7 @@
     gap: 10px;
     padding: 10px 14px;
     border-radius: 12px;
-    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(14,165,233,.05));
     border: 1.5px solid var(--border);
     font-size: 13.5px;
     font-weight: 600;
@@ -381,10 +426,10 @@
   .grade-btn .ge { font-size: 20px; }
   .grade-btn:hover { transform: translateY(-2px); border-color: var(--gray); }
   .grade-btn.active.correct {
-    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.04));
+    background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(14,165,233,.04));
     border-color: var(--accent);
     color: var(--accent-dark);
-    box-shadow: 0 12px 24px -14px rgba(0,212,184,.5);
+    box-shadow: 0 12px 24px -14px rgba(14,165,233,.5);
   }
   .grade-btn.active.partial {
     background: linear-gradient(135deg, rgba(255,170,0,.16), rgba(255,170,0,.04));
@@ -549,7 +594,7 @@
     transition: all .2s;
   }
   .access-switch.on {
-    background: linear-gradient(135deg, rgba(0,212,184,.14), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(14,165,233,.05));
     border-color: var(--accent);
     color: var(--accent-dark);
   }
@@ -602,11 +647,11 @@
     gap: 12px;
     padding: 18px 22px;
     border-bottom: 1.5px solid var(--border);
-    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(0,212,184,.03));
+    background: linear-gradient(135deg, rgba(106,76,255,.04), rgba(14,165,233,.03));
     flex-wrap: wrap;
   }
   html.dark .schedule-head {
-    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(0,212,184,.06));
+    background: linear-gradient(135deg, rgba(122,92,255,.10), rgba(14,165,233,.06));
   }
   .schedule-week-title { font-size: 17px; font-weight: 800; }
   .schedule-nav { display: flex; gap: 6px; }
@@ -639,7 +684,7 @@
   }
   .sg-cell { border-right: 1px solid var(--border); position: relative; }
   .sg-corner {
-    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(0,212,184,.05));
+    background: linear-gradient(135deg, rgba(106,76,255,.08), rgba(14,165,233,.05));
     height: 56px;
   }
   .sg-day-head {
@@ -735,7 +780,7 @@
   }
 
   .ev-c0  { background: linear-gradient(135deg, rgba(106,76,255,.16), rgba(106,76,255,.06)); color: #5a3fd8; }
-  .ev-c1  { background: linear-gradient(135deg, rgba(0,212,184,.16), rgba(0,212,184,.06)); color: #008b74; }
+  .ev-c1  { background: linear-gradient(135deg, rgba(14,165,233,.16), rgba(14,165,233,.06)); color: #0369a1; }
   .ev-c2  { background: linear-gradient(135deg, rgba(255,122,198,.18), rgba(255,122,198,.06)); color: #c4407e; }
   .ev-c3  { background: linear-gradient(135deg, rgba(255,155,61,.18), rgba(255,155,61,.06)); color: #c47f00; }
   .ev-c4  { background: linear-gradient(135deg, rgba(74,144,226,.18), rgba(74,144,226,.06)); color: #2a6fc4; }
@@ -743,12 +788,12 @@
   .ev-c6  { background: linear-gradient(135deg, rgba(224,67,92,.16), rgba(224,67,92,.06)); color: #c43a3a; }
   .ev-c7  { background: linear-gradient(135deg, rgba(160,140,255,.20), rgba(160,140,255,.06)); color: #5a3fd8; }
   .ev-c8  { background: linear-gradient(135deg, rgba(255,216,74,.22), rgba(255,216,74,.06)); color: #8a6a00; }
-  .ev-c9  { background: linear-gradient(135deg, rgba(90,220,200,.20), rgba(90,220,200,.06)); color: #008b74; }
+  .ev-c9  { background: linear-gradient(135deg, rgba(90,220,200,.20), rgba(90,220,200,.06)); color: #0369a1; }
   .ev-c10 { background: linear-gradient(135deg, rgba(255,143,200,.20), rgba(255,143,200,.06)); color: #c4407e; }
   .ev-c11 { background: linear-gradient(135deg, rgba(122,122,153,.18), rgba(122,122,153,.06)); color: #5a5a7a; }
 
   html.dark .ev-c0  { background: linear-gradient(135deg, rgba(122,92,255,.30), rgba(122,92,255,.12)); color: #b8a6ff; }
-  html.dark .ev-c1  { background: linear-gradient(135deg, rgba(0,212,184,.30), rgba(0,212,184,.12)); color: #7affd9; }
+  html.dark .ev-c1  { background: linear-gradient(135deg, rgba(14,165,233,.30), rgba(14,165,233,.12)); color: #7ad8f8; }
   html.dark .ev-c2  { background: linear-gradient(135deg, rgba(255,122,198,.30), rgba(255,122,198,.12)); color: #ffb0da; }
   html.dark .ev-c3  { background: linear-gradient(135deg, rgba(255,155,61,.30), rgba(255,155,61,.12)); color: #ffc47a; }
   html.dark .ev-c4  { background: linear-gradient(135deg, rgba(74,144,226,.30), rgba(74,144,226,.12)); color: #90c0ff; }
@@ -756,7 +801,7 @@
   html.dark .ev-c6  { background: linear-gradient(135deg, rgba(224,67,92,.30), rgba(224,67,92,.12)); color: #ff8fa3; }
   html.dark .ev-c7  { background: linear-gradient(135deg, rgba(160,140,255,.32), rgba(160,140,255,.12)); color: #c9b6ff; }
   html.dark .ev-c8  { background: linear-gradient(135deg, rgba(255,216,74,.32), rgba(255,216,74,.12)); color: #ffe28a; }
-  html.dark .ev-c9  { background: linear-gradient(135deg, rgba(90,220,200,.32), rgba(90,220,200,.12)); color: #7affd9; }
+  html.dark .ev-c9  { background: linear-gradient(135deg, rgba(90,220,200,.32), rgba(90,220,200,.12)); color: #7ad8f8; }
   html.dark .ev-c10 { background: linear-gradient(135deg, rgba(255,143,200,.32), rgba(255,143,200,.12)); color: #ffb0da; }
   html.dark .ev-c11 { background: linear-gradient(135deg, rgba(122,122,153,.30), rgba(122,122,153,.12)); color: #b0b0c8; }
 
@@ -822,41 +867,171 @@
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════════════
+     SVG-СПРАЙТ ИКОНОК (Lucide)
+     Использование: <svg class="ico"><use href="#i-book"/></svg>
+     ═══════════════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <!-- flask-conical — колба, логотип -->
+    <symbol id="i-flask" viewBox="0 0 24 24">
+      <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+      <path d="M8.5 2h7"/>
+      <path d="M7 16h10"/>
+    </symbol>
+    <!-- book-open -->
+    <symbol id="i-book" viewBox="0 0 24 24">
+      <path d="M12 7v14"/>
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+    </symbol>
+    <!-- users -->
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <!-- message-circle -->
+    <symbol id="i-message" viewBox="0 0 24 24">
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+    </symbol>
+    <!-- bell -->
+    <symbol id="i-bell" viewBox="0 0 24 24">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+    </symbol>
+    <!-- bar-chart-3 -->
+    <symbol id="i-chart" viewBox="0 0 24 24">
+      <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+      <path d="M7 16h8"/>
+      <path d="M7 11h12"/>
+      <path d="M7 6h3"/>
+    </symbol>
+    <!-- calendar -->
+    <symbol id="i-calendar" viewBox="0 0 24 24">
+      <path d="M8 2v4"/>
+      <path d="M16 2v4"/>
+      <rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M3 10h18"/>
+    </symbol>
+    <!-- search -->
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.3-4.3"/>
+    </symbol>
+    <!-- log-out -->
+    <symbol id="i-logout" viewBox="0 0 24 24">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" x2="9" y1="12" y2="12"/>
+    </symbol>
+    <!-- copy -->
+    <symbol id="i-copy" viewBox="0 0 24 24">
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+    </symbol>
+    <!-- key-round — сброс пароля -->
+    <symbol id="i-key" viewBox="0 0 24 24">
+      <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/>
+      <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>
+    </symbol>
+    <!-- graduation-cap — класс -->
+    <symbol id="i-cap" viewBox="0 0 24 24">
+      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+      <path d="M22 10v6"/>
+      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+    </symbol>
+    <!-- trash-2 -->
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M3 6h18"/>
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+      <line x1="10" x2="10" y1="11" y2="17"/>
+      <line x1="14" x2="14" y1="11" y2="17"/>
+    </symbol>
+    <!-- lock -->
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </symbol>
+    <!-- x -->
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="M18 6 6 18"/>
+      <path d="m6 6 12 12"/>
+    </symbol>
+    <!-- pencil -->
+    <symbol id="i-pencil" viewBox="0 0 24 24">
+      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+      <path d="m15 5 4 4"/>
+    </symbol>
+    <!-- ban — отменить -->
+    <symbol id="i-ban" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="m4.9 4.9 14.2 14.2"/>
+    </symbol>
+    <!-- folder-open — доступ -->
+    <symbol id="i-folder" viewBox="0 0 24 24">
+      <path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
+    </symbol>
+    <!-- check -->
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12"/>
+    </symbol>
+    <!-- lock (для ученика) -->
+    <symbol id="i-lock-open" viewBox="0 0 24 24">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+    </symbol>
+    <!-- menu -->
+    <symbol id="i-menu" viewBox="0 0 24 24">
+      <line x1="4" x2="20" y1="12" y2="12"/>
+      <line x1="4" x2="20" y1="6" y2="6"/>
+      <line x1="4" x2="20" y1="18" y2="18"/>
+    </symbol>
+    <!-- info / sparkle — для подсказки -->
+    <symbol id="i-sparkle" viewBox="0 0 24 24">
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="backdrop" id="backdrop"></div>
 
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="brand-logo">👨‍🏫</div>
+      <div class="brand-logo">
+        <svg class="ico"><use href="#i-flask"/></svg>
+      </div>
       <div>Алхимичка</div>
     </div>
 
     <button class="search-trigger search-trigger-sidebar" type="button">
-      <span class="ic">🔍</span>
+      <svg class="ico"><use href="#i-search"/></svg>
       <span class="label">Поиск</span>
       <span class="hint">Ctrl+K</span>
     </button>
 
     <button class="nav-item active" data-view="topics">
-      <span class="ic">📚</span> Мои темы
+      <svg class="ico"><use href="#i-book"/></svg> Мои темы
       <span class="count" id="cnt-topics">0</span>
     </button>
     <button class="nav-item" data-view="students">
-      <span class="ic">👩‍🎓</span> Мои ученики
+      <svg class="ico"><use href="#i-users"/></svg> Мои ученики
       <span class="count" id="cnt-students">0</span>
     </button>
     <button class="nav-item" id="nav-chat" data-view="chat">
-      <span class="ic">💬</span> Чат
+      <svg class="ico"><use href="#i-message"/></svg> Чат
     </button>
     <button class="nav-item" id="nav-reviews" data-view="reviews">
-      <span class="ic">🔔</span> Проверка работ
+      <svg class="ico"><use href="#i-bell"/></svg> Проверка работ
       <span class="badge-alert" id="cnt-reviews" style="display:none">0</span>
     </button>
     <button class="nav-item" data-view="results">
-      <span class="ic">📊</span> Результаты
+      <svg class="ico"><use href="#i-chart"/></svg> Результаты
     </button>
     <button class="nav-item" data-view="schedule">
-      <span class="ic">📅</span> Расписание
+      <svg class="ico"><use href="#i-calendar"/></svg> Расписание
     </button>
 
     <div class="profile-card">
@@ -869,14 +1044,14 @@
     </div>
 
     <button class="btn btn-ghost" id="logout" title="Выйти" style="margin-top:10px;padding:10px 14px;font-size:13px;border-radius:10px">
-      Выйти ⎋
+      <svg class="ico ico-sm"><use href="#i-logout"/></svg> Выйти
     </button>
   </aside>
 
   <main class="main">
     <header class="page-head">
       <div style="display:flex;align-items:center;">
-        <button class="menu-btn" id="menu-btn">☰</button>
+        <button class="menu-btn" id="menu-btn"><svg class="ico"><use href="#i-menu"/></svg></button>
         <div>
           <h1 class="page-title" id="page-title">Мои темы</h1>
           <p class="page-sub" id="page-sub">Управляйте темами, материалами и тестами</p>
@@ -899,7 +1074,7 @@
 <!-- ═══ МОДАЛКА: НОВАЯ ТЕМА ═══ -->
 <div class="modal-backdrop" id="modal-topic">
   <div class="modal">
-    <h3>📚 Новая тема</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-book"/></svg> Новая тема</h3>
     <div class="form-group mt-2">
       <label class="label">Название</label>
       <input class="input" id="new-topic-title" placeholder="Например: Строение атома">
@@ -930,7 +1105,7 @@
 <!-- ═══ МОДАЛКА: НОВЫЙ УЧЕНИК ═══ -->
 <div class="modal-backdrop" id="modal-student">
   <div class="modal">
-    <h3>👩‍🎓 Новый ученик</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-users"/></svg> Новый ученик</h3>
     <div class="form-group mt-2">
       <label class="label">Имя ученика</label>
       <input class="input" id="new-student-name" placeholder="Мария Иванова">
@@ -957,7 +1132,7 @@
 <!-- ═══ МОДАЛКА: КОПИРОВАНИЕ ТЕМЫ ═══ -->
 <div class="modal-backdrop" id="modal-duplicate">
   <div class="modal">
-    <h3>📋 Скопировать тему</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-copy"/></svg> Скопировать тему</h3>
     <p class="muted mt-1" style="font-size:13.5px" id="dup-source-info"></p>
 
     <div class="form-group mt-3">
@@ -979,13 +1154,16 @@
     </div>
 
     <div class="hint-box mt-2" style="padding:10px 14px;border-radius:10px;background:rgba(106,76,255,.06);border-left:3px solid var(--primary);font-size:12.5px;color:var(--dark);line-height:1.5">
-      💡 Скопируются: материалы, файлы, вопросы. Тест — в черновик.
+      <svg class="ico ico-sm" style="vertical-align:-3px"><use href="#i-sparkle"/></svg>
+      Скопируются: материалы, файлы, вопросы. Тест — в черновик.
       Доступы учеников не переносятся.
     </div>
 
     <div class="flex gap-2 mt-3">
       <button class="btn btn-ghost" data-close>Отмена</button>
-      <button class="btn btn-primary" id="do-duplicate">📋 Скопировать</button>
+      <button class="btn btn-primary" id="do-duplicate">
+        <svg class="ico ico-sm"><use href="#i-copy"/></svg> Скопировать
+      </button>
     </div>
   </div>
 </div>
@@ -993,7 +1171,7 @@
 <!-- ═══ МОДАЛКА: ЛОГИН/ПАРОЛЬ ═══ -->
 <div class="modal-backdrop" id="modal-creds">
   <div class="modal">
-    <h3>🔐 Данные для входа</h3>
+    <h3><svg class="ico ico-lg"><use href="#i-lock"/></svg> Данные для входа</h3>
     <p class="muted mt-1" style="font-size:14px">
       Передайте ученику. Пароль больше не покажется.
     </p>
@@ -1002,7 +1180,7 @@
       <span id="cred-avatar"></span>
       <div class="creds-info">
         <div class="creds-name" id="cred-name"></div>
-        <div class="creds-sub">🎨 Запомните аватарку — она будет в вашем кабинете</div>
+        <div class="creds-sub"><svg class="ico ico-sm" style="vertical-align:-3px"><use href="#i-sparkle"/></svg> Запомните аватарку — она будет в вашем кабинете</div>
       </div>
     </div>
 
@@ -1030,7 +1208,7 @@
 <!-- ═══ МОДАЛКА: ДОСТУП УЧЕНИКА К ТЕМАМ ═══ -->
 <div class="modal-backdrop" id="modal-student-access">
   <div class="modal access-modal">
-    <h3 id="st-access-title">📚 Доступ к темам</h3>
+    <h3 id="st-access-title"><svg class="ico ico-lg"><use href="#i-folder"/></svg> Доступ к темам</h3>
     <p class="muted mt-1" style="font-size:13.5px" id="st-access-sub">
       Галочки сохраняются автоматически
     </p>
@@ -1071,7 +1249,7 @@
 <!-- ═══ МОДАЛКА: НОВОЕ ЗАНЯТИЕ ═══ -->
 <div class="modal-backdrop" id="modal-lesson">
   <div class="modal" style="max-width:520px">
-    <h3 id="lesson-modal-title">📅 Новое занятие</h3>
+    <h3 id="lesson-modal-title"><svg class="ico ico-lg"><use href="#i-calendar"/></svg> Новое занятие</h3>
     <p class="muted mt-1" style="font-size:13.5px" id="lesson-modal-sub">Настройте еженедельное занятие</p>
 
     <div class="form-group mt-3">
@@ -1128,9 +1306,15 @@
     <p class="muted mt-1" style="font-size:13.5px" id="lc-sub"></p>
 
     <div class="flex gap-2 mt-3" style="flex-wrap:wrap">
-      <button class="btn btn-ghost" id="lc-cancel-date" style="flex:1;min-width:140px">🚫 Отменить это занятие</button>
-      <button class="btn btn-ghost" id="lc-edit-template" style="flex:1;min-width:140px">✏️ Изменить шаблон</button>
-      <button class="btn btn-ghost" id="lc-delete-template" style="flex:1;min-width:140px;color:var(--danger);border-color:rgba(224,67,92,.3)">🗑 Удалить шаблон</button>
+      <button class="btn btn-ghost" id="lc-cancel-date" style="flex:1;min-width:140px">
+        <svg class="ico ico-sm"><use href="#i-ban"/></svg> Отменить это занятие
+      </button>
+      <button class="btn btn-ghost" id="lc-edit-template" style="flex:1;min-width:140px">
+        <svg class="ico ico-sm"><use href="#i-pencil"/></svg> Изменить шаблон
+      </button>
+      <button class="btn btn-ghost" id="lc-delete-template" style="flex:1;min-width:140px;color:var(--danger);border-color:rgba(224,67,92,.3)">
+        <svg class="ico ico-sm"><use href="#i-trash"/></svg> Удалить шаблон
+      </button>
     </div>
 
     <div class="flex gap-2 mt-3" style="justify-content:flex-end">
