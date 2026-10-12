@@ -29,6 +29,10 @@ function toast(msg, type = '') {
   t._t = setTimeout(() => t.className = 'toast', 2600);
 }
 
+function ico(id, cls = 'ico') {
+  return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+}
+
 function openModal(id)  { $('#' + id).classList.add('open'); }
 function closeModal(id) { $('#' + id).classList.remove('open'); }
 
@@ -84,17 +88,11 @@ function switchView(view) {
 
 $$('.moder-tab').forEach(t => t.addEventListener('click', () => switchView(t.dataset.view)));
 
-// ⭐ При вводе — обновляем и перерисовываем активную вкладку
 $('#moder-search').addEventListener('input', (e) => {
   searchQuery = e.target.value.trim().toLowerCase();
   if (currentView === 'tutors')   renderTutors();
   if (currentView === 'students') renderStudents();
   if (currentView === 'trash')    renderTrash();
-});
-
-// ⭐ При фокусе — показываем актуальные данные без фильтра (если пусто)
-$('#moder-search').addEventListener('focus', () => {
-  // не делаем ничего, но оставляем хук для будущего
 });
 
 $('#logout').addEventListener('click', async () => {
@@ -122,32 +120,32 @@ function renderStats() {
   const trash = (s.trash_tutors || 0) + (s.trash_students || 0);
   $('#stats-grid').innerHTML = `
     <div class="stat-card accent">
-      <div class="sc-label">👨‍🏫 Учителей</div>
+      <div class="sc-label">${ico('users','ico-sm')} Учителей</div>
       <div class="sc-value">${s.tutors || 0}</div>
       <div class="sc-sub">активных аккаунтов</div>
     </div>
     <div class="stat-card success">
-      <div class="sc-label">👩‍🎓 Учеников</div>
+      <div class="sc-label">${ico('graduation','ico-sm')} Учеников</div>
       <div class="sc-value">${s.students || 0}</div>
       <div class="sc-sub">на платформе</div>
     </div>
     <div class="stat-card">
-      <div class="sc-label">📚 Тем</div>
+      <div class="sc-label">${ico('book','ico-sm')} Тем</div>
       <div class="sc-value">${s.topics || 0}</div>
       <div class="sc-sub">создано учителями</div>
     </div>
     <div class="stat-card">
-      <div class="sc-label">📝 Попыток</div>
+      <div class="sc-label">${ico('file-text','ico-sm')} Попыток</div>
       <div class="sc-value">${s.attempts || 0}</div>
       <div class="sc-sub">тестов пройдено</div>
     </div>
     <div class="stat-card">
-      <div class="sc-label">💬 Сообщений</div>
+      <div class="sc-label">${ico('message','ico-sm')} Сообщений</div>
       <div class="sc-value">${s.messages || 0}</div>
       <div class="sc-sub">в чатах</div>
     </div>
     <div class="stat-card danger">
-      <div class="sc-label">🗑 В корзине</div>
+      <div class="sc-label">${ico('trash','ico-sm')} В корзине</div>
       <div class="sc-value">${trash}</div>
       <div class="sc-sub">${s.trash_tutors || 0} уч. · ${s.trash_students || 0} учеников</div>
     </div>
@@ -175,7 +173,7 @@ function renderTutors() {
 
   if (!list.length) {
     v.innerHTML = `<div class="moder-empty">
-      <span class="ic">👨‍🏫</span>
+      <span class="ic">${ico('users','ico')}</span>
       <h3>${searchQuery ? 'Никого не найдено' : 'Пока нет учителей'}</h3>
       <p>${searchQuery ? 'Попробуй другой запрос' : 'Учителя появятся здесь после регистрации'}</p>
     </div>`;
@@ -192,16 +190,16 @@ function renderTutors() {
           <span class="uc-login">${esc(t.username)}</span>
         </div>
         <div class="uc-meta">
-          <span>📅 ${formatDate(t.created_at)}</span>
-          <span>👩‍🎓 <b>${t.students_count}</b> учеников</span>
-          <span>📚 <b>${t.topics_count}</b> тем</span>
-          <span>📝 <b>${t.attempts_count}</b> попыток</span>
-          ${t.last_seen ? `<span>⏱ ${timeAgo(t.last_seen)}</span>` : ''}
+          <span>${ico('calendar','ico-sm')} ${formatDate(t.created_at)}</span>
+          <span>${ico('graduation','ico-sm')} <b>${t.students_count}</b> учеников</span>
+          <span>${ico('book','ico-sm')} <b>${t.topics_count}</b> тем</span>
+          <span>${ico('file-text','ico-sm')} <b>${t.attempts_count}</b> попыток</span>
+          ${t.last_seen ? `<span>${ico('clock','ico-sm')} ${timeAgo(t.last_seen)}</span>` : ''}
         </div>
       </div>
       <div class="uc-actions">
-        <button data-reset="${t.id}" title="Сбросить пароль">🔐 Сброс</button>
-        <button class="danger" data-delete="${t.id}" title="Удалить в корзину">🗑 Удалить</button>
+        <button data-reset="${t.id}" title="Сбросить пароль">${ico('key','ico-sm')} Сброс</button>
+        <button class="danger" data-delete="${t.id}" title="Удалить в корзину">${ico('trash','ico-sm')} Удалить</button>
       </div>
     </div>
   `).join('');
@@ -231,7 +229,7 @@ function renderStudents() {
 
   if (!list.length) {
     v.innerHTML = `<div class="moder-empty">
-      <span class="ic">👩‍🎓</span>
+      <span class="ic">${ico('graduation','ico')}</span>
       <h3>${searchQuery ? 'Никого не найдено' : 'Пока нет учеников'}</h3>
       <p>${searchQuery ? 'Попробуй другой запрос' : 'Учеников создают учителя'}</p>
     </div>`;
@@ -248,15 +246,15 @@ function renderStudents() {
           <span class="uc-login">${esc(s.username)}</span>
         </div>
         <div class="uc-meta">
-          <span>👨‍🏫 Учитель: <b>${esc(s.tutor_name || '—')}</b></span>
-          ${s.grade ? `<span>🎓 ${esc(gradeLabel(s.grade))}</span>` : ''}
-          <span>📝 <b>${s.attempts_count}</b> попыток</span>
-          <span>📅 ${formatDate(s.created_at)}</span>
+          <span>${ico('users','ico-sm')} Учитель: <b>${esc(s.tutor_name || '—')}</b></span>
+          ${s.grade ? `<span>${ico('cap','ico-sm')} ${esc(gradeLabel(s.grade))}</span>` : ''}
+          <span>${ico('file-text','ico-sm')} <b>${s.attempts_count}</b> попыток</span>
+          <span>${ico('calendar','ico-sm')} ${formatDate(s.created_at)}</span>
         </div>
       </div>
       <div class="uc-actions">
-        <button data-reset="${s.id}" title="Сбросить пароль">🔐 Сброс</button>
-        <button class="danger" data-delete="${s.id}" title="Удалить в корзину">🗑 Удалить</button>
+        <button data-reset="${s.id}" title="Сбросить пароль">${ico('key','ico-sm')} Сброс</button>
+        <button class="danger" data-delete="${s.id}" title="Удалить в корзину">${ico('trash','ico-sm')} Удалить</button>
       </div>
     </div>
   `).join('');
@@ -298,7 +296,7 @@ function renderTrash() {
 
   if (!tutors.length && !students.length) {
     v.innerHTML = `<div class="moder-empty">
-      <span class="ic">🗑</span>
+      <span class="ic">${ico('trash','ico')}</span>
       <h3>${searchQuery ? 'Никого не найдено' : 'Корзина пуста'}</h3>
       <p>${searchQuery ? 'Попробуй другой запрос' : 'Удалённые аккаунты хранятся 30 дней'}</p>
     </div>`;
@@ -308,7 +306,7 @@ function renderTrash() {
   let html = '';
 
   if (tutors.length) {
-    html += `<h3 style="font-size:15px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 12px">👨‍🏫 Учителя в корзине (${tutors.length})</h3>`;
+    html += `<h3 style="font-size:15px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 12px">${ico('users','ico-sm')} Учителя в корзине (${tutors.length})</h3>`;
     html += tutors.map(t => `
       <div class="user-card trash" data-user-id="${t.id}">
         ${window.Avatars.html(t, { size: 'md' })}
@@ -319,21 +317,21 @@ function renderTrash() {
             <span class="uc-login">${esc(t.username)}</span>
           </div>
           <div class="uc-meta">
-            <span>👩‍🎓 было <b>${t.students_count}</b> учеников</span>
-            <span>📚 было <b>${t.topics_count}</b> тем</span>
-            <span class="uc-days">⏳ осталось ${Math.max(0, 30 - (t.days_in_trash || 0))} дн.</span>
+            <span>${ico('graduation','ico-sm')} было <b>${t.students_count}</b> учеников</span>
+            <span>${ico('book','ico-sm')} было <b>${t.topics_count}</b> тем</span>
+            <span class="uc-days">${ico('clock','ico-sm')} осталось ${Math.max(0, 30 - (t.days_in_trash || 0))} дн.</span>
           </div>
         </div>
         <div class="uc-actions">
-          <button class="restore" data-restore="${t.id}">♻️ Вернуть</button>
-          <button class="danger" data-purge="${t.id}">🔥 Удалить навсегда</button>
+          <button class="restore" data-restore="${t.id}">${ico('rotate','ico-sm')} Вернуть</button>
+          <button class="danger" data-purge="${t.id}">${ico('flame','ico-sm')} Удалить навсегда</button>
         </div>
       </div>
     `).join('');
   }
 
   if (students.length) {
-    html += `<h3 style="font-size:15px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin:24px 0 12px">👩‍🎓 Ученики в корзине (${students.length})</h3>`;
+    html += `<h3 style="font-size:15px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin:24px 0 12px">${ico('graduation','ico-sm')} Ученики в корзине (${students.length})</h3>`;
     html += students.map(s => `
       <div class="user-card trash" data-user-id="${s.id}">
         ${window.Avatars.html(s, { size: 'md' })}
@@ -344,14 +342,14 @@ function renderTrash() {
             <span class="uc-login">${esc(s.username)}</span>
           </div>
           <div class="uc-meta">
-            <span>👨‍🏫 Учитель: <b>${esc(s.tutor_name || '—')}</b></span>
-            <span>📝 <b>${s.attempts_count}</b> попыток</span>
-            <span class="uc-days">⏳ осталось ${Math.max(0, 30 - (s.days_in_trash || 0))} дн.</span>
+            <span>${ico('users','ico-sm')} Учитель: <b>${esc(s.tutor_name || '—')}</b></span>
+            <span>${ico('file-text','ico-sm')} <b>${s.attempts_count}</b> попыток</span>
+            <span class="uc-days">${ico('clock','ico-sm')} осталось ${Math.max(0, 30 - (s.days_in_trash || 0))} дн.</span>
           </div>
         </div>
         <div class="uc-actions">
-          <button class="restore" data-restore="${s.id}">♻️ Вернуть</button>
-          <button class="danger" data-purge="${s.id}">🔥 Удалить навсегда</button>
+          <button class="restore" data-restore="${s.id}">${ico('rotate','ico-sm')} Вернуть</button>
+          <button class="danger" data-purge="${s.id}">${ico('flame','ico-sm')} Удалить навсегда</button>
         </div>
       </div>
     `).join('');
@@ -433,7 +431,7 @@ function wireTrashCards(container) {
 // ═══ НОВЫЙ ПАРОЛЬ ═══
 
 function showNewPassword(user) {
-  $('#np-title').textContent = `🔐 Новый пароль`;
+  $('#np-title').innerHTML = `${ico('lock','ico ico-lg')} Новый пароль`;
   $('#np-sub').textContent = `${user.display_name} (${user.role === 'tutor' ? 'Учитель' : 'Ученик'}) · логин «${user.username}»`;
   $('#np-value').textContent = user.password;
   openModal('modal-newpass');
@@ -442,8 +440,8 @@ function showNewPassword(user) {
 $('#np-copy').addEventListener('click', () => {
   const pwd = $('#np-value').textContent;
   navigator.clipboard.writeText(pwd).then(() => {
-    $('#np-copy').textContent = '✓ Скопировано';
-    setTimeout(() => $('#np-copy').textContent = '📋 Скопировать', 1500);
+    $('#np-copy').innerHTML = `${ico('check','ico-sm')} Скопировано`;
+    setTimeout(() => $('#np-copy').innerHTML = `${ico('copy','ico-sm')} Скопировать`, 1500);
   });
 });
 
@@ -504,7 +502,6 @@ $('#confirm-ok').addEventListener('click', async () => {
 
 (async function boot() {
   try {
-    // ⭐ Сбрасываем input поиска при загрузке (браузер мог восстановить значение)
     const searchInput = $('#moder-search');
     if (searchInput) {
       searchInput.value = '';
@@ -522,7 +519,5 @@ $('#confirm-ok').addEventListener('click', async () => {
     await Promise.all([loadTutors(), loadStudents(), loadTrash()]);
 
     switchView('tutors');
-  } catch (e) {
-    // Редирект уже выполнен в api()
-  }
+  } catch (e) {}
 })();

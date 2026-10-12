@@ -29,6 +29,10 @@ function toast(msg, type = '') {
   t._t = setTimeout(() => t.className = 'toast', 2600);
 }
 
+function ico(id, cls = 'ico') {
+  return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+}
+
 function skeletonTiles(n = 4) {
   let html = '';
   for (let i = 0; i < n; i++) {
@@ -55,7 +59,6 @@ function formatDuration(sec) {
   return m + ' мин ' + s + ' сек';
 }
 
-// ⭐ Классы
 const GRADES = {
   junior: { label: 'Младшая', cls: 'g-junior' },
   '8':    { label: '8 класс', cls: 'g-8' },
@@ -69,7 +72,6 @@ function gradeBadge(id) {
   return `<span class="grade-badge ${GRADES[id].cls}">${esc(GRADES[id].label)}</span>`;
 }
 
-// ⭐ Расписание: константы
 const DOW_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 const DOW_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
@@ -126,16 +128,6 @@ function loadTables() {
   }
 }
 
-async function autoOpenSingleDialog() {
-  try {
-    const res = await fetch('/api/chat/dialogs', { credentials: 'same-origin' });
-    const data = await res.json();
-    if (data.dialogs && data.dialogs.length === 1) {
-      if (window.Chat) window.Chat.openWith(data.dialogs[0].user.id);
-    }
-  } catch (e) {}
-}
-
 $('#logout').addEventListener('click', async () => {
   await api('/logout', { method: 'POST' }).catch(() => {});
   location.href = 'index.html';
@@ -155,7 +147,7 @@ async function loadTopics() {
 
     if (!topics.length) {
       v.innerHTML = `<div class="empty" style="grid-column:1/-1">
-        <span class="empty-icon">📚</span>
+        <span class="empty-icon">${ico('book','ico-xl')}</span>
         <h3>Тем пока нет</h3>
         <p>Учитель ещё не открыл вам ни одной темы. Заходите позже!</p>
       </div>`;
@@ -172,16 +164,16 @@ async function loadTopics() {
       let badge;
       if (isWelcome) {
         badge = `<div class="best-badge" style="background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00">
-          <span class="star" style="animation-duration:1.6s">⭐</span> Вводная
+          ${ico('star','ico-sm')} Вводная
         </div>`;
       } else if (pendingCount > 0) {
         badge = `<div class="best-badge" style="background: rgba(255,170,0,.15); color:#c47f00;">
-          <span class="star" style="animation-duration:1.2s">⏳</span> Ждёт проверки
+          ${ico('clock','ico-sm')} Ждёт проверки
         </div>`;
       } else if (hasBest) {
-        badge = `<div class="best-badge ${cls}"><span class="star">⭐</span> ${pct}%</div>`;
+        badge = `<div class="best-badge ${cls}">${ico('star','ico-sm')} ${pct}%</div>`;
       } else {
-        badge = `<div class="best-badge new">🆕 Не пройдено</div>`;
+        badge = `<div class="best-badge new">Не пройдено</div>`;
       }
 
       const fresh = (!hasBest && pendingCount === 0 && !isWelcome) ? 'fresh' : '';
@@ -201,14 +193,14 @@ async function loadTopics() {
           ${gradeBadgeHtml ? `<div style="margin-top:-6px">${gradeBadgeHtml}</div>` : ''}
           <p class="desc">${esc(t.description || 'Без описания')}</p>
           <div class="meta">
-            <span>📄 <b>${t.materials_count}</b> материалов</span>
+            <span>${ico('file-text','ico-sm')} <b>${t.materials_count}</b> материалов</span>
             ${isWelcome
-              ? `<span style="color:#c47f00;font-weight:600">⭐ Знакомство</span>`
-              : `<span>❓ <b>${t.questions_count}</b> вопросов</span>`
+              ? `<span style="color:#c47f00;font-weight:600">${ico('star','ico-sm')} Знакомство</span>`
+              : `<span>${ico('help','ico-sm')} <b>${t.questions_count}</b> вопросов</span>`
             }
           </div>
           <button class="btn btn-accent btn-block" style="margin-top:auto">
-            ${btnLabel} →
+            ${btnLabel} ${ico('arrow-right','ico-sm')}
           </button>
         </div>
       `;
@@ -242,7 +234,7 @@ async function loadHistory() {
     const { attempts } = await api('/my/attempts');
     if (!attempts.length) {
       v.innerHTML = `<div class="empty">
-        <span class="empty-icon">📊</span>
+        <span class="empty-icon">${ico('chart','ico-xl')}</span>
         <h3>Вы ещё не проходили тесты</h3>
         <p>Пройдите хотя бы один тест, чтобы увидеть историю</p>
       </div>`;
@@ -264,10 +256,10 @@ async function loadHistory() {
                 <td>${pending ? '<span class="muted">—</span>' : `${a.score} / ${a.total}`}</td>
                 <td>
                   ${pending
-                    ? `<span class="badge" style="background: rgba(255,170,0,.14); color:#c47f00;">⏳ Ждёт проверки</span>`
+                    ? `<span class="badge" style="background: rgba(255,170,0,.14); color:#c47f00;">${ico('clock','ico-sm')} Ждёт проверки</span>`
                     : `<span class="history-score ${cls}">${pct}%</span>`}
                 </td>
-                <td class="muted" style="font-size:13px">⏱ ${formatDuration(a.duration_sec)}</td>
+                <td class="muted" style="font-size:13px">${ico('clock','ico-sm')} ${formatDuration(a.duration_sec)}</td>
                 <td class="muted" style="font-size:13px">${esc(a.created_at)}</td>
               </tr>`;
             }).join('')}
@@ -295,14 +287,13 @@ async function loadMySchedule() {
 
     if (!lessons.length) {
       v.innerHTML = `<div class="empty">
-        <span class="empty-icon">📅</span>
+        <span class="empty-icon">${ico('calendar','ico-xl')}</span>
         <h3>Пока нет занятий</h3>
         <p>Учитель ещё не назначил вам занятия. Как только назначит — они появятся здесь.</p>
       </div>`;
       return;
     }
 
-    // Группируем по дате
     const groups = {};
     for (const l of lessons) {
       if (!groups[l.date]) groups[l.date] = [];
@@ -319,8 +310,8 @@ async function loadMySchedule() {
       const dowIdx = (d.getDay() + 6) % 7;
 
       const dayLabel = isToday
-        ? '🔔 Сегодня'
-        : (date === dateStrLocal(new Date(Date.now() + 86400000)) ? '📅 Завтра' : DOW_FULL[dowIdx]);
+        ? `${ico('bell','ico-sm')} Сегодня`
+        : (date === dateStrLocal(new Date(Date.now() + 86400000)) ? `${ico('calendar','ico-sm')} Завтра` : DOW_FULL[dowIdx]);
 
       html += `
         <div class="msl-day-group ${isToday ? 'today' : ''}">
@@ -405,7 +396,7 @@ async function loadNextLessonBanner() {
     banner.classList.add('show');
     banner.innerHTML = `
       <div class="nlb-row">
-        <div class="nlb-icon">🔔</div>
+        <div class="nlb-icon">${ico('bell','ico-lg')}</div>
         <div class="nlb-body">
           <div class="nlb-title">Скоро занятие!</div>
           <div class="nlb-sub">
@@ -418,7 +409,6 @@ async function loadNextLessonBanner() {
       </div>
     `;
 
-    // Тикаем обратный отсчёт каждую секунду
     if (nextLessonTimer) clearInterval(nextLessonTimer);
     let totalSec = minutes * 60;
     nextLessonTimer = setInterval(() => {
@@ -445,7 +435,7 @@ async function loadNextLessonBanner() {
 
 function startNextLessonPolling() {
   loadNextLessonBanner();
-  setInterval(loadNextLessonBanner, 5 * 60 * 1000); // каждые 5 минут
+  setInterval(loadNextLessonBanner, 5 * 60 * 1000);
 }
 
 // ═══ МОДАЛКА ПРОСМОТРА ПОПЫТКИ ═══
@@ -487,14 +477,14 @@ async function openAttemptModal(attemptId) {
     const pending = a.status === 'pending_review';
 
     $('#am-title').textContent = a.topic_title;
-    $('#am-sub').textContent = `${a.test_title} · ${a.created_at} · ⏱ ${formatDuration(a.duration_sec)}`;
+    $('#am-sub').textContent = `${a.test_title} · ${a.created_at} · ${ico('clock','ico-sm')} ${formatDuration(a.duration_sec)}`;
 
     const header = pending
       ? `<div style="padding:14px 18px;border-radius:14px;background:rgba(255,170,0,.1);border-left:3px solid #ffaa00;margin-bottom:18px">
-           <b>⏳ Ждёт проверки учителем.</b><br>
+           <b>${ico('clock','ico-sm')} Ждёт проверки учителем.</b><br>
            <span style="font-size:13.5px;color:var(--gray)">Комментарии и итоговый балл появятся после проверки.</span>
          </div>`
-      : `<div style="padding:14px 18px;border-radius:14px;background:rgba(0,212,184,.08);border-left:3px solid var(--accent);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      : `<div style="padding:14px 18px;border-radius:14px;background:rgba(14,165,233,.08);border-left:3px solid var(--accent);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
            <div>
              <div style="font-size:22px;font-weight:800">${Math.round(a.percent)}%</div>
              <div style="font-size:13px;color:var(--gray)">${a.score} из ${a.total} баллов</div>
@@ -516,10 +506,10 @@ function renderAttemptItem(d, i) {
               : grade === 'partial' ? 'partial'
               : grade === 'wrong'   ? 'wrong'
               : 'pending';
-    const icon = grade === 'correct' ? '✅'
-              : grade === 'partial' ? '🟡'
-              : grade === 'wrong'   ? '❌'
-              : '⏳';
+    const icon = grade === 'correct' ? ico('check','ico')
+              : grade === 'partial' ? ico('circle-dot','ico')
+              : grade === 'wrong'   ? ico('x','ico')
+              : ico('clock','ico');
     const gradeText = grade === 'correct' ? 'Верно'
                    : grade === 'partial' ? 'Частично верно'
                    : grade === 'wrong'   ? 'Неверно'
@@ -528,14 +518,14 @@ function renderAttemptItem(d, i) {
     return `
       <div class="detail-item ${cls}" style="margin-bottom:12px">
         <div class="detail-q"><span>${icon}</span><span>${i + 1}. ${esc(d.text)}
-          <span style="padding:2px 8px;border-radius:999px;background:rgba(255,170,0,.15);color:#c47f00;font-size:11px;font-weight:700;text-transform:uppercase;margin-left:6px">✍️ развёрнутый</span>
+          <span style="padding:2px 8px;border-radius:999px;background:rgba(255,170,0,.15);color:#c47f00;font-size:11px;font-weight:700;text-transform:uppercase;margin-left:6px">${ico('pen','ico-sm')} развёрнутый</span>
         </span></div>
         <div class="detail-answers">
           <div class="row">
             <span class="lbl">Ваш ответ:</span>
             <span class="val">
               ${d.given_text ? esc(d.given_text) : '<i>— текст не введён —</i>'}
-              ${d.given_file ? `<br>📎 <a href="${esc(d.given_file)}" target="_blank" rel="noopener">${esc(d.given_file_name || 'файл')}</a>` : ''}
+              ${d.given_file ? `<br>${ico('paperclip','ico-sm')} <a href="${esc(d.given_file)}" target="_blank" rel="noopener">${esc(d.given_file_name || 'файл')}</a>` : ''}
             </span>
           </div>
           <div class="row">
@@ -544,7 +534,7 @@ function renderAttemptItem(d, i) {
           </div>
         </div>
         ${d.comment ? `<div class="teacher-comment" style="margin-top:10px;padding:12px 16px;border-radius:12px;background:rgba(106,76,255,.06);border-left:3px solid var(--primary);font-size:13.5px;line-height:1.5">
-          <div style="font-weight:700;color:var(--primary);margin-bottom:4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px">💬 Комментарий учителя</div>
+          <div style="font-weight:700;color:var(--primary);margin-bottom:4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px">${ico('message','ico-sm')} Комментарий учителя</div>
           ${esc(d.comment)}
         </div>` : ''}
       </div>
@@ -559,13 +549,13 @@ function renderAttemptItem(d, i) {
     : []
   );
   const options = d.options || [];
-  const typeLabel = d.type === 'multi' ? '☑️ несколько' : '🔘 один';
-  const typeBg = d.type === 'multi' ? 'rgba(0,212,184,.14)' : 'rgba(106,76,255,.12)';
+  const typeLabel = d.type === 'multi' ? `${ico('check-square','ico-sm')} несколько` : `${ico('circle-dot','ico-sm')} один`;
+  const typeBg = d.type === 'multi' ? 'rgba(14,165,233,.14)' : 'rgba(106,76,255,.12)';
   const typeColor = d.type === 'multi' ? 'var(--accent-dark)' : 'var(--primary)';
 
   return `
     <div class="detail-item ${ok ? 'correct' : 'wrong'}" style="margin-bottom:12px">
-      <div class="detail-q"><span>${ok ? '✅' : '❌'}</span><span>${i + 1}. ${esc(d.text)}
+      <div class="detail-q"><span>${ok ? ico('check','ico') : ico('x','ico')}</span><span>${i + 1}. ${esc(d.text)}
         <span style="padding:2px 8px;border-radius:999px;background:${typeBg};color:${typeColor};font-size:11px;font-weight:700;text-transform:uppercase;margin-left:6px">${typeLabel}</span>
       </span></div>
       <div class="detail-answers">
@@ -573,9 +563,9 @@ function renderAttemptItem(d, i) {
           const isCorrect = correctSet.has(idx);
           const isGiven = givenSet.has(idx);
           let mark = '';
-          if (isCorrect && isGiven) mark = '✅';
-          else if (isCorrect && !isGiven) mark = '🟢 <i>(пропущено)</i>';
-          else if (!isCorrect && isGiven) mark = '❌ <i>(лишний)</i>';
+          if (isCorrect && isGiven) mark = ico('check','ico-sm');
+          else if (isCorrect && !isGiven) mark = `<i>(пропущено)</i>`;
+          else if (!isCorrect && isGiven) mark = ico('x','ico-sm') + ' <i>(лишний)</i>';
           return `<div class="row">
             <span class="lbl">${letterFor(idx)}.</span>
             <span class="val ${isCorrect && isGiven ? 'ok' : !isCorrect && isGiven ? 'bad' : ''}">
@@ -618,8 +608,6 @@ function renderAttemptItem(d, i) {
     });
 
     switchView('topics');
-
-    // ⭐ Баннер «скоро занятие» + опрос каждые 5 минут
     startNextLessonPolling();
   } catch (e) {}
 })();

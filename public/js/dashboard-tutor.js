@@ -47,7 +47,7 @@ document.addEventListener('click', (e) => {
   const val = $('.val', f).textContent;
   navigator.clipboard.writeText(val).then(() => {
     const old = $('.cpy', f).textContent;
-    $('.cpy', f).textContent = '✓ скопировано';
+    $('.cpy', f).textContent = 'Скопировано';
     f.style.borderColor = 'var(--accent)';
     setTimeout(() => {
       $('.cpy', f).textContent = old;
@@ -64,6 +64,11 @@ $('#backdrop')?.addEventListener('click', () => {
   $('#sidebar').classList.remove('open');
   $('#backdrop').classList.remove('show');
 });
+
+// ═══ SVG-иконки для динамики ═══
+function ico(id, cls = 'ico') {
+  return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+}
 
 function skeletonTiles(n = 4) {
   let html = '';
@@ -86,16 +91,6 @@ function formatDuration(sec) {
 }
 
 function letterFor(i) { return String.fromCharCode(65 + i); }
-function fileIcon(name) {
-  const ext = (String(name).split('.').pop() || '').toLowerCase();
-  if (ext === 'pdf') return '📕';
-  if (['doc','docx'].includes(ext)) return '📘';
-  if (['xls','xlsx','csv'].includes(ext)) return '📗';
-  if (['ppt','pptx'].includes(ext)) return '📙';
-  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return '🖼';
-  if (['txt','md','rtf'].includes(ext)) return '📄';
-  return '📎';
-}
 
 // ⭐ Классы
 const GRADES = [
@@ -113,7 +108,6 @@ function gradeBadge(id) {
   return `<span class="grade-badge ${g.cls}">${esc(g.full)}</span>`;
 }
 
-// ⭐ Расписание: константы
 const DOW_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 const DOW_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
@@ -157,7 +151,7 @@ function switchView(view) {
 
   if (view === 'topics') {
     $('#head-action').innerHTML =
-      `<button class="btn btn-primary" id="btn-add-topic">+ Новая тема</button>`;
+      `<button class="btn btn-primary" id="btn-add-topic">${ico('plus','ico ico-sm')} Новая тема</button>`;
     $('#btn-add-topic').onclick = () => {
       $('#new-topic-title').value = '';
       $('#new-topic-desc').value = '';
@@ -169,7 +163,7 @@ function switchView(view) {
   }
   if (view === 'students') {
     $('#head-action').innerHTML =
-      `<button class="btn btn-primary" id="btn-add-student">+ Новый ученик</button>`;
+      `<button class="btn btn-primary" id="btn-add-student">${ico('plus','ico ico-sm')} Новый ученик</button>`;
     $('#btn-add-student').onclick = () => {
       $('#new-student-name').value = '';
       $('#new-student-grade').value = '';
@@ -300,7 +294,7 @@ async function loadTopics() {
 
     if (!topics.length) {
       v.innerHTML = `<div class="empty">
-        <span class="empty-icon">📚</span>
+        <span class="empty-icon">${ico('book','ico-xl')}</span>
         <h3>Пока нет тем</h3>
         <p>Создайте первую тему и добавьте в неё материалы и тест</p>
         <button class="btn btn-primary" id="empty-add-topic">Создать тему</button>
@@ -317,7 +311,7 @@ async function loadTopics() {
 
     if (!filtered.length) {
       html += `<div class="empty" style="padding:40px 20px">
-        <span class="empty-icon" style="font-size:48px">📭</span>
+        <span class="empty-icon" style="font-size:48px">${ico('folder','ico-lg')}</span>
         <h3 style="font-size:18px">В этом классе пока нет тем</h3>
         <p>Создайте новую тему или скопируйте существующую</p>
       </div>`;
@@ -332,21 +326,21 @@ async function loadTopics() {
     html += `<div class="grid grid-2">${filtered.map(t => {
       const isWelcome = t.is_welcome === 1;
       const welcomeBadge = isWelcome
-        ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00;font-size:11px;font-weight:700;margin-left:8px;vertical-align:middle">⭐ Вводная</span>`
+        ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00;font-size:11px;font-weight:700;margin-left:8px;vertical-align:middle">${ico('star','ico-sm')} Вводная</span>`
         : '';
       const draftBadge = (t.test_is_draft === 1 && !isWelcome)
-        ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;background:rgba(255,170,0,.14);color:#c47f00;font-size:11px;font-weight:700;margin-left:8px;vertical-align:middle">📝 Черновик</span>`
+        ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;background:rgba(255,170,0,.14);color:#c47f00;font-size:11px;font-weight:700;margin-left:8px;vertical-align:middle">${ico('pencil','ico-sm')} Черновик</span>`
         : '';
 
       const gradeBadgeHtml = !isWelcome && t.grade ? gradeBadge(t.grade) : '';
 
       const deleteBtn = isWelcome
         ? ''
-        : `<button class="btn btn-ghost" data-del="${t.id}" title="Удалить">🗑</button>`;
+        : `<button class="btn btn-ghost btn-only-icon" data-del="${t.id}" title="Удалить">${ico('trash','ico')}</button>`;
 
       const duplicateBtn = isWelcome
         ? ''
-        : `<button class="btn btn-ghost" data-dup="${t.id}" title="Скопировать в другой класс">📋</button>`;
+        : `<button class="btn btn-ghost btn-only-icon" data-dup="${t.id}" title="Скопировать в другой класс">${ico('copy','ico')}</button>`;
 
       return `
       <div class="tile">
@@ -354,10 +348,10 @@ async function loadTopics() {
         ${gradeBadgeHtml ? `<div style="margin-top:6px;margin-bottom:8px">${gradeBadgeHtml}</div>` : ''}
         <div class="tile-desc">${esc(t.description || 'Без описания')}</div>
         <div class="tile-meta">
-          <span>📄 <b>${t.materials_count}</b> материалов</span>
+          <span>${ico('file-text','ico-sm')} <b>${t.materials_count}</b> материалов</span>
           ${isWelcome
             ? `<span style="color:#c47f00;font-weight:600">без теста</span>`
-            : `<span>❓ <b>${t.questions_count}</b> вопросов</span>`
+            : `<span>${ico('help','ico-sm')} <b>${t.questions_count}</b> вопросов</span>`
           }
         </div>
         <div class="tile-actions">
@@ -425,7 +419,7 @@ $('#do-duplicate')?.addEventListener('click', async () => {
   btn.textContent = 'Копируем…';
 
   try {
-    const { topic } = await api('/topics/' + currentDuplicateTopic.id + '/duplicate', {
+    await api('/topics/' + currentDuplicateTopic.id + '/duplicate', {
       method: 'POST',
       body: { title, grade }
     });
@@ -436,7 +430,7 @@ $('#do-duplicate')?.addEventListener('click', async () => {
     toast(e.message, 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = '📋 Скопировать';
+    btn.innerHTML = `${ico('copy','ico ico-sm')} Скопировать`;
   }
 });
 
@@ -452,7 +446,7 @@ async function loadStudents() {
 
     if (!students.length) {
       v.innerHTML = `<div class="empty">
-        <span class="empty-icon">👩‍🎓</span>
+        <span class="empty-icon">${ico('users','ico-xl')}</span>
         <h3>Пока нет учеников</h3>
         <p>Создайте первого — система сгенерирует логин и пароль</p>
         <button class="btn btn-primary" id="empty-add-student">Создать ученика</button>
@@ -469,7 +463,7 @@ async function loadStudents() {
 
     if (!filtered.length) {
       html += `<div class="empty" style="padding:40px 20px">
-        <span class="empty-icon" style="font-size:48px">📭</span>
+        <span class="empty-icon" style="font-size:48px">${ico('folder','ico-lg')}</span>
         <h3 style="font-size:18px">В этом классе пока нет учеников</h3>
         <p>Создайте нового или измените класс существующего</p>
       </div>`;
@@ -492,11 +486,11 @@ async function loadStudents() {
           </div>
         </div>
         <div class="tile-actions" style="flex-wrap:wrap;gap:6px;margin-top:14px">
-          <button class="btn btn-ghost" data-access="${s.id}" style="flex:1;min-width:130px;padding:10px 14px;font-size:13.5px" title="Доступ к темам">📚 Доступ</button>
-          <button class="btn btn-ghost" data-change-grade="${s.id}" style="width:44px;padding:10px 0;font-size:17px" title="Сменить класс">🎓</button>
-          <button class="btn btn-ghost" data-reset="${s.id}" style="width:44px;padding:10px 0;font-size:17px" title="Сбросить пароль">🔐</button>
-          <button class="btn btn-ghost" data-chat-to="${s.id}" style="width:44px;padding:10px 0;font-size:17px" title="Написать в чат">💬</button>
-          <button class="btn btn-ghost" data-del-student="${s.id}" style="width:44px;padding:10px 0;font-size:17px;color:var(--danger);border-color:rgba(224,67,92,.3)" title="Удалить">🗑</button>
+          <button class="btn btn-ghost" data-access="${s.id}" style="flex:1;min-width:130px;padding:10px 14px;font-size:13.5px" title="Доступ к темам">${ico('folder','ico ico-sm')} Доступ</button>
+          <button class="btn btn-ghost btn-only-icon" data-change-grade="${s.id}" style="width:44px;padding:10px 0" title="Сменить класс">${ico('cap','ico')}</button>
+          <button class="btn btn-ghost btn-only-icon" data-reset="${s.id}" style="width:44px;padding:10px 0" title="Сбросить пароль">${ico('key','ico')}</button>
+          <button class="btn btn-ghost btn-only-icon" data-chat-to="${s.id}" style="width:44px;padding:10px 0" title="Написать в чат">${ico('message','ico')}</button>
+          <button class="btn btn-ghost btn-only-icon" data-del-student="${s.id}" style="width:44px;padding:10px 0;color:var(--danger);border-color:rgba(224,67,92,.3)" title="Удалить">${ico('trash','ico')}</button>
         </div>
       </div>
     `).join('')}</div>`;
@@ -597,7 +591,7 @@ function ensureChangeGradeModal() {
   const html = `
     <div class="modal-backdrop" id="modal-change-grade">
       <div class="modal">
-        <h3>🎓 Сменить класс</h3>
+        <h3>${ico('cap','ico ico-lg')} Сменить класс</h3>
         <p class="muted mt-1" style="font-size:13.5px" id="cg-student-name"></p>
         <div class="form-group mt-3">
           <label class="label">Новый класс</label>
@@ -654,7 +648,7 @@ async function openStudentAccessModal(studentId) {
     const data = await api('/students/' + studentId + '/access');
     currentAccessStudent = data.student;
 
-    $('#st-access-title').textContent = `📚 Доступ к темам · ${data.student.display_name}`;
+    $('#st-access-title').innerHTML = `${ico('folder','ico ico-lg')} Доступ к темам · ${esc(data.student.display_name)}`;
     $('#st-access-sub').textContent = 'Темы своего класса открыты автоматически';
 
     const topics = data.topics || [];
@@ -662,7 +656,7 @@ async function openStudentAccessModal(studentId) {
     if (!topics.length) {
       $('#st-access-body').innerHTML = `
         <div class="empty" style="padding:30px 20px">
-          <span class="empty-icon" style="font-size:48px">📚</span>
+          <span class="empty-icon" style="font-size:48px">${ico('book','ico-lg')}</span>
           <h3 style="font-size:18px">Пока нет тем</h3>
           <p>Создайте темы — здесь появятся галочки доступа</p>
         </div>
@@ -678,19 +672,19 @@ async function openStudentAccessModal(studentId) {
           const isAuto = t.auto_access === 1;
           const rowCls = isWelcome ? 'access-row welcome' : 'access-row';
           const welcomeTag = isWelcome
-            ? `<span class="welcome-tag">⭐ Вводная</span>`
-            : (isAuto ? `<span class="welcome-tag" style="background:rgba(0,212,184,.14);color:var(--accent-dark)">🎓 Авто по классу</span>` : '');
+            ? `<span class="welcome-tag">${ico('star','ico-sm')} Вводная</span>`
+            : (isAuto ? `<span class="welcome-tag" style="background:rgba(14,165,233,.14);color:var(--accent-dark)">${ico('cap','ico-sm')} Авто по классу</span>` : '');
 
           const switches = (isWelcome || isAuto)
             ? `
               <div class="switches">
                 <label class="access-switch on disabled">
                   <span class="sw-dot"></span>
-                  <span>📄 Материалы</span>
+                  <span>${ico('file-text','ico-sm')} Материалы</span>
                 </label>
                 <label class="access-switch on disabled">
                   <span class="sw-dot"></span>
-                  <span>❓ Тест</span>
+                  <span>${ico('help','ico-sm')} Тест</span>
                 </label>
               </div>
             `
@@ -699,12 +693,12 @@ async function openStudentAccessModal(studentId) {
                 <label class="access-switch ${t.can_materials ? 'on' : ''}" data-topic-id="${t.id}" data-kind="materials">
                   <input type="checkbox" ${t.can_materials ? 'checked' : ''}>
                   <span class="sw-dot"></span>
-                  <span>📄 Материалы</span>
+                  <span>${ico('file-text','ico-sm')} Материалы</span>
                 </label>
                 <label class="access-switch ${t.can_test ? 'on' : ''}" data-topic-id="${t.id}" data-kind="test">
                   <input type="checkbox" ${t.can_test ? 'checked' : ''}>
                   <span class="sw-dot"></span>
-                  <span>❓ Тест</span>
+                  <span>${ico('help','ico-sm')} Тест</span>
                 </label>
               </div>
             `;
@@ -771,7 +765,7 @@ async function loadReviews() {
 
     if (!reviews.length) {
       v.innerHTML = `<div class="empty">
-        <span class="empty-icon" style="filter:grayscale(0.2)">🎉</span>
+        <span class="empty-icon" style="filter:grayscale(0.2)">${ico('check','ico-xl')}</span>
         <h3>Все работы проверены!</h3>
         <p>Здесь появятся новые попытки, как только ученики сдадут тесты с развёрнутыми вопросами</p>
       </div>`;
@@ -790,13 +784,13 @@ async function loadReviews() {
           <div class="review-info">
             <div class="review-name">${esc(r.student_name)}</div>
             <div class="review-meta">
-              <span>📚 ${esc(r.topic_title)}</span>
+              <span>${ico('book','ico-sm')} ${esc(r.topic_title)}</span>
               ${r.student_grade ? gradeBadge(r.student_grade) : ''}
-              <span>⏱ ${formatDuration(r.duration_sec)}</span>
+              <span>${ico('clock','ico-sm')} ${formatDuration(r.duration_sec)}</span>
             </div>
           </div>
           <div class="review-actions">
-            <button class="btn btn-primary" data-open-review="${r.id}">Проверить →</button>
+            <button class="btn btn-primary" data-open-review="${r.id}">Проверить ${ico('arrow-right','ico-sm')}</button>
           </div>
         </div>
       `;
@@ -848,7 +842,7 @@ function renderReviewBody() {
       ${window.Avatars.html(student, { size: 'md' })}
       <div class="info">
         <div class="name">${esc(currentReviewAttempt.student_name)}</div>
-        <div class="meta">${esc(currentReviewAttempt.topic_title)} · ⏱ ${formatDuration(currentReviewAttempt.duration_sec)}</div>
+        <div class="meta">${esc(currentReviewAttempt.topic_title)} · ${ico('clock','ico-sm')} ${formatDuration(currentReviewAttempt.duration_sec)}</div>
       </div>
     </div>
   `;
@@ -856,13 +850,13 @@ function renderReviewBody() {
   const body = studentHead + `
     ${allAuto.length ? `
       <div class="detail-heading" style="margin-top:0;border-top:none;padding-top:0">
-        🤖 Авто-проверенные вопросы
+        ${ico('settings','ico-sm')} Авто-проверенные вопросы
       </div>
       ${allAuto.map((d, i) => renderReviewAuto(d, i)).join('')}
     ` : ''}
 
     ${openQuestions.length ? `
-      <div class="detail-heading">✍️ Развёрнутые ответы — оцените вручную</div>
+      <div class="detail-heading">${ico('pen','ico-sm')} Развёрнутые ответы — оцените вручную</div>
       ${openQuestions.map((d, i) => renderReviewOpen(d, i)).join('')}
     ` : ''}
   `;
@@ -905,13 +899,15 @@ function renderReviewAuto(d, i) {
     : []
   );
 
+  const typeLabel = d.type === 'multi' ? `${ico('check-square','ico-sm')} несколько` : `${ico('circle-dot','ico-sm')} один`;
+
   return `
     <div class="rv-q ${ok ? 'auto-correct' : 'auto-wrong'}">
       <div class="rv-q-head">
         <div class="rv-q-num">${i + 1}</div>
         <div class="rv-q-text">
           ${esc(d.text)}
-          <span class="rv-q-type ${d.type}">${d.type === 'multi' ? '☑️ несколько' : '🔘 один'}</span>
+          <span class="rv-q-type ${d.type}">${typeLabel}</span>
         </div>
       </div>
       <div>
@@ -920,9 +916,9 @@ function renderReviewAuto(d, i) {
           const isGiven = givenSet.has(idx);
           let cls = '';
           let markBadge = '';
-          if (isCorrect && isGiven) { cls = 'correct'; markBadge = '✅ верно'; }
-          else if (isCorrect && !isGiven) { cls = 'correct'; markBadge = '🟢 пропущено'; }
-          else if (!isCorrect && isGiven) { cls = 'bad-give'; markBadge = '❌ лишний'; }
+          if (isCorrect && isGiven) { cls = 'correct'; markBadge = `${ico('check','ico-sm')} верно`; }
+          else if (isCorrect && !isGiven) { cls = 'correct'; markBadge = 'пропущено'; }
+          else if (!isCorrect && isGiven) { cls = 'bad-give'; markBadge = `${ico('x','ico-sm')} лишний`; }
           else if (isGiven) { cls = 'given'; markBadge = 'выбрано'; }
           return `<div class="rv-opt ${cls}">
             <span class="key">${letterFor(idx)}</span>
@@ -943,7 +939,7 @@ function renderReviewOpen(d) {
   return `
     <div class="rv-q open-q" data-open-block="${qid}">
       <div class="rv-q-head">
-        <div class="rv-q-num">✍️</div>
+        <div class="rv-q-num">${ico('pen','ico-sm')}</div>
         <div class="rv-q-text">
           ${esc(d.text)}
           <span class="rv-q-type open">развёрнутый</span>
@@ -956,7 +952,7 @@ function renderReviewOpen(d) {
 
       ${hasFile ? `
         <a class="rv-open-file" href="${esc(d.given_file)}" target="_blank" rel="noopener">
-          <div class="fi">${fileIcon(d.given_file_name || '')}</div>
+          <div class="fi">${ico('paperclip','ico-sm')}</div>
           <div>
             <div>${esc(d.given_file_name || 'файл')}</div>
             <div class="fs">Открыть в новой вкладке</div>
@@ -967,19 +963,19 @@ function renderReviewOpen(d) {
       <div class="grade-row">
         <div class="grade-btn ${graded.grade === 'correct' ? 'active correct' : ''}"
              data-grade="correct" data-qid="${qid}">
-          <span class="ge">✅</span> Верно
+          <span class="ge">${ico('check','ico')}</span> Верно
         </div>
         <div class="grade-btn ${graded.grade === 'partial' ? 'active partial' : ''}"
              data-grade="partial" data-qid="${qid}">
-          <span class="ge">🟡</span> Частично
+          <span class="ge">${ico('circle-dot','ico')}</span> Частично
         </div>
         <div class="grade-btn ${graded.grade === 'wrong' ? 'active wrong' : ''}"
              data-grade="wrong" data-qid="${qid}">
-          <span class="ge">❌</span> Неверно
+          <span class="ge">${ico('x','ico')}</span> Неверно
         </div>
       </div>
 
-      <label class="rv-comment-label">💬 Комментарий для ученика (необязательно)</label>
+      <label class="rv-comment-label">${ico('message','ico-sm')} Комментарий для ученика (необязательно)</label>
       <textarea class="rv-comment" data-comment="${qid}"
                 placeholder="Например: молодец, но укажи ещё одну причину...">${esc(graded.comment || '')}</textarea>
     </div>
@@ -1000,7 +996,7 @@ function updateReviewProgress() {
 
   const hint = $('#rv-footer-hint');
   if (graded === total) {
-    hint.textContent = '✓ Все ответы оценены, можно сохранять';
+    hint.textContent = 'Все ответы оценены, можно сохранять';
     hint.classList.add('done');
   } else {
     hint.textContent = `Осталось оценить: ${total - graded}`;
@@ -1056,7 +1052,7 @@ async function loadResults() {
     const { results } = await api('/results');
     if (!results.length) {
       v.innerHTML = `<div class="empty">
-        <span class="empty-icon">📊</span>
+        <span class="empty-icon">${ico('chart','ico-xl')}</span>
         <h3>Пока нет результатов</h3>
         <p>Как только ученики начнут проходить тесты, здесь появится статистика</p>
       </div>`;
@@ -1086,8 +1082,8 @@ async function loadResults() {
                   <td>${nameCell}</td>
                   <td>${esc(r.topic_title)}${r.topic_grade ? ' ' + gradeBadge(r.topic_grade) : ''}</td>
                   <td class="muted">—</td>
-                  <td><span class="badge" style="background: rgba(255,170,0,.14); color:#c47f00;">⏳ Ждёт проверки</span></td>
-                  <td class="muted" style="font-size:13px">⏱ ${formatDuration(r.duration_sec)}</td>
+                  <td><span class="badge" style="background: rgba(255,170,0,.14); color:#c47f00;">${ico('clock','ico-sm')} Ждёт проверки</span></td>
+                  <td class="muted" style="font-size:13px">${ico('clock','ico-sm')} ${formatDuration(r.duration_sec)}</td>
                   <td class="muted" style="font-size:13px">${esc(r.created_at)}</td>
                 </tr>`;
               }
@@ -1101,7 +1097,7 @@ async function loadResults() {
                   <div class="bar ${cls}"><span style="width:${pct}%"></span></div>
                   <span class="muted" style="font-size:12px">${pct}%</span>
                 </td>
-                <td class="muted" style="font-size:13px">⏱ ${formatDuration(r.duration_sec)}</td>
+                <td class="muted" style="font-size:13px">${ico('clock','ico-sm')} ${formatDuration(r.duration_sec)}</td>
                 <td class="muted" style="font-size:13px">${esc(r.created_at)}</td>
               </tr>`;
             }).join('')}
@@ -1172,7 +1168,7 @@ async function openResultDetail(attemptId) {
     const a = data.attempt;
 
     $('#rs-title').textContent = a.student_name || 'Результат';
-    $('#rs-sub').textContent = `${a.topic_title} · ${a.test_title} · ${a.created_at} · ⏱ ${formatDuration(a.duration_sec)}`;
+    $('#rs-sub').textContent = `${a.topic_title} · ${a.test_title} · ${a.created_at} · ${ico('clock','ico-sm')} ${formatDuration(a.duration_sec)}`;
 
     const pct = Math.round((a.score / a.total) * 100);
     const pill = $('#rs-score-pill');
@@ -1189,7 +1185,7 @@ async function openResultDetail(attemptId) {
         ${window.Avatars.html(student, { size: 'md' })}
         <div class="info">
           <div class="name">${esc(a.student_name)}</div>
-          <div class="meta">${esc(a.topic_title)} · ⏱ ${formatDuration(a.duration_sec)}</div>
+          <div class="meta">${esc(a.topic_title)} · ${ico('clock','ico-sm')} ${formatDuration(a.duration_sec)}</div>
         </div>
       </div>
     `;
@@ -1208,10 +1204,10 @@ function renderResultItem(d, i) {
               : grade === 'partial' ? 'partial'
               : grade === 'wrong'   ? 'wrong'
               : 'pending';
-    const icon = grade === 'correct' ? '✅'
-              : grade === 'partial' ? '🟡'
-              : grade === 'wrong'   ? '❌'
-              : '⏳';
+    const icon = grade === 'correct' ? ico('check','ico')
+              : grade === 'partial' ? ico('circle-dot','ico')
+              : grade === 'wrong'   ? ico('x','ico')
+              : ico('clock','ico');
     const gradeText = grade === 'correct' ? 'Верно'
                    : grade === 'partial' ? 'Частично верно'
                    : grade === 'wrong'   ? 'Неверно'
@@ -1223,7 +1219,7 @@ function renderResultItem(d, i) {
           <div class="rv-q-num">${icon}</div>
           <div class="rv-q-text">
             ${esc(d.text)}
-            <span class="rv-q-type open">✍️ развёрнутый</span>
+            <span class="rv-q-type open">${ico('pen','ico-sm')} развёрнутый</span>
           </div>
         </div>
 
@@ -1233,7 +1229,7 @@ function renderResultItem(d, i) {
 
         ${d.given_file ? `
           <a class="rv-open-file" href="${esc(d.given_file)}" target="_blank" rel="noopener">
-            <div class="fi">${fileIcon(d.given_file_name || '')}</div>
+            <div class="fi">${ico('paperclip','ico-sm')}</div>
             <div>
               <div>${esc(d.given_file_name || 'файл')}</div>
               <div class="fs">Открыть в новой вкладке</div>
@@ -1252,7 +1248,7 @@ function renderResultItem(d, i) {
         </div>
 
         ${d.comment ? `<div class="teacher-comment" style="margin-top:10px;padding:12px 16px;border-radius:12px;background:rgba(106,76,255,.06);border-left:3px solid var(--primary);font-size:13.5px;line-height:1.5">
-          <div style="font-weight:700;color:var(--primary);margin-bottom:4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px">💬 Ваш комментарий</div>
+          <div style="font-weight:700;color:var(--primary);margin-bottom:4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px">${ico('message','ico-sm')} Ваш комментарий</div>
           ${esc(d.comment)}
         </div>` : ''}
       </div>`;
@@ -1266,6 +1262,7 @@ function renderResultItem(d, i) {
     : []
   );
   const options = d.options || [];
+  const typeLabel = d.type === 'multi' ? `${ico('check-square','ico-sm')} несколько` : `${ico('circle-dot','ico-sm')} один`;
 
   return `
     <div class="rv-q ${ok ? 'auto-correct' : 'auto-wrong'}" style="margin-bottom:12px">
@@ -1273,7 +1270,7 @@ function renderResultItem(d, i) {
         <div class="rv-q-num">${i + 1}</div>
         <div class="rv-q-text">
           ${esc(d.text)}
-          <span class="rv-q-type ${d.type}">${d.type === 'multi' ? '☑️ несколько' : '🔘 один'}</span>
+          <span class="rv-q-type ${d.type}">${typeLabel}</span>
         </div>
       </div>
       <div>
@@ -1282,9 +1279,9 @@ function renderResultItem(d, i) {
           const isGiven = givenSet.has(idx);
           let cls = '';
           let markBadge = '';
-          if (isCorrect && isGiven) { cls = 'correct'; markBadge = '✅ верно'; }
-          else if (isCorrect && !isGiven) { cls = 'correct'; markBadge = '🟢 пропущено'; }
-          else if (!isCorrect && isGiven) { cls = 'bad-give'; markBadge = '❌ лишний'; }
+          if (isCorrect && isGiven) { cls = 'correct'; markBadge = `${ico('check','ico-sm')} верно`; }
+          else if (isCorrect && !isGiven) { cls = 'correct'; markBadge = 'пропущено'; }
+          else if (!isCorrect && isGiven) { cls = 'bad-give'; markBadge = `${ico('x','ico-sm')} лишний`; }
           else if (isGiven) { cls = 'given'; markBadge = 'выбрано'; }
           return `<div class="rv-opt ${cls}">
             <span class="key">${letterFor(idx)}</span>
@@ -1450,16 +1447,16 @@ function renderScheduleGrid(container, data, students) {
         <h1 class="page-title">Расписание</h1>
         <p class="page-sub">Еженедельные занятия с учениками</p>
       </div>
-      <button class="btn btn-primary" id="btn-add-lesson">+ Новое занятие</button>
+      <button class="btn btn-primary" id="btn-add-lesson">${ico('plus','ico ico-sm')} Новое занятие</button>
     </div>
 
     <div class="schedule-wrap">
       <div class="schedule-head">
         <div class="schedule-week-title">${weekLabel}</div>
         <div class="schedule-nav">
-          <button id="sched-prev" title="Предыдущая неделя">←</button>
+          <button id="sched-prev" title="Предыдущая неделя">${ico('arrow-left','ico-sm')}</button>
           <button class="today-btn" id="sched-today">Сегодня</button>
-          <button id="sched-next" title="Следующая неделя">→</button>
+          <button id="sched-next" title="Следующая неделя">${ico('arrow-right','ico-sm')}</button>
         </div>
       </div>
 
@@ -1472,10 +1469,10 @@ function renderScheduleGrid(container, data, students) {
         </div>
       ` : `
         <div class="schedule-empty">
-          <span class="icon">📅</span>
+          <span class="icon">${ico('calendar','ico-xl')}</span>
           <h3>Пока нет занятий</h3>
           <p>Добавьте первое занятие — оно будет повторяться каждую неделю</p>
-          <button class="btn btn-primary" id="btn-add-lesson-empty">+ Новое занятие</button>
+          <button class="btn btn-primary" id="btn-add-lesson-empty">${ico('plus','ico ico-sm')} Новое занятие</button>
         </div>
       `}
 
@@ -1567,7 +1564,7 @@ function openLessonModal(lesson, prefill = {}) {
   }
 
   if (lesson) {
-    $('#lesson-modal-title').textContent = '✏️ Изменить занятие';
+    $('#lesson-modal-title').innerHTML = `${ico('pencil','ico ico-lg')} Изменить занятие`;
     $('#lesson-modal-sub').textContent = 'Изменения применятся ко всем будущим неделям';
     $('#lesson-student').value = String(lesson.student_id);
     $('#lesson-day').value = String(lesson.day_of_week);
@@ -1575,7 +1572,7 @@ function openLessonModal(lesson, prefill = {}) {
     $('#lesson-duration').value = String(lesson.duration_min);
     $('#lesson-subject').value = lesson.subject || '';
   } else {
-    $('#lesson-modal-title').textContent = '📅 Новое занятие';
+    $('#lesson-modal-title').innerHTML = `${ico('calendar','ico ico-lg')} Новое занятие`;
     $('#lesson-modal-sub').textContent = 'Будет повторяться каждую неделю';
     $('#lesson-student').value = '';
     $('#lesson-day').value = String(prefill.day_of_week ?? 0);
@@ -1632,7 +1629,7 @@ function openLessonCard(lesson) {
   $('#lc-title').textContent = lesson.student_name || 'Занятие';
   let sub = `${DOW_FULL[lesson.day_of_week]}, ${lesson.time_start} · ${lesson.duration_min} мин`;
   if (lesson.subject) sub += ' · ' + lesson.subject;
-  if (lesson.is_override) sub += ' · ⚠️ перенесено';
+  if (lesson.is_override) sub += ' · перенесено';
   $('#lc-sub').textContent = sub;
 
   openModal('modal-lesson-card');

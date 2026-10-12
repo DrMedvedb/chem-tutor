@@ -40,15 +40,14 @@ function toast(msg, type = '') {
   t._t = setTimeout(() => t.className = 'toast', 2600);
 }
 
-function fileIcon(name) {
+function ico(id, cls = 'ico') {
+  return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+}
+
+function fileTypeIco(name) {
   const ext = (String(name).split('.').pop() || '').toLowerCase();
-  if (ext === 'pdf') return '📕';
-  if (['doc','docx'].includes(ext)) return '📘';
-  if (['xls','xlsx','csv'].includes(ext)) return '📗';
-  if (['ppt','pptx'].includes(ext)) return '📙';
-  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return '🖼';
-  if (['txt','md','rtf'].includes(ext)) return '📄';
-  return '📎';
+  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return 'image';
+  return 'file-text';
 }
 function formatSize(b) {
   if (!b && b !== 0) return '';
@@ -65,7 +64,6 @@ function formatDuration(sec) {
   return m + ' мин ' + s + ' сек';
 }
 
-// ⭐ Классы
 const GRADES = {
   junior: { full: 'Младшая группа', cls: 'g-junior' },
   '8':    { full: '8 класс', cls: 'g-8' },
@@ -85,11 +83,10 @@ async function loadTopic() {
     $('#t-title').textContent = data.topic.title;
     $('#t-desc').textContent = data.topic.description || '';
 
-    // ⭐ Бейдж класса
     const gradeWrap = $('#t-grade-wrap');
     if (gradeWrap) {
       if (data.topic.is_welcome === 1) {
-        gradeWrap.innerHTML = `<span class="grade-badge" style="background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00">⭐ Вводная</span>`;
+        gradeWrap.innerHTML = `<span class="grade-badge" style="background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00">${ico('star','ico-sm')} Вводная</span>`;
       } else if (data.topic.grade && GRADES[data.topic.grade]) {
         const g = GRADES[data.topic.grade];
         gradeWrap.innerHTML = `<span class="grade-badge ${g.cls}">${g.full}</span>`;
@@ -116,20 +113,19 @@ async function loadTopic() {
   }
 }
 
-// ⭐ Заглушки
 function showAccessDenied(msg) {
   document.querySelector('.st-wrap').innerHTML = `
-    <a href="dashboard-student.html" class="st-back">← Мои темы</a>
+    <a href="dashboard-student.html" class="st-back">${ico('arrow-left','ico-sm')} Мои темы</a>
     <div style="background:var(--white);border-radius:28px;padding:56px 40px;border:1.5px solid var(--border);text-align:center;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#e0435c,#ff7a8e)"></div>
-      <div style="font-size:88px;line-height:1;margin-bottom:16px">🔒</div>
+      <div style="display:grid;place-items:center;margin-bottom:16px;color:var(--danger)">${ico('lock','ico-xl')}</div>
       <h2 style="font-size:28px;font-weight:800;margin-bottom:10px">Доступ закрыт</h2>
       <p style="color:var(--gray);font-size:15px;max-width:420px;margin:0 auto 28px;line-height:1.5">
         ${esc(msg)}.<br>
         Обратитесь к учителю, если считаете, что это ошибка.
       </p>
       <a href="dashboard-student.html" class="btn btn-accent" style="padding:14px 32px">
-        ← Вернуться к темам
+        ${ico('arrow-left','ico-sm')} Вернуться к темам
       </a>
     </div>
   `;
@@ -137,15 +133,15 @@ function showAccessDenied(msg) {
 
 function showNotFound(msg) {
   document.querySelector('.st-wrap').innerHTML = `
-    <a href="dashboard-student.html" class="st-back">← Мои темы</a>
+    <a href="dashboard-student.html" class="st-back">${ico('arrow-left','ico-sm')} Мои темы</a>
     <div style="background:var(--white);border-radius:28px;padding:56px 40px;border:1.5px solid var(--border);text-align:center">
-      <div style="font-size:88px;line-height:1;margin-bottom:16px">🤷</div>
+      <div style="display:grid;place-items:center;margin-bottom:16px;color:var(--gray)">${ico('help','ico-xl')}</div>
       <h2 style="font-size:28px;font-weight:800;margin-bottom:10px">Не найдено</h2>
       <p style="color:var(--gray);font-size:15px;max-width:420px;margin:0 auto 28px;line-height:1.5">
         ${esc(msg)}
       </p>
       <a href="dashboard-student.html" class="btn btn-accent" style="padding:14px 32px">
-        ← Вернуться к темам
+        ${ico('arrow-left','ico-sm')} Вернуться к темам
       </a>
     </div>
   `;
@@ -155,7 +151,7 @@ function renderMaterials(mats) {
   const v = $('#materials');
   if (!mats.length) {
     v.innerHTML = `<div class="empty" style="padding:30px 20px">
-      <span class="empty-icon" style="font-size:48px">📄</span>
+      <span class="empty-icon" style="font-size:48px">${ico('file-text','ico-lg')}</span>
       <h3 style="font-size:18px">Материалов пока нет</h3>
       <p>Учитель ещё не добавил материалы к этой теме</p>
     </div>`;
@@ -164,31 +160,31 @@ function renderMaterials(mats) {
 
   v.innerHTML = mats.map((m) => {
     const isFile = !!m.file_path;
-    const icon = isFile ? fileIcon(m.file_name || '') : (m.type === 'link' ? '🔗' : '📝');
+    const icon = isFile ? fileTypeIco(m.file_name || '') : (m.type === 'link' ? 'link' : 'file-text');
 
     let sub, body;
     if (isFile) {
-      sub = '📥 Скачать файл' + (m.file_size ? ' · ' + formatSize(m.file_size) : '');
+      sub = `${ico('download','ico-sm')} Скачать файл` + (m.file_size ? ' · ' + formatSize(m.file_size) : '');
       body = `<a href="${esc(m.content)}" download="${esc(m.file_name || '')}" target="_blank" rel="noopener">
-        📥 Скачать ${esc(m.file_name || 'файл')}
+        ${ico('download','ico-sm')} Скачать ${esc(m.file_name || 'файл')}
       </a>`;
     } else if (m.type === 'link') {
-      sub = '🔗 Внешняя ссылка';
+      sub = `${ico('link','ico-sm')} Внешняя ссылка`;
       body = `<a href="${esc(m.content)}" target="_blank" rel="noopener">${esc(m.content)}</a>`;
     } else {
-      sub = '📝 Конспект';
+      sub = `${ico('file-text','ico-sm')} Конспект`;
       body = esc(m.content);
     }
 
     return `
       <div class="st-mat" data-mat-id="${m.id}" id="m-${m.id}">
         <div class="st-mat-head">
-          <div class="ic">${icon}</div>
+          <div class="ic">${ico(icon,'ico')}</div>
           <div class="body">
             <div class="title">${esc(m.title)}</div>
             <div class="sub">${sub}</div>
           </div>
-          <div class="chev">▶</div>
+          <div class="chev">${ico('chevr','ico-sm')}</div>
         </div>
         <div class="st-mat-body">
           <div class="inner">${body}</div>
@@ -205,7 +201,7 @@ function renderMaterials(mats) {
 
   $$('.st-mat').forEach(el => {
     const sub = $('.sub', el).textContent;
-    if (sub.startsWith('🔗') || sub.startsWith('📥')) {
+    if (sub.includes('Внешняя ссылка') || sub.includes('Скачать файл')) {
       el.classList.add('open');
     }
   });
@@ -217,7 +213,7 @@ async function renderTestBlock(data) {
   if (data.topic.is_welcome === 1) {
     v.innerHTML = `
       <div class="test-cta">
-        <span class="emoji">⭐</span>
+        <span class="emoji">${ico('star','ico-xl')}</span>
         <h3>Вводная тема</h3>
         <p>Эта тема — знакомство с платформой. Тест здесь не предусмотрен.</p>
       </div>
@@ -229,7 +225,7 @@ async function renderTestBlock(data) {
 
   if (!hasTest) {
     v.innerHTML = `<div class="test-cta">
-      <span class="emoji">⏳</span>
+      <span class="emoji">${ico('clock','ico-xl')}</span>
       <h3>Тест пока не готов</h3>
       <p>Учитель ещё не добавил вопросы к этой теме</p>
     </div>`;
@@ -244,7 +240,7 @@ async function renderTestBlock(data) {
   if (!canTakeTest) {
     v.innerHTML = `
       <div class="test-cta" style="background:linear-gradient(135deg,rgba(224,67,92,.06),rgba(224,67,92,.02));border:1.5px solid rgba(224,67,92,.25)">
-        <span class="emoji">🔒</span>
+        <span class="emoji">${ico('lock','ico-xl')}</span>
         <h3 style="color:var(--danger)">Тест закрыт</h3>
         <p>Учитель не открыл вам доступ к тесту по этой теме.<br>Материалы доступны — изучайте!</p>
       </div>
@@ -271,21 +267,21 @@ async function renderTestBlock(data) {
   let statusHtml = '';
   if (pending) {
     statusHtml = `<div class="best-result" style="background:rgba(255,170,0,.12);color:#c47f00;">
-      ⏳ Ваша работа отправлена на проверку учителю
+      ${ico('clock','ico-sm')} Ваша работа отправлена на проверку учителю
     </div>`;
   } else if (best) {
     statusHtml = `<div class="best-result">
-      ⭐ Ваш лучший результат: ${Math.round(best.score / best.total * 100)}%
+      ${ico('star','ico-sm')} Ваш лучший результат: ${Math.round(best.score / best.total * 100)}%
       (${best.score} из ${best.total})
     </div>`;
   }
 
   const infoBits = [];
-  if (data.test.timer_min) infoBits.push(`⏱ ${data.test.timer_min} мин`);
+  if (data.test.timer_min) infoBits.push(`${ico('clock','ico-sm')} ${data.test.timer_min} мин`);
   if (maxAttempts) {
-    infoBits.push(`🔁 Попыток: ${attemptsUsed} из ${maxAttempts}`);
+    infoBits.push(`${ico('rotate','ico-sm')} Попыток: ${attemptsUsed} из ${maxAttempts}`);
   } else {
-    infoBits.push(`🔁 Без ограничения попыток`);
+    infoBits.push(`${ico('rotate','ico-sm')} Без ограничения попыток`);
   }
   const infoHtml = infoBits.length
     ? `<div style="font-size:13.5px;color:var(--gray);font-weight:600;margin-bottom:12px">${infoBits.join(' · ')}</div>`
@@ -301,7 +297,7 @@ async function renderTestBlock(data) {
   }
 
   v.innerHTML = `<div class="test-cta">
-    <span class="emoji">🧪</span>
+    <span class="emoji">${ico('flask','ico-xl')}</span>
     <h3>${esc(data.test.title)}</h3>
     <p>Вопросов: <b>${data.questions_count}</b></p>
     ${infoHtml}
@@ -309,10 +305,10 @@ async function renderTestBlock(data) {
     <br>
     ${isLimitReached
       ? `<button class="btn btn-ghost" disabled style="padding:16px 40px;font-size:16px;opacity:.55;cursor:not-allowed">
-           🚫 ${buttonLabel}
+           ${ico('ban','ico-sm')} ${buttonLabel}
          </button>`
       : `<a class="btn btn-accent" href="take-test.html?id=${topicId}" style="padding:16px 40px;font-size:16px">
-           ${buttonLabel} →
+           ${buttonLabel} ${ico('arrow-right','ico-sm')}
          </a>`
     }
   </div>`;

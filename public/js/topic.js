@@ -33,6 +33,10 @@ function toast(msg, type = '') {
   t._t = setTimeout(() => t.className = 'toast', 2600);
 }
 
+function ico(id, cls = 'ico') {
+  return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+}
+
 function openModal(id)  { $('#' + id).classList.add('open'); }
 function closeModal(id) { $('#' + id).classList.remove('open'); }
 
@@ -73,16 +77,12 @@ function gradeBadge(id) {
   return `<span class="grade-badge ${GRADES[id].cls}">${esc(GRADES[id].full)}</span>`;
 }
 
-function fileIcon(name) {
+function fileTypeIco(name) {
   const ext = (String(name).split('.').pop() || '').toLowerCase();
-  if (ext === 'pdf') return '📕';
-  if (['doc', 'docx'].includes(ext)) return '📘';
-  if (['xls', 'xlsx', 'csv'].includes(ext)) return '📗';
-  if (['ppt', 'pptx'].includes(ext)) return '📙';
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '🖼';
-  if (['txt', 'md', 'rtf'].includes(ext)) return '📄';
-  return '📎';
+  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return 'image';
+  return 'file-text';
 }
+
 function formatSize(bytes) {
   if (!bytes && bytes !== 0) return '';
   if (bytes < 1024) return bytes + ' Б';
@@ -125,9 +125,8 @@ async function loadAll() {
     $('#topic-title').textContent = topic.title;
     $('#topic-desc').textContent = topic.description || 'Без описания';
 
-    // ⭐ Бейдж класса
     if (topic.is_welcome === 1) {
-      $('#topic-grade-wrap').innerHTML = `<span class="grade-badge" style="background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00">⭐ Вводная — видна всем</span>`;
+      $('#topic-grade-wrap').innerHTML = `<span class="grade-badge" style="background:linear-gradient(135deg,rgba(255,170,0,.16),rgba(255,170,0,.05));color:#c47f00">${ico('star','ico-sm')} Вводная — видна всем</span>`;
       $('#dup-topic-btn').style.display = 'none';
     } else if (topic.grade) {
       $('#topic-grade-wrap').innerHTML = gradeBadge(topic.grade);
@@ -190,7 +189,7 @@ $('#do-duplicate')?.addEventListener('click', async () => {
     toast(e.message, 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = '📋 Скопировать';
+    btn.innerHTML = `${ico('copy','ico ico-sm')} Скопировать`;
   }
 });
 
@@ -201,7 +200,7 @@ function renderMaterials() {
   const v = $('#materials-wrap');
   if (!materials.length) {
     v.innerHTML = `<div class="empty" style="padding:30px 20px">
-      <span class="empty-icon" style="font-size:48px">📄</span>
+      <span class="empty-icon" style="font-size:48px">${ico('file-text','ico-lg')}</span>
       <h3 style="font-size:18px">Материалов пока нет</h3>
       <p style="margin-bottom:14px">Добавьте ссылки, конспекты или файлы, чтобы ученики видели их</p>
     </div>`;
@@ -210,11 +209,11 @@ function renderMaterials() {
 
   v.innerHTML = `<div class="mat-list">${materials.map(m => {
     const isFile = !!m.file_path;
-    const icon = isFile ? fileIcon(m.file_name || '') : (m.type === 'link' ? '🔗' : '📝');
+    const icon = isFile ? fileTypeIco(m.file_name || '') : (m.type === 'link' ? 'link' : 'file-text');
     let body;
     if (isFile) {
       const size = m.file_size ? formatSize(m.file_size) : '';
-      body = `<a href="${esc(m.content)}" download="${esc(m.file_name || '')}">📥 Скачать ${esc(m.file_name || 'файл')}</a>${size ? ` <span class="muted">· ${size}</span>` : ''}`;
+      body = `<a href="${esc(m.content)}" download="${esc(m.file_name || '')}">${ico('download','ico-sm')} Скачать ${esc(m.file_name || 'файл')}</a>${size ? ` <span class="muted">· ${size}</span>` : ''}`;
     } else if (m.type === 'link') {
       body = `<a href="${esc(m.content)}" target="_blank" rel="noopener">${esc(m.content)}</a>`;
     } else {
@@ -222,14 +221,14 @@ function renderMaterials() {
     }
     return `
       <div class="mat-item">
-        <div class="type-icon">${icon}</div>
+        <div class="type-icon">${ico(icon,'ico')}</div>
         <div class="body">
           <div class="title">${esc(m.title)}</div>
           <div class="content">${body}</div>
         </div>
         <div class="actions">
-          <button class="icon-btn" data-edit-mat="${m.id}" title="Изменить">✏️</button>
-          <button class="icon-btn danger" data-del-mat="${m.id}" title="Удалить">🗑</button>
+          <button class="icon-btn" data-edit-mat="${m.id}" title="Изменить">${ico('pencil','ico-sm')}</button>
+          <button class="icon-btn danger" data-del-mat="${m.id}" title="Удалить">${ico('trash','ico-sm')}</button>
         </div>
       </div>`;
   }).join('')}</div>`;
@@ -283,12 +282,12 @@ function setSelectedFile(file) {
   const preview = $('#file-preview');
   preview.style.display = '';
   preview.innerHTML = `<div class="file-chip">
-    <div class="fc-icon">${fileIcon(file.name)}</div>
+    <div class="fc-icon">${ico(fileTypeIco(file.name),'ico')}</div>
     <div class="fc-info">
       <div class="fc-name">${esc(file.name)}</div>
       <div class="fc-size">${formatSize(file.size)}</div>
     </div>
-    <button class="icon-btn danger" id="clear-file" title="Убрать">✕</button>
+    <button class="icon-btn danger" id="clear-file" title="Убрать">${ico('x','ico-sm')}</button>
   </div>`;
   $('#clear-file').onclick = (e) => {
     e.preventDefault();
@@ -308,7 +307,9 @@ function openMaterialModal(m) {
   fileInput.value = '';
   $('#file-preview').style.display = 'none';
   $('#file-preview').innerHTML = '';
-  $('#mat-modal-title').textContent = m ? '✏️ Изменить материал' : '📄 Новый материал';
+  $('#mat-modal-title').innerHTML = m
+    ? `${ico('pencil','ico ico-lg')} Изменить материал`
+    : `${ico('file-text','ico ico-lg')} Новый материал`;
   $('#mat-title').value = m?.title || '';
 
   if (m?.file_path) currentMatTab = 'file';
@@ -384,12 +385,12 @@ function renderTestBlock() {
     head.innerHTML = '';
     wrap.innerHTML = `
       <div class="empty-test-block">
-        <span class="icon">🧪</span>
+        <span class="icon">${ico('flask','ico-xl')}</span>
         <h3>Тест по теме пока не создан</h3>
         <p>Когда будете готовы — создайте тест и добавьте в него вопросы.
            Ученики увидят его сразу после публикации.</p>
         <button class="btn btn-primary btn-create-test" id="btn-create-test">
-          + Создать тест по теме
+          ${ico('plus','ico ico-sm')} Создать тест по теме
         </button>
       </div>
     `;
@@ -404,13 +405,13 @@ function renderTestBlock() {
   head.innerHTML = `
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       ${isDraft
-        ? `<span class="draft-chip" title="Тест ещё не виден ученикам">📝 Черновик</span>
-           <button class="btn btn-ghost" id="publish-test">✅ Опубликовать</button>`
-        : `<span class="published-chip" title="Ученики видят этот тест">🌐 Опубликован</span>
-           <button class="btn btn-ghost" id="unpublish-test" title="Скрыть от учеников">📥 Вернуть в черновики</button>`
+        ? `<span class="draft-chip" title="Тест ещё не виден ученикам">${ico('pencil','ico-sm')} Черновик</span>
+           <button class="btn btn-ghost" id="publish-test">${ico('check','ico-sm')} Опубликовать</button>`
+        : `<span class="published-chip" title="Ученики видят этот тест">${ico('globe','ico-sm')} Опубликован</span>
+           <button class="btn btn-ghost" id="unpublish-test" title="Скрыть от учеников">${ico('download','ico-sm')} Вернуть в черновики</button>`
       }
-      <button class="btn btn-ghost" id="open-settings" title="Настройки теста">⚙️ Настройки</button>
-      <button class="btn btn-primary" id="add-question">+ Добавить вопрос</button>
+      <button class="btn btn-ghost" id="open-settings" title="Настройки теста">${ico('settings','ico-sm')} Настройки</button>
+      <button class="btn btn-primary" id="add-question">${ico('plus','ico-sm')} Добавить вопрос</button>
     </div>
   `;
 
@@ -441,7 +442,7 @@ async function createTest() {
   } catch (e) {
     toast(e.message, 'error');
     const btn = $('#btn-create-test');
-    if (btn) { btn.disabled = false; btn.textContent = '+ Создать тест по теме'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = `${ico('plus','ico ico-sm')} Создать тест по теме`; }
   }
 }
 
@@ -546,10 +547,10 @@ function renderQuestions() {
   const v = $('#questions-wrap');
   if (!questions.length) {
     v.innerHTML = `<div class="empty" style="padding:30px 20px">
-      <span class="empty-icon" style="font-size:48px">❓</span>
+      <span class="empty-icon" style="font-size:48px">${ico('help','ico-lg')}</span>
       <h3 style="font-size:18px">Вопросов пока нет</h3>
       <p style="margin-bottom:14px">Добавьте первый вопрос — ученики смогут пройти тест</p>
-      <button class="btn btn-primary" id="empty-add-question">+ Добавить вопрос</button>
+      <button class="btn btn-primary" id="empty-add-question">${ico('plus','ico-sm')} Добавить вопрос</button>
     </div>`;
     $('#empty-add-question').onclick = () => openQuestionModal(null);
     return;
@@ -561,7 +562,7 @@ function renderQuestions() {
     let body = '';
 
     if (type === 'single') {
-      typeBadge = `<span class="q-type-badge single">🔘 Один</span>`;
+      typeBadge = `<span class="q-type-badge single">${ico('circle-dot','ico-sm')} Один</span>`;
       const opts = q.options || [];
       const correctSet = new Set(q.correct || []);
       body = `<div class="q-options">
@@ -573,7 +574,7 @@ function renderQuestions() {
         `).join('')}
       </div>`;
     } else if (type === 'multi') {
-      typeBadge = `<span class="q-type-badge multi">☑️ Несколько</span>`;
+      typeBadge = `<span class="q-type-badge multi">${ico('check-square','ico-sm')} Несколько</span>`;
       const opts = q.options || [];
       const correctSet = new Set(q.correct || []);
       body = `<div class="q-options">
@@ -585,10 +586,10 @@ function renderQuestions() {
         `).join('')}
       </div>`;
     } else {
-      typeBadge = `<span class="q-type-badge open">✍️ Развёрнутый</span>`;
+      typeBadge = `<span class="q-type-badge open">${ico('pen','ico-sm')} Развёрнутый</span>`;
       const ct = q.correct_text ? esc(q.correct_text) : '<i>Эталонный ответ не задан</i>';
       body = `<div class="q-open-answer">
-        <b>📌 Эталонный ответ:</b><br>${ct}
+        <b>${ico('paperclip','ico-sm')} Эталонный ответ:</b><br>${ct}
       </div>`;
     }
 
@@ -601,8 +602,8 @@ function renderQuestions() {
             ${esc(q.text)}
           </div>
           <div class="actions" style="display:flex;gap:4px">
-            <button class="icon-btn" data-edit-q="${q.id}" title="Редактировать">✏️</button>
-            <button class="icon-btn danger" data-del-q="${q.id}" title="Удалить">🗑</button>
+            <button class="icon-btn" data-edit-q="${q.id}" title="Редактировать">${ico('pencil','ico-sm')}</button>
+            <button class="icon-btn danger" data-del-q="${q.id}" title="Удалить">${ico('trash','ico-sm')}</button>
           </div>
         </div>
         ${body}
@@ -668,7 +669,7 @@ function renderSingleOptions() {
     <div class="opt-row ${qCorrect.includes(idx) ? 'is-correct' : ''}" data-idx="${idx}">
       <div class="opt-letter">${letterFor(idx)}</div>
       <input class="input" data-opt-input="${idx}" value="${esc(val)}" placeholder="Вариант ${letterFor(idx)}">
-      <button class="mark-correct" data-mark="${idx}" title="Отметить правильным">${qCorrect.includes(idx) ? '✓' : '◯'}</button>
+      <button class="mark-correct" data-mark="${idx}" title="Отметить правильным">${qCorrect.includes(idx) ? ico('check','ico-sm') : ico('circle-dot','ico-sm')}</button>
     </div>
   `).join('');
 
@@ -692,8 +693,8 @@ function renderMultiOptions() {
     <div class="opt-row ${qCorrect.includes(idx) ? 'is-correct' : ''}" data-idx="${idx}">
       <div class="opt-letter">${letterFor(idx)}</div>
       <input class="input" data-opt-input="${idx}" value="${esc(val)}" placeholder="Вариант ${letterFor(idx)}">
-      <button class="mark-correct" data-mark="${idx}" title="Отметить правильным">${qCorrect.includes(idx) ? '✓' : '◯'}</button>
-      ${qOptions.length > 4 ? `<button class="del-opt" data-del-opt="${idx}" title="Удалить">✕</button>` : ''}
+      <button class="mark-correct" data-mark="${idx}" title="Отметить правильным">${qCorrect.includes(idx) ? ico('check','ico-sm') : ico('circle-dot','ico-sm')}</button>
+      ${qOptions.length > 4 ? `<button class="del-opt" data-del-opt="${idx}" title="Удалить">${ico('x','ico-sm')}</button>` : ''}
     </div>
   `).join('');
 
@@ -745,7 +746,7 @@ function openQuestionModal(existing) {
   editingQuestion = existing || null;
 
   if (existing) {
-    $('#q-modal-title').textContent = '✏️ Редактирование вопроса';
+    $('#q-modal-title').innerHTML = `${ico('pencil','ico ico-lg')} Редактирование вопроса`;
     $('#q-text').value = existing.text || '';
     $('#q-correct-text').value = existing.correct_text || '';
 
@@ -760,7 +761,7 @@ function openQuestionModal(existing) {
     }
     setQuestionType(type);
   } else {
-    $('#q-modal-title').textContent = '❓ Новый вопрос';
+    $('#q-modal-title').innerHTML = `${ico('help','ico ico-lg')} Новый вопрос`;
     $('#q-text').value = '';
     $('#q-correct-text').value = '';
     qOptions = ['', '', '', ''];

@@ -10,7 +10,6 @@
 (function (global) {
   'use strict';
 
-  // ─── Хелперы ───
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
@@ -45,15 +44,14 @@
     t._t = setTimeout(() => t.className = 'toast', 2600);
   }
 
-  function fileIcon(name) {
+  function ico(id, cls = 'ico') {
+    return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+  }
+
+  function fileTypeIco(name) {
     const ext = (String(name).split('.').pop() || '').toLowerCase();
-    if (ext === 'pdf') return '📕';
-    if (['doc','docx'].includes(ext)) return '📘';
-    if (['xls','xlsx','csv'].includes(ext)) return '📗';
-    if (['ppt','pptx'].includes(ext)) return '📙';
-    if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return '🖼';
-    if (['txt','md','rtf'].includes(ext)) return '📄';
-    return '📎';
+    if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return 'image';
+    return 'file-text';
   }
   function isImage(name) {
     const ext = (String(name).split('.').pop() || '').toLowerCase();
@@ -99,7 +97,6 @@
 
   const REACTION_EMOJIS = ['👍','❤️','😂','😮','😢','👏','🔥','✅','❌'];
 
-  // ─── Состояние ───
   let me = null;
   let role = null;
   let mountEl = null;
@@ -114,9 +111,7 @@
   let pendingFile = null;
   let notifPanelOpen = false;
 
-  // ═══════════════════════════════════════════════════
-  //  ИНИЦИАЛИЗАЦИЯ
-  // ═══════════════════════════════════════════════════
+  // ═══ ИНИЦИАЛИЗАЦИЯ ═══
 
   function init(opts) {
     role = opts.role;
@@ -141,21 +136,19 @@
     startPolling();
   }
 
-  // ═══════════════════════════════════════════════════
-  //  КАРКАС
-  // ═══════════════════════════════════════════════════
+  // ═══ КАРКАС ═══
 
   function renderShell() {
     mountEl.innerHTML = `
       <div class="chat-app">
         <aside class="chat-sidebar">
           <div class="chat-sidebar-head">
-            <h3>💬 Сообщения <span class="cnt-badge" id="chat-total-unread" style="display:none">0</span></h3>
+            <h3>${ico('message','ico ico-sm')} Сообщения <span class="cnt-badge" id="chat-total-unread" style="display:none">0</span></h3>
             <input class="chat-search" id="chat-search-input" type="text" placeholder="Поиск по имени…" autocomplete="off">
           </div>
           <div class="chat-dialogs" id="chat-dialogs">
             <div class="chat-placeholder" style="padding:30px 20px">
-              <span class="emoji" style="font-size:36px">⏳</span>
+              <span class="emoji">${ico('clock','ico-lg')}</span>
               <p style="font-size:13px">Загрузка…</p>
             </div>
           </div>
@@ -163,7 +156,7 @@
 
         <section class="chat-main" id="chat-main">
           <div class="chat-placeholder">
-            <span class="emoji">${role === 'tutor' ? '👩‍🎓' : '👨‍🏫'}</span>
+            <span class="emoji">${role === 'tutor' ? ico('graduation','ico-xl') : ico('users','ico-xl')}</span>
             <h3>${role === 'tutor' ? 'Выберите ученика' : 'Напишите учителю'}</h3>
             <p>${role === 'tutor'
               ? 'Слева — список ваших учеников. Кликните на любого, чтобы начать переписку.'
@@ -183,9 +176,7 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════
-  //  СПИСОК ДИАЛОГОВ
-  // ═══════════════════════════════════════════════════
+  // ═══ СПИСОК ДИАЛОГОВ ═══
 
   async function loadDialogs() {
     try {
@@ -201,7 +192,7 @@
       console.error('loadDialogs:', e);
       const v = $('#chat-dialogs');
       if (v) v.innerHTML = `<div class="chat-placeholder" style="padding:30px 20px">
-        <span class="emoji" style="font-size:36px">😕</span>
+        <span class="emoji">${ico('help','ico-lg')}</span>
         <p style="font-size:13px">${esc(e.message)}</p>
       </div>`;
     }
@@ -220,7 +211,7 @@
 
     if (!list.length) {
       v.innerHTML = `<div class="chat-placeholder" style="padding:30px 20px">
-        <span class="emoji" style="font-size:36px">${filter ? '🔍' : '📭'}</span>
+        <span class="emoji">${filter ? ico('search','ico-lg') : ico('folder','ico-lg')}</span>
         <p style="font-size:13px">${filter ? 'Никого не найдено' : (role === 'tutor' ? 'Пока нет учеников' : 'Учитель не назначен')}</p>
       </div>`;
       return;
@@ -237,7 +228,7 @@
         const prefix = lm.from_me ? 'Вы: ' : '';
         const content = lm.text
           ? esc(lm.text.slice(0, 60))
-          : (lm.file_name ? '📎 ' + esc(lm.file_name.slice(0, 40)) : '—');
+          : (lm.file_name ? ico('paperclip','ico-sm') + ' ' + esc(lm.file_name.slice(0, 40)) : '—');
         preview = `<div class="preview">${prefix}${content}</div>`;
       } else {
         preview = `<div class="preview muted">Нет сообщений</div>`;
@@ -279,9 +270,7 @@
     return (Date.now() - last) < 2 * 60 * 1000;
   }
 
-  // ═══════════════════════════════════════════════════
-  //  ОТКРЫТИЕ ЧАТА
-  // ═══════════════════════════════════════════════════
+  // ═══ ОТКРЫТИЕ ЧАТА ═══
 
   async function openWith(userId) {
     const d = dialogsById.get(userId);
@@ -316,9 +305,7 @@
     renderChatMain();
   }
 
-  // ═══════════════════════════════════════════════════
-  //  ОКНО ЧАТА
-  // ═══════════════════════════════════════════════════
+  // ═══ ОКНО ЧАТА ═══
 
   function renderChatMain() {
     const v = $('#chat-main');
@@ -327,7 +314,7 @@
     if (!currentPeer) {
       v.innerHTML = `
         <div class="chat-placeholder">
-          <span class="emoji">${role === 'tutor' ? '👩‍🎓' : '👨‍🏫'}</span>
+          <span class="emoji">${role === 'tutor' ? ico('graduation','ico-xl') : ico('users','ico-xl')}</span>
           <h3>${role === 'tutor' ? 'Выберите ученика' : 'Напишите учителю'}</h3>
           <p>${role === 'tutor'
             ? 'Слева — список ваших учеников. Кликните на любого, чтобы начать переписку.'
@@ -355,12 +342,12 @@
       <div class="chat-input-wrap">
         <div id="chat-attach-preview-wrap"></div>
         <div class="chat-input-row">
-          <button class="chat-attach-btn" id="chat-attach-btn" title="Прикрепить файл">📎</button>
+          <button class="chat-attach-btn" id="chat-attach-btn" title="Прикрепить файл">${ico('paperclip','ico')}</button>
           <input type="file" id="chat-file-input" hidden
                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.md,.rtf,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg">
           <textarea class="chat-textarea" id="chat-textarea"
                     placeholder="Написать сообщение… (Enter — отправить)"></textarea>
-          <button class="chat-send-btn" id="chat-send-btn" disabled title="Отправить">➤</button>
+          <button class="chat-send-btn" id="chat-send-btn" disabled title="Отправить">${ico('arrow-right','ico')}</button>
         </div>
         <div class="chat-hint-under">Enter — отправить, Shift+Enter — новая строка</div>
       </div>
@@ -377,7 +364,7 @@
     if (!currentMessages.length) {
       body.innerHTML = `
         <div class="chat-placeholder" style="min-height:auto;padding:40px 20px">
-          <span class="emoji" style="font-size:48px">👋</span>
+          <span class="emoji">${ico('message','ico-xl')}</span>
           <h3 style="font-size:16px">Начните переписку</h3>
           <p style="font-size:13px">${role === 'tutor'
             ? 'Напишите ученику первое сообщение'
@@ -428,12 +415,12 @@
       } else {
         bubbleInner += `
           <a class="msg-file" href="${esc(m.file_path)}" download="${esc(m.file_name)}" target="_blank" rel="noopener">
-            <div class="fi">${fileIcon(m.file_name)}</div>
+            <div class="fi">${ico(fileTypeIco(m.file_name),'ico')}</div>
             <div class="finfo">
               <div class="fname">${esc(m.file_name)}</div>
               <div class="fsize">${formatSize(m.file_size)}</div>
             </div>
-            <div class="fdl">📥</div>
+            <div class="fdl">${ico('download','ico-sm')}</div>
           </a>
         `;
       }
@@ -488,9 +475,7 @@
     if (body) body.scrollTop = body.scrollHeight;
   }
 
-  // ═══════════════════════════════════════════════════
-  //  ОБРАБОТЧИКИ
-  // ═══════════════════════════════════════════════════
+  // ═══ ОБРАБОТЧИКИ ═══
 
   function wireChatMain() {
     const ta = $('#chat-textarea');
@@ -535,9 +520,7 @@
     btn.disabled = !hasText && !pendingFile;
   }
 
-  // ═══════════════════════════════════════════════════
-  //  ОТПРАВКА
-  // ═══════════════════════════════════════════════════
+  // ═══ ОТПРАВКА ═══
 
   async function sendMessage() {
     if (!currentPeer) return;
@@ -585,9 +568,7 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════
-  //  ФАЙЛЫ
-  // ═══════════════════════════════════════════════════
+  // ═══ ФАЙЛЫ ═══
 
   async function uploadFile(file) {
     if (file.size > 20 * 1024 * 1024) {
@@ -596,7 +577,7 @@
 
     const wrap = $('#chat-attach-preview-wrap');
     wrap.innerHTML = `<div class="chat-attach-preview">
-      <div class="fi">⏳</div>
+      <div class="fi">${ico('clock','ico')}</div>
       <div class="finfo">
         <div class="fname">Загрузка…</div>
         <div class="fsize">${esc(file.name)}</div>
@@ -637,12 +618,12 @@
     }
     wrap.innerHTML = `
       <div class="chat-attach-preview">
-        <div class="fi">${fileIcon(pendingFile.file_name)}</div>
+        <div class="fi">${ico(fileTypeIco(pendingFile.file_name),'ico')}</div>
         <div class="finfo">
           <div class="fname">${esc(pendingFile.file_name)}</div>
           <div class="fsize">${formatSize(pendingFile.file_size)}</div>
         </div>
-        <div class="frm" id="chat-attach-clear">✕</div>
+        <div class="frm" id="chat-attach-clear">${ico('x','ico-sm')}</div>
       </div>
     `;
     $('#chat-attach-clear').onclick = clearPendingFile;
@@ -657,9 +638,7 @@
     updateSendButton();
   }
 
-  // ═══════════════════════════════════════════════════
-  //  РЕАКЦИИ
-  // ═══════════════════════════════════════════════════
+  // ═══ РЕАКЦИИ ═══
 
   let reactionsPanel = null;
   let reactionsPanelFor = null;
@@ -751,9 +730,7 @@
     if (e.key === 'Escape') hideReactionsPanel();
   });
 
-  // ═══════════════════════════════════════════════════
-  //  POLLING
-  // ═══════════════════════════════════════════════════
+  // ═══ POLLING ═══
 
   function startPolling() {
     if (pollTimer) clearInterval(pollTimer);
@@ -797,9 +774,7 @@
     return (body.scrollHeight - body.scrollTop - body.clientHeight) < 40;
   }
 
-  // ═══════════════════════════════════════════════════
-  //  БЕЙДЖ И ПАНЕЛЬ УВЕДОМЛЕНИЙ
-  // ═══════════════════════════════════════════════════
+  // ═══ БЕЙДЖ И ПАНЕЛЬ УВЕДОМЛЕНИЙ ═══
 
   function updateUnreadBadge(count) {
     const nav = notifMountEl
@@ -846,7 +821,7 @@
     notifPanel.className = 'chat-notif-panel';
     notifPanel.innerHTML = `
       <div class="chat-notif-head">
-        <h4>💬 Непрочитанные</h4>
+        <h4>${ico('message','ico-sm')} Непрочитанные</h4>
         <span class="total" id="chat-notif-total">0</span>
       </div>
       <div class="chat-notif-body" id="chat-notif-body"></div>
@@ -887,7 +862,7 @@
       if (!data.items || !data.items.length) {
         body.innerHTML = `
           <div class="chat-notif-empty">
-            <span class="emo">🎉</span>
+            <span class="emo">${ico('check','ico-xl')}</span>
             <div>Нет непрочитанных сообщений</div>
           </div>`;
         return;
@@ -898,7 +873,7 @@
         const avatarHtml = window.Avatars.html(u, { size: 'md' });
         const preview = item.latest.text
           ? esc(item.latest.text.slice(0, 60))
-          : (item.latest.file_name ? '📎 ' + esc(item.latest.file_name.slice(0, 40)) : '—');
+          : (item.latest.file_name ? ico('paperclip','ico-sm') + ' ' + esc(item.latest.file_name.slice(0, 40)) : '—');
 
         return `
           <div class="chat-notif-item" data-notif-user-id="${u.id}">
@@ -936,10 +911,6 @@
       updateUnreadBadge(data.total || 0);
     } catch (e) {}
   }
-
-  // ═══════════════════════════════════════════════════
-  //  ЭКСПОРТ
-  // ═══════════════════════════════════════════════════
 
   global.Chat = {
     init,

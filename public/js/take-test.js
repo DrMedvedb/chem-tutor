@@ -38,16 +38,16 @@ function toast(msg, type = '') {
   t._t = setTimeout(() => t.className = 'toast', 2600);
 }
 
+function ico(id, cls = 'ico') {
+  return `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+}
+
 function letterFor(idx) { return String.fromCharCode(65 + idx); }
-function fileIcon(name) {
+
+function fileTypeIco(name) {
   const ext = (String(name).split('.').pop() || '').toLowerCase();
-  if (ext === 'pdf') return '📕';
-  if (['doc','docx'].includes(ext)) return '📘';
-  if (['xls','xlsx','csv'].includes(ext)) return '📗';
-  if (['ppt','pptx'].includes(ext)) return '📙';
-  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return '🖼';
-  if (['txt','md','rtf'].includes(ext)) return '📄';
-  return '📎';
+  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return 'image';
+  return 'file-text';
 }
 function formatSize(b) {
   if (!b && b !== 0) return '';
@@ -76,7 +76,6 @@ let answers = {};
 let submitted = false;
 let startedAt = Date.now();
 
-// ⭐ Таймер
 let timerMin = null;
 let timerLeft = null;
 let timerInterval = null;
@@ -92,7 +91,6 @@ async function loadTest() {
 
     startedAt = Date.now();
 
-    // ⭐ Таймер
     if (test.timer_min && test.timer_min > 0) {
       timerMin = test.timer_min;
       timerLeft = timerMin * 60;
@@ -101,13 +99,10 @@ async function loadTest() {
     renderAll();
     updateProgress();
 
-    // ✅ Показываем кнопки шпаргалок
     window.Cheatsheet?.show();
 
-    // ⭐ Запускаем таймер, если задан
     if (timerMin) startTimer();
   } catch (e) {
-    // ⭐ Определяем причину
     const msg = String(e.message || '');
     const isAccessDenied =
       e.status === 403 ||
@@ -117,20 +112,20 @@ async function loadTest() {
       msg.includes('Вводная тема');
 
     if (isAccessDenied) {
-      let emoji = '🔒';
+      let iconId = 'lock';
       let title = 'Тест закрыт';
       let sub = 'Учитель не открыл вам доступ к тесту по этой теме.<br>Материалы темы по-прежнему доступны — вернитесь и изучайте.';
 
       if (msg.includes('Попытки закончились')) {
-        emoji = '🚫';
+        iconId = 'ban';
         title = 'Попытки закончились';
         sub = 'Вы израсходовали все попытки, которые разрешил учитель.<br>Обратитесь к нему, если нужны дополнительные попытки.';
       } else if (msg.includes('ещё не опубликован')) {
-        emoji = '📝';
+        iconId = 'pencil';
         title = 'Тест ещё не опубликован';
         sub = 'Учитель ещё готовит этот тест. Загляните позже.';
       } else if (msg.includes('Вводная тема')) {
-        emoji = '⭐';
+        iconId = 'star';
         title = 'Вводная тема';
         sub = 'В этой теме нет теста — только материалы для знакомства с платформой.';
       }
@@ -138,12 +133,12 @@ async function loadTest() {
       $('#content').innerHTML = `
         <div class="result-wrap" style="position:relative;overflow:hidden">
           <div style="position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#e0435c,#ff7a8e)"></div>
-          <span class="result-emoji">${emoji}</span>
+          <span class="result-emoji weak">${ico(iconId,'ico')}</span>
           <h2 class="result-title">${title}</h2>
           <p class="result-sub">${sub}</p>
           <div class="result-actions" style="justify-content:center">
             <a href="student-topic.html?id=${topicId}" class="btn btn-accent" style="padding:14px 32px">
-              ← К материалам темы
+              ${ico('arrow-left','ico-sm')} К материалам темы
             </a>
             <a href="dashboard-student.html" class="btn btn-ghost" style="padding:14px 32px">
               К моим темам
@@ -154,10 +149,10 @@ async function loadTest() {
     } else {
       toast(e.message, 'error');
       $('#content').innerHTML = `<div class="result-wrap">
-        <span class="result-emoji">😕</span>
+        <span class="result-emoji weak">${ico('help','ico')}</span>
         <h2 class="result-title">Тест недоступен</h2>
         <p class="result-sub">${esc(e.message)}</p>
-        <a href="dashboard-student.html" class="btn btn-accent">← К темам</a>
+        <a href="dashboard-student.html" class="btn btn-accent">${ico('arrow-left','ico-sm')} К темам</a>
       </div>`;
     }
     window.Cheatsheet?.hide();
@@ -173,7 +168,7 @@ function startTimer() {
   timerPanel = document.createElement('div');
   timerPanel.className = 'tt-timer-panel';
   timerPanel.innerHTML = `
-    <span class="tt-timer-ic">⏱</span>
+    <span class="tt-timer-ic">${ico('clock','ico')}</span>
     <span class="tt-timer-label">До конца теста:</span>
     <span class="tt-timer-value" id="tt-timer-value">${formatTimer(timerLeft)}</span>
   `;
@@ -235,9 +230,9 @@ function renderAll() {
   $('#content').innerHTML = questions.map((q, i) => {
     const type = q.type || 'single';
     let hint = '';
-    if (type === 'single') hint = `<span class="q-type-hint single">🔘 один вариант</span>`;
-    if (type === 'multi')  hint = `<span class="q-type-hint multi">☑️ несколько вариантов</span>`;
-    if (type === 'open')   hint = `<span class="q-type-hint open">✍️ развёрнутый</span>`;
+    if (type === 'single') hint = `<span class="q-type-hint single">${ico('circle-dot','ico-sm')} один вариант</span>`;
+    if (type === 'multi')  hint = `<span class="q-type-hint multi">${ico('check-square','ico-sm')} несколько вариантов</span>`;
+    if (type === 'open')   hint = `<span class="q-type-hint open">${ico('pen','ico-sm')} развёрнутый</span>`;
 
     let body = '';
     if (type === 'single') {
@@ -246,7 +241,7 @@ function renderAll() {
           <div class="opt radio" data-qid="${q.id}" data-idx="${idx}" data-type="single">
             <div class="key">${letterFor(idx)}</div>
             <div class="text">${esc(opt)}</div>
-            <div class="mark">●</div>
+            <div class="mark">${ico('circle-dot','ico-sm')}</div>
           </div>
         `).join('')}
       </div>`;
@@ -256,14 +251,14 @@ function renderAll() {
           <div class="opt" data-qid="${q.id}" data-idx="${idx}" data-type="multi">
             <div class="key">${letterFor(idx)}</div>
             <div class="text">${esc(opt)}</div>
-            <div class="mark">✓</div>
+            <div class="mark">${ico('check','ico-sm')}</div>
           </div>
         `).join('')}
       </div>`;
     } else {
       body = `<div class="open-block" data-open-qid="${q.id}">
         <div class="open-hint">
-          ✍️ Напишите ответ своими словами. Можно приложить файл с решением
+          ${ico('pen','ico-sm')} Напишите ответ своими словами. Можно приложить файл с решением
           (фото, PDF, документ). Учитель проверит вручную.
         </div>
         <textarea class="open-textarea" data-open-text="${q.id}"
@@ -271,7 +266,7 @@ function renderAll() {
         <label class="open-file-zone" data-open-drop="${q.id}">
           <input type="file" data-open-file="${q.id}" hidden
                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.md,.rtf,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg">
-          <div class="icon">📎</div>
+          <div class="icon">${ico('paperclip','ico')}</div>
           <div class="label">Прикрепить файл</div>
           <div class="sub">PDF, DOCX, PPTX, изображения · до 20 МБ</div>
         </label>
@@ -358,7 +353,7 @@ async function uploadAnswerFile(qid, file) {
   }
   const preview = $(`[data-open-preview="${qid}"]`);
   preview.innerHTML = `<div class="file-attached">
-    <div class="fi">⏳</div>
+    <div class="fi">${ico('clock','ico-sm')}</div>
     <div class="fn">Загрузка…</div>
   </div>`;
 
@@ -379,12 +374,12 @@ async function uploadAnswerFile(qid, file) {
     answers[qid].file_size = json.file_size;
 
     preview.innerHTML = `<div class="file-attached">
-      <div class="fi">${fileIcon(json.file_name)}</div>
+      <div class="fi">${ico(fileTypeIco(json.file_name),'ico-sm')}</div>
       <div style="flex:1;overflow:hidden">
         <div class="fn">${esc(json.file_name)}</div>
         <div class="fs">${formatSize(json.file_size)}</div>
       </div>
-      <div class="fx" title="Убрать">✕</div>
+      <div class="fx" title="Убрать">${ico('x','ico-sm')}</div>
     </div>`;
     preview.querySelector('.fx').onclick = () => {
       delete answers[qid].file;
@@ -421,8 +416,8 @@ function updateProgress() {
   const pct = total ? (answered / total) * 100 : 0;
   $('#tt-progress').style.width = pct + '%';
   $('#tt-counter').textContent = `Отвечено: ${answered} из ${total}`;
-  $('#answered-info').textContent = answered === total
-    ? '✓ Все вопросы отвечены'
+  $('#answered-info').innerHTML = answered === total
+    ? `${ico('check','ico-sm')} Все вопросы отвечены`
     : `Осталось: ${total - answered}`;
   const btn = $('#finish-btn');
   btn.disabled = answered < total;
@@ -457,7 +452,6 @@ $('#finish-btn').addEventListener('click', async () => {
 async function doSubmit(payload, isAuto) {
   submitted = true;
 
-  // ⏹ Останавливаем таймер
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -501,14 +495,14 @@ function showPendingScreen() {
 
   $('#content').innerHTML = `
     <div class="pending-wrap">
-      <div class="hourglass">⏳</div>
+      <div class="hourglass">${ico('hourglass','ico')}</div>
       <h2 class="pending-title">Работа отправлена на проверку</h2>
       <p class="pending-sub">
         В тесте есть развёрнутые вопросы, которые проверяет учитель вручную.
         Результат появится в вашей истории, как только он поставит оценку.
       </p>
       <div class="pending-note">
-        🔔 Учитель уже получил уведомление
+        ${ico('bell','ico-sm')} Учитель уже получил уведомление
       </div>
       <div class="result-actions" style="margin-bottom:0">
         <a href="dashboard-student.html" class="btn btn-accent">К моим темам</a>
@@ -528,25 +522,25 @@ function showResult(result) {
   const wrongCount = result.attempt.total - correctCount;
   const duration = result.attempt.duration_sec;
 
-  let emoji, title, verdictCls, verdictText, ringColor1, ringColor2;
+  let iconId, emojiCls, title, verdictCls, verdictText, ringColor1, ringColor2;
   if (pct >= 90) {
-    emoji = '🏆'; title = 'Превосходно!';
+    iconId = 'trophy'; emojiCls = 'trophy'; title = 'Превосходно!';
     verdictCls = 'excellent'; verdictText = 'Отличное знание темы';
-    ringColor1 = '#00d4b8'; ringColor2 = '#48e0c6';
+    ringColor1 = '#0ea5e9'; ringColor2 = '#38bdf8';
   } else if (pct >= 75) {
-    emoji = '🎉'; title = 'Отличный результат!';
+    iconId = 'trophy'; emojiCls = 'trophy'; title = 'Отличный результат!';
     verdictCls = 'excellent'; verdictText = 'Тема усвоена хорошо';
-    ringColor1 = '#00d4b8'; ringColor2 = '#6a4cff';
+    ringColor1 = '#0ea5e9'; ringColor2 = '#6a4cff';
   } else if (pct >= 50) {
-    emoji = '👍'; title = 'Неплохо!';
+    iconId = 'thumbs-up'; emojiCls = 'good'; title = 'Неплохо!';
     verdictCls = 'good'; verdictText = 'База есть, но стоит повторить';
     ringColor1 = '#6a4cff'; ringColor2 = '#a678ff';
   } else if (pct >= 30) {
-    emoji = '📖'; title = 'Есть над чем поработать';
+    iconId = 'book-open'; emojiCls = 'weak'; title = 'Есть над чем поработать';
     verdictCls = 'weak'; verdictText = 'Повторите материалы темы';
     ringColor1 = '#e0435c'; ringColor2 = '#ff7a8e';
   } else {
-    emoji = '💪'; title = 'Стоит повторить материал';
+    iconId = 'flame'; emojiCls = 'weak'; title = 'Стоит повторить материал';
     verdictCls = 'weak'; verdictText = 'Перечитайте конспект и попробуйте снова';
     ringColor1 = '#e0435c'; ringColor2 = '#ff7a8e';
   }
@@ -556,7 +550,7 @@ function showResult(result) {
 
   $('#content').innerHTML = `
     <div class="result-wrap">
-      <span class="result-emoji">${emoji}</span>
+      <span class="result-emoji ${emojiCls}">${ico(iconId,'ico')}</span>
       <h2 class="result-title">${title}</h2>
 
       <div class="chart-wrap">
@@ -581,19 +575,19 @@ function showResult(result) {
 
         <div class="stats-row">
           <div class="stat-chip correct">
-            <div class="ic">✓</div>
+            <div class="ic">${ico('check','ico-sm')}</div>
             <div><div class="num">${correctCount}</div><div class="lbl">верно</div></div>
           </div>
           <div class="stat-chip wrong">
-            <div class="ic">✕</div>
+            <div class="ic">${ico('x','ico-sm')}</div>
             <div><div class="num">${wrongCount}</div><div class="lbl">ошибок</div></div>
           </div>
           <div class="stat-chip total">
-            <div class="ic">∑</div>
+            <div class="ic">${ico('check-square','ico-sm')}</div>
             <div><div class="num">${result.attempt.total}</div><div class="lbl">всего</div></div>
           </div>
           <div class="stat-chip total">
-            <div class="ic">⏱</div>
+            <div class="ic">${ico('clock','ico-sm')}</div>
             <div><div class="num" style="font-size:15px">${formatDuration(duration)}</div><div class="lbl">время</div></div>
           </div>
         </div>
@@ -602,11 +596,11 @@ function showResult(result) {
       </div>
 
       <div class="result-actions">
-        <a href="take-test.html?id=${topicId}" class="btn btn-accent">🔄 Пройти заново</a>
+        <a href="take-test.html?id=${topicId}" class="btn btn-accent">${ico('rotate','ico-sm')} Пройти заново</a>
         <a href="dashboard-student.html" class="btn btn-ghost">К моим темам</a>
       </div>
 
-      <h3 class="detail-heading">📋 Разбор ответов</h3>
+      <h3 class="detail-heading">${ico('file-text','ico-sm')} Разбор ответов</h3>
       <div class="detail-list">
         ${result.detail.map((d, i) => renderDetailItem(d, i)).join('')}
       </div>
@@ -642,10 +636,10 @@ function renderDetailItem(d, i) {
               : grade === 'partial' ? 'partial'
               : grade === 'wrong'   ? 'wrong'
               : 'pending';
-    const icon = grade === 'correct' ? '✅'
-              : grade === 'partial' ? '🟡'
-              : grade === 'wrong'   ? '❌'
-              : '⏳';
+    const icon = grade === 'correct' ? ico('check','ico')
+              : grade === 'partial' ? ico('circle-dot','ico')
+              : grade === 'wrong'   ? ico('x','ico')
+              : ico('clock','ico');
     const gradeText = grade === 'correct' ? 'Верно'
                    : grade === 'partial' ? 'Частично верно'
                    : grade === 'wrong'   ? 'Неверно'
@@ -655,14 +649,14 @@ function renderDetailItem(d, i) {
       <div class="detail-item ${cls}">
         <div class="detail-q">
           <span>${icon}</span>
-          <span>${i + 1}. ${esc(d.text)} <span class="q-type-hint open">✍️</span></span>
+          <span>${i + 1}. ${esc(d.text)} <span class="q-type-hint open">${ico('pen','ico-sm')}</span></span>
         </div>
         <div class="detail-answers">
           <div class="row">
             <span class="lbl">Ваш ответ:</span>
             <span class="val">
               ${d.given_text ? esc(d.given_text) : '<i>— текст не введён —</i>'}
-              ${d.given_file ? `<br>📎 <a href="${esc(d.given_file)}" target="_blank" rel="noopener">${esc(d.given_file_name || 'файл')}</a>` : ''}
+              ${d.given_file ? `<br>${ico('paperclip','ico-sm')} <a href="${esc(d.given_file)}" target="_blank" rel="noopener">${esc(d.given_file_name || 'файл')}</a>` : ''}
             </span>
           </div>
           <div class="row">
@@ -673,7 +667,7 @@ function renderDetailItem(d, i) {
           </div>
         </div>
         ${d.comment ? `<div class="teacher-comment">
-          <div class="tc-head">💬 Комментарий учителя</div>
+          <div class="tc-head">${ico('message','ico-sm')} Комментарий учителя</div>
           ${esc(d.comment)}
         </div>` : ''}
       </div>
@@ -688,14 +682,17 @@ function renderDetailItem(d, i) {
     : []
   );
   const options = d.options || [];
+  const typeLabel = d.type === 'multi'
+    ? `${ico('check-square','ico-sm')} несколько`
+    : `${ico('circle-dot','ico-sm')} один`;
 
   return `
     <div class="detail-item ${ok ? 'correct' : 'wrong'}">
       <div class="detail-q">
-        <span>${ok ? '✅' : '❌'}</span>
+        <span>${ok ? ico('check','ico') : ico('x','ico')}</span>
         <span>${i + 1}. ${esc(d.text)}
           <span class="q-type-hint ${d.type}">
-            ${d.type === 'multi' ? '☑️ несколько' : '🔘 один'}
+            ${typeLabel}
           </span>
         </span>
       </div>
@@ -704,9 +701,9 @@ function renderDetailItem(d, i) {
           const isCorrect = correctSet.has(idx);
           const isGiven = givenSet.has(idx);
           let mark = '';
-          if (isCorrect && isGiven) mark = '✅';
-          else if (isCorrect && !isGiven) mark = '🟢 <i>(пропущено)</i>';
-          else if (!isCorrect && isGiven) mark = '❌ <i>(лишний)</i>';
+          if (isCorrect && isGiven) mark = ico('check','ico-sm');
+          else if (isCorrect && !isGiven) mark = '<i>(пропущено)</i>';
+          else if (!isCorrect && isGiven) mark = ico('x','ico-sm') + ' <i>(лишний)</i>';
           return `<div class="row">
             <span class="lbl">${letterFor(idx)}.</span>
             <span class="val ${isCorrect && isGiven ? 'ok' : !isCorrect && isGiven ? 'bad' : ''}">
@@ -732,7 +729,7 @@ function animateNumber(el, from, to, duration, suffix = '') {
 }
 
 function launchConfetti() {
-  const colors = ['#6a4cff', '#00d4b8', '#ff7ac6', '#ffb84d', '#48e0c6', '#a678ff'];
+  const colors = ['#6a4cff', '#0ea5e9', '#ff7ac6', '#ffb84d', '#38bdf8', '#a678ff'];
   for (let i = 0; i < 90; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
@@ -757,4 +754,4 @@ function launchConfetti() {
     }
     loadTest();
   } catch (e) {}
-})();
+})();м
