@@ -1677,6 +1677,18 @@ $('#lc-delete-template')?.addEventListener('click', async () => {
 });
 
 // ═══ СТАРТ ═══
+// ⭐ Грузим все счётчики сразу при старте
+async function loadCountersOnBoot() {
+  try {
+    const { topics } = await api('/topics');
+    $('#cnt-topics').textContent = topics.length;
+  } catch (e) {}
+
+  try {
+    const { students } = await api('/students');
+    $('#cnt-students').textContent = students.length;
+  } catch (e) {}
+}
 
 (async function boot() {
   try {
@@ -1701,6 +1713,9 @@ $('#lc-delete-template')?.addEventListener('click', async () => {
     switchView('topics');
     startReviewsPolling();
     startUnseenPolling();
+
+    // ⭐ Грузим счётчики учеников и тем сразу
+    loadCountersOnBoot();
 
     const params = new URLSearchParams(location.search);
     if (params.get('highlight-student')) {
