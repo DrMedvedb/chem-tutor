@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Иван Петрович — репетитор по химии | Алхимичка</title>
+<title>Лила Викторовна — репетитор по химии | Алхимичка</title>
 <style>
   :root {
     --primary: #6a4cff;
@@ -19,6 +19,7 @@
     --mint: #10b981;
     --amber: #f59e0b;
     --rose: #f43f5e;
+    --star: #fbbf24;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -114,6 +115,7 @@
   }
   .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
   .btn-lg { padding: 15px 28px; font-size: 15px; border-radius: 13px; }
+  .btn-block { width: 100%; justify-content: center; }
 
   /* ═══ HERO ═══ */
   .hero {
@@ -198,7 +200,7 @@
   }
   .hero-trust-ic .ico { width: 18px; height: 18px; }
   .hero-trust-body { display: flex; flex-direction: column; }
-  .hero-trust-num { font-size: 16px; font-weight: 800; color: var(--dark); line-height: 1.1; }
+  .hero-trust-num { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1.2; }
   .hero-trust-lbl { font-size: 11.5px; color: var(--gray); font-weight: 600; }
 
   .hero-photo {
@@ -230,72 +232,39 @@
   }
   .hero-photo .ico { width: 130px; height: 130px; stroke-width: .7; color: var(--primary); opacity: .3; }
 
-  /* ═══ CTA / CONTACTS ═══ */
-  .cta-box {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-radius: 28px;
-    padding: 56px;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
+  /* ═══ SECTION HEAD ═══ */
+  section.block { padding: 80px 0; }
+  section.alt { background: var(--paper-alt); }
+  .section-head { text-align: center; margin-bottom: 48px; }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(106,76,255,.08);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
   }
-  .cta-box::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,.15), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(255,255,255,.1), transparent 40%);
-    pointer-events: none;
-  }
-  .cta-box h2 {
-    font-size: clamp(28px, 3.5vw, 40px);
+  .section-title {
+    font-size: clamp(28px, 3.6vw, 42px);
     font-weight: 800;
     letter-spacing: -1px;
     line-height: 1.15;
-    margin-bottom: 16px;
-    position: relative;
+    margin-bottom: 12px;
   }
-  .cta-box h2 em { font-style: italic; font-weight: 400; opacity: .85; }
-  .cta-box p {
-    font-size: 16px;
-    opacity: .92;
-    line-height: 1.65;
-    margin: 0 auto 32px;
-    max-width: 560px;
-    position: relative;
+  .section-title em { font-style: italic; font-weight: 400; color: var(--gray); }
+  .section-sub {
+    color: var(--gray);
+    font-size: 16.5px;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
   }
-  .cta-contacts {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    position: relative;
-  }
-  .cta-contact {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 22px;
-    border-radius: 13px;
-    background: rgba(255,255,255,.15);
-    color: #fff;
-    font-weight: 700;
-    font-size: 14px;
-    backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(255,255,255,.25);
-    transition: all .2s;
-  }
-  .cta-contact:hover {
-    background: rgba(255,255,255,.25);
-    border-color: rgba(255,255,255,.5);
-    transform: translateY(-2px);
-  }
-
-  /* ═══ SECTIONS ═══ */
-  section.block { padding: 80px 0; }
-  section.alt { background: var(--paper-alt); }
 
   /* ═══ ABOUT ═══ */
   .about-grid {
@@ -362,7 +331,7 @@
     letter-spacing: .6px;
     margin-bottom: 4px;
   }
-  .fact-val { font-size: 16px; font-weight: 800; color: var(--dark); }
+  .fact-val { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1.3; }
 
   /* ═══ SERVICES ═══ */
   .services-grid {
@@ -378,6 +347,8 @@
     transition: all .25s;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   .service-card::before {
     content: '';
@@ -411,35 +382,151 @@
   .service-card.c4 .service-icon { background: linear-gradient(135deg, rgba(245,158,11,.15), rgba(245,158,11,.05)); color: var(--amber); }
 
   .service-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.3px; }
-  .service-card p { color: var(--gray); font-size: 14.5px; margin-bottom: 18px; min-height: 66px; }
+  .service-card p { color: var(--gray); font-size: 14.5px; margin-bottom: 18px; flex: 1; }
   .service-price {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 800;
     padding-top: 16px;
     border-top: 1.5px dashed var(--border);
+    margin-top: auto;
   }
   .service-card.c1 .service-price { color: var(--primary); }
   .service-card.c2 .service-price { color: var(--accent); }
   .service-card.c3 .service-price { color: var(--mint); }
   .service-card.c4 .service-price { color: var(--amber); }
+  .service-price.free { color: var(--mint); }
 
-  /* ═══ REVIEWS ═══ */
-  .reviews-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+  /* ═══ FEEDBACK ═══ */
+  .feedback-wrap {
+    max-width: 720px;
+    margin: 0 auto;
   }
-  .review-card {
+  .feedback-card {
+    background: var(--paper);
+    border-radius: 24px;
+    padding: 36px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 20px 50px -25px rgba(106,76,255,.2);
+  }
+
+  .stars-input {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin: 8px 0 20px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    background: transparent;
+    color: var(--border);
+    font-size: 32px;
+    line-height: 1;
+    transition: all .15s ease;
+    padding: 0;
+  }
+  .star-btn:hover { transform: scale(1.1); }
+  .star-btn.active { color: var(--star); }
+  .star-btn.hovered { color: #fcd34d; transform: scale(1.12); }
+
+  .feedback-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .form-row { display: flex; flex-direction: column; gap: 8px; }
+  .form-row label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: .2px;
+  }
+  .form-row input,
+  .form-row textarea,
+  .form-row select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--paper);
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--dark);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .form-row input:focus,
+  .form-row textarea:focus,
+  .form-row select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(106,76,255,.12);
+  }
+  .form-row textarea { resize: vertical; min-height: 100px; }
+
+  .feedback-empty {
+    text-align: center;
+    padding: 40px 20px;
+    background: var(--paper-alt);
+    border-radius: 18px;
+    border: 1.5px dashed var(--border);
+    color: var(--gray);
+    font-size: 15px;
+    margin-top: 24px;
+  }
+  .feedback-empty .ico {
+    width: 48px; height: 48px; stroke-width: 1;
+    color: var(--gray-light);
+    margin-bottom: 8px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ─── Список одобренных отзывов ─── */
+  .feedback-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .feedback-item {
     background: var(--paper);
     border-radius: 20px;
-    padding: 28px;
+    padding: 24px 28px;
     border: 1.5px solid var(--border);
     position: relative;
-    transition: all .25s;
+    overflow: hidden;
+    transition: all .25s ease;
+    animation: fbIn .5s cubic-bezier(.2,.8,.3,1) backwards;
   }
-  .review-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-  .review-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-  .review-avatar {
+  .feedback-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #fbbf24, #f59e0b);
+  }
+  .feedback-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px -20px rgba(106,76,255,.25);
+  }
+  @keyframes fbIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-item .fb-item-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .feedback-item .fb-item-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .feedback-item .fb-item-avatar {
     width: 48px; height: 48px;
     border-radius: 14px;
     display: grid; place-items: center;
@@ -449,52 +536,101 @@
     font-size: 18px;
     flex-shrink: 0;
   }
-  .review-name { font-weight: 800; font-size: 15px; margin-bottom: 2px; }
-  .review-role { font-size: 13px; color: var(--gray); font-weight: 600; }
-  .review-text { color: var(--gray); font-size: 14.5px; line-height: 1.65; margin-bottom: 16px; }
-  .review-score {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: rgba(16,185,129,.12);
-    color: var(--mint);
+  .feedback-item .fb-item-name {
     font-weight: 800;
-    font-size: 13px;
+    font-size: 15px;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+  .feedback-item .fb-item-date {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 600;
+  }
+  .feedback-item .fb-item-stars {
+    display: inline-flex;
+    gap: 2px;
+    font-size: 20px;
+    line-height: 1;
+    color: #fbbf24;
+  }
+  .feedback-item .fb-item-stars .off { color: var(--border); }
+  .feedback-item .fb-item-text {
+    color: var(--gray);
+    font-size: 15px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
-  /* ═══ SECTION HEAD ═══ */
-  .section-head { text-align: center; margin-bottom: 48px; }
-  .section-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 14px;
-    border-radius: 999px;
-    background: rgba(106,76,255,.08);
-    color: var(--primary);
-    font-size: 12px;
+  .feedback-success {
+    text-align: center;
+    padding: 32px 20px;
+    background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(16,185,129,.03));
+    border-radius: 18px;
+    border: 1.5px solid rgba(16,185,129,.25);
+    display: none;
+  }
+  .feedback-success.show { display: block; animation: fadeSlide .4s ease; }
+  .feedback-success .ico { width: 48px; height: 48px; color: var(--mint); stroke-width: 1.5; margin-bottom: 12px; }
+  .feedback-success h3 { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+  .feedback-success p { color: var(--gray); font-size: 14.5px; line-height: 1.5; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ═══ CONTACTS / LEAD FORM ═══ */
+  .lead-card {
+    max-width: 620px;
+    margin: 0 auto;
+    background: var(--paper);
+    border-radius: 24px;
+    padding: 40px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 25px 60px -25px rgba(106,76,255,.25);
+    position: relative;
+    overflow: hidden;
+  }
+  .lead-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+  .lead-card h3 {
+    font-size: 26px;
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-align: center;
+    letter-spacing: -.5px;
+    margin-bottom: 8px;
+  }
+  .lead-card .lead-sub {
+    text-align: center;
+    color: var(--gray);
+    font-size: 15px;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .lead-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .lead-success {
+    text-align: center;
+    padding: 32px 20px;
+    display: none;
+  }
+  .lead-success.show { display: block; animation: fadeSlide .4s ease; }
+  .lead-success .ico {
+    width: 64px; height: 64px;
+    stroke-width: 1.2;
+    color: var(--mint);
     margin-bottom: 16px;
   }
-  .section-title {
-    font-size: clamp(28px, 3.6vw, 42px);
-    font-weight: 800;
-    letter-spacing: -1px;
-    line-height: 1.15;
-    margin-bottom: 12px;
-  }
-  .section-title em { font-style: italic; font-weight: 400; color: var(--gray); }
-  .section-sub {
-    color: var(--gray);
-    font-size: 16.5px;
-    max-width: 640px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
+  .lead-success h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .lead-success p { color: var(--gray); font-size: 15px; line-height: 1.5; }
 
   /* ═══ PLATFORM BANNER ═══ */
   .platform-banner {
@@ -636,9 +772,10 @@
     section.block { padding: 56px 0; }
     h1.hero-title { letter-spacing: -1px; }
     .about-facts { grid-template-columns: 1fr; }
-    .cta-box { padding: 40px 24px; }
     .platform-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
     .platform-cta { width: 100%; justify-content: center; }
+    .feedback-card, .lead-card { padding: 24px 20px; }
+    .feedback-item { padding: 18px 20px; }
   }
 </style>
 </head>
@@ -658,8 +795,7 @@
     <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></symbol>
     <symbol id="i-award" viewBox="0 0 24 24"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></symbol>
     <symbol id="i-message" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
-    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
-    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
     <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
   </defs>
 </svg>
@@ -673,7 +809,7 @@
         <span class="brand-name">Алхимичка</span>
       </div>
       <div class="tutor-info">
-        <div class="tutor-name">Иван Петрович</div>
+        <div class="tutor-name">Лила Викторовна</div>
         <div class="tutor-role">Репетитор по химии</div>
       </div>
     </div>
@@ -681,8 +817,8 @@
     <nav class="nav">
       <a href="#about">Обо мне</a>
       <a href="#services">Услуги</a>
-      <a href="#reviews">Отзывы</a>
-      <a href="#contact">Контакты</a>
+      <a href="#feedback">Отзывы</a>
+      <a href="#contact">Оставить заявку</a>
     </nav>
   </div>
 </header>
@@ -703,9 +839,8 @@
       </h1>
 
       <p class="hero-lead">
-        Меня зовут Иван Петрович. Пять лет я помогаю школьникам
-        разобраться в химии — от базовой программы до подготовки
-        к ЕГЭ на 80+ баллов. Без зубрёжки, через понимание.
+        Меня зовут Лила, уже не первый год я объясняю химию не просто множеством
+        сложных слов, а понятно и доступно для каждого ребёнка.
       </p>
 
       <div class="hero-actions">
@@ -716,22 +851,22 @@
         <div class="hero-trust-item">
           <div class="hero-trust-ic"><svg class="ico"><use href="#i-cap"/></svg></div>
           <div class="hero-trust-body">
-            <div class="hero-trust-num">МГУ, химфак</div>
-            <div class="hero-trust-lbl">красный диплом</div>
+            <div class="hero-trust-num">РНИМУ им. Пирогова</div>
+            <div class="hero-trust-lbl">студентка</div>
           </div>
         </div>
         <div class="hero-trust-item">
           <div class="hero-trust-ic"><svg class="ico"><use href="#i-award"/></svg></div>
           <div class="hero-trust-body">
-            <div class="hero-trust-num">78 баллов</div>
-            <div class="hero-trust-lbl">средний ЕГЭ</div>
+            <div class="hero-trust-num">99 баллов</div>
+            <div class="hero-trust-lbl">ЕГЭ по химии</div>
           </div>
         </div>
         <div class="hero-trust-item">
-          <div class="hero-trust-ic"><svg class="ico"><use href="#i-user"/></svg></div>
+          <div class="hero-trust-ic"><svg class="ico"><use href="#i-star"/></svg></div>
           <div class="hero-trust-body">
-            <div class="hero-trust-num">200+</div>
-            <div class="hero-trust-lbl">учеников</div>
+            <div class="hero-trust-num">Олимпиады</div>
+            <div class="hero-trust-lbl">призёр и победитель</div>
           </div>
         </div>
       </div>
@@ -746,45 +881,40 @@
 <!-- ═══ ABOUT ═══ -->
 <section id="about" class="block alt">
   <div class="container">
-    <div class="section-head">
-      <div class="section-label">
-        <svg class="ico ico-sm"><use href="#i-user"/></svg>
-        Обо мне
-      </div>
-      <h2 class="section-title">Кто будет <em>вас учить</em></h2>
-    </div>
-
     <div class="about-grid">
       <div class="about-photo">
         <svg class="ico"><use href="#i-user"/></svg>
       </div>
 
       <div class="about-text">
-        <h3>Иван Петрович</h3>
+        <h3>Лила Викторовна</h3>
         <p>
-          Закончил <strong>химический факультет МГУ им. Ломоносова</strong> с красным дипломом.
-          С 2019 года занимаюсь репетиторством.
+          Учусь в <strong>РНИМУ им. Н.И. Пирогова</strong>. Уже с 10-го класса
+          занимаюсь репетиторством.
         </p>
         <p>
-          Мой подход: <strong>никакой зубрёжки</strong>. Разбираем логику реакций,
-          учимся понимать <em>почему</em> — тогда формулы запоминаются сами.
+          Я убеждена: химия — это не про зазубривание формул, а про <strong>понимание
+          логики</strong>. Когда ученик видит, как одно вытекает из другого, предмет
+          становится живым и понятным. Я объясняю сложные вещи простым языком,
+          привожу примеры из жизни, подбираю объяснение под каждого ученика.
         </p>
         <p>
-          Работаю с учениками 8–11 классов, готовлю к ЕГЭ, ОГЭ и олимпиадам.
+          Работаю с учениками 8–11 классов: помогаю подтянуть текущую программу,
+          готовлю к контрольным, ОГЭ и ЕГЭ.
         </p>
 
         <div class="about-facts">
           <div class="fact">
             <div class="fact-lbl">Образование</div>
-            <div class="fact-val">МГУ, химфак</div>
+            <div class="fact-val">РНИМУ им. Пирогова</div>
           </div>
           <div class="fact">
             <div class="fact-lbl">Опыт</div>
-            <div class="fact-val">5 лет</div>
+            <div class="fact-val">больше 5 лет</div>
           </div>
           <div class="fact">
-            <div class="fact-lbl">Средний ЕГЭ</div>
-            <div class="fact-val">78 / 100</div>
+            <div class="fact-lbl">ЕГЭ по химии</div>
+            <div class="fact-val">99 / 100</div>
           </div>
           <div class="fact">
             <div class="fact-lbl">Форматы</div>
@@ -799,135 +929,152 @@
 <!-- ═══ SERVICES ═══ -->
 <section id="services" class="block">
   <div class="container">
-    <div class="section-head">
-      <div class="section-label">
-        <svg class="ico ico-sm"><use href="#i-book"/></svg>
-        Услуги
-      </div>
-      <h2 class="section-title">Чем я могу <em>помочь</em></h2>
-    </div>
-
     <div class="services-grid">
       <div class="service-card c1">
         <div class="service-icon"><svg class="ico ico-lg"><use href="#i-book"/></svg></div>
-        <h3>Школьная программа</h3>
-        <p>Помогу догнать класс, разобраться с текущими темами и подготовиться к контрольным.</p>
-        <div class="service-price">от 1 500 ₽ / 60 мин</div>
+        <h3>Повышение успеваемости</h3>
+        <p>Помогу разобраться с текущей школьной программой, догнать класс и уверенно
+           отвечать на уроках. Работаем в удобном темпе, без давления.</p>
+        <div class="service-price">1000 ₽ / час</div>
       </div>
 
       <div class="service-card c2">
         <div class="service-icon"><svg class="ico ico-lg"><use href="#i-cap"/></svg></div>
         <h3>Подготовка к ОГЭ</h3>
-        <p>Системная подготовка: разбор всех тем, тренировка задач, пробные варианты.</p>
-        <div class="service-price">от 1 800 ₽ / 60 мин</div>
+        <p>Системная подготовка к экзамену: разбираем все темы кодификатора, тренируем
+           типовые задания, пишем пробники.</p>
+        <div class="service-price">1000 ₽ / час</div>
       </div>
 
       <div class="service-card c3">
         <div class="service-icon"><svg class="ico ico-lg"><use href="#i-atom"/></svg></div>
         <h3>Подготовка к ЕГЭ</h3>
-        <p>Готовлю к ЕГЭ на 80+ баллов. Разбираем сложные задачи, работаем над ошибками.</p>
-        <div class="service-price">от 2 000 ₽ / 60 мин</div>
+        <p>Готовлю к ЕГЭ на высокий балл. Разбираем сложные задачи, работаем над
+           ошибками, отрабатываем каждую тему до автоматизма.</p>
+        <div class="service-price">1200 ₽ / час</div>
       </div>
 
       <div class="service-card c4">
         <div class="service-icon"><svg class="ico ico-lg"><use href="#i-star"/></svg></div>
-        <h3>Олимпиады</h3>
-        <p>Подготовлю к олимпиадам разных уровней. Разбираем нестандартные задачи.</p>
-        <div class="service-price">от 2 000 ₽ / 60 мин</div>
+        <h3>Пробное занятие</h3>
+        <p>Первое занятие — бесплатно. Познакомимся, определим уровень, обсудим цели
+           и составим план подготовки.</p>
+        <div class="service-price free">Бесплатно</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ REVIEWS ═══ -->
-<section id="reviews" class="block alt">
+<!-- ═══ FEEDBACK ═══ -->
+<section id="feedback" class="block alt">
   <div class="container">
     <div class="section-head">
       <div class="section-label">
         <svg class="ico ico-sm"><use href="#i-star"/></svg>
         Отзывы
       </div>
-      <h2 class="section-title">Что говорят <em>ученики</em></h2>
+      <h2 class="section-title">Оставить <em>отзыв</em></h2>
+      <p class="section-sub">
+        Поделитесь впечатлениями о занятиях. Отзыв появится на сайте после проверки модератором.
+      </p>
     </div>
 
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="review-head">
-          <div class="review-avatar">А</div>
-          <div>
-            <div class="review-name">Анна К.</div>
-            <div class="review-role">Мама ученика, 11 класс</div>
+    <div class="feedback-wrap">
+      <div class="feedback-card">
+        <form class="feedback-form" id="feedback-form">
+          <div class="form-row">
+            <label>Ваша оценка</label>
+            <div class="stars-input" id="stars-input">
+              <button type="button" class="star-btn" data-value="1">★</button>
+              <button type="button" class="star-btn" data-value="2">★</button>
+              <button type="button" class="star-btn" data-value="3">★</button>
+              <button type="button" class="star-btn" data-value="4">★</button>
+              <button type="button" class="star-btn" data-value="5">★</button>
+            </div>
+            <input type="hidden" name="rating" id="rating-value" value="0">
           </div>
-        </div>
-        <p class="review-text">
-          Сын занимался год. Сдали ЕГЭ на 89 баллов, поступили в Сеченовку.
-          Занятия структурированные, обратная связь постоянная.
-        </p>
-        <div class="review-score">
-          <svg class="ico ico-sm"><use href="#i-star"/></svg> ЕГЭ: 89 баллов
+
+          <div class="form-row">
+            <label for="fb-name">Ваше имя <span style="color:var(--gray);font-weight:500">(необязательно)</span></label>
+            <input type="text" id="fb-name" name="author_name" placeholder="Можно оставить анонимно" maxlength="60">
+          </div>
+
+          <div class="form-row">
+            <label for="fb-text">Текст отзыва</label>
+            <textarea id="fb-text" name="text" placeholder="Расскажите, как проходили занятия, что понравилось..." required maxlength="1000"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block" id="fb-submit">
+            Отправить отзыв <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
+          </button>
+        </form>
+
+        <div class="feedback-success" id="feedback-success">
+          <svg class="ico"><use href="#i-check"/></svg>
+          <h3>Спасибо за отзыв!</h3>
+          <p>Он появится на сайте после проверки модератором.</p>
         </div>
       </div>
 
-      <div class="review-card">
-        <div class="review-head">
-          <div class="review-avatar">М</div>
-          <div>
-            <div class="review-name">Мария С.</div>
-            <div class="review-role">Ученица, 9 класс</div>
-          </div>
+      <div id="feedback-list-wrap">
+        <div class="feedback-empty" id="feedback-empty">
+          <svg class="ico"><use href="#i-message"/></svg>
+          Пока нет отзывов — станьте первым!
         </div>
-        <p class="review-text">
-          Химия была нелюбимым предметом, пока не начала заниматься.
-          Теперь это один из любимых! Объясняет так, что становится понятно.
-        </p>
-        <div class="review-score">
-          <svg class="ico ico-sm"><use href="#i-star"/></svg> ОГЭ: 5
-        </div>
-      </div>
-
-      <div class="review-card">
-        <div class="review-head">
-          <div class="review-avatar">Д</div>
-          <div>
-            <div class="review-name">Дмитрий Л.</div>
-            <div class="review-role">Ученик, 10 класс</div>
-          </div>
-        </div>
-        <p class="review-text">
-          Занимаюсь полгода. Начали с базовой программы, сейчас готовимся
-          к олимпиадам. Всегда на связи, если что-то непонятно.
-        </p>
-        <div class="review-score">
-          <svg class="ico ico-sm"><use href="#i-star"/></svg> Призёр олимпиады
-        </div>
+        <div id="feedback-list" class="feedback-list" style="display:none"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ CONTACTS ═══ -->
+<!-- ═══ CONTACT / LEAD FORM ═══ -->
 <section id="contact" class="block">
   <div class="container">
-    <div class="cta-box">
-      <h2>
-        Готовы <em>начать?</em>
-      </h2>
-      <p>
-        Запишитесь на бесплатное пробное занятие — познакомимся
-        и составим план подготовки.
+    <div class="lead-card">
+      <h3>Оставить заявку</h3>
+      <p class="lead-sub">
+        Заполните форму — мы перезвоним, ответим на вопросы и подберём удобное время
+        для пробного занятия.
       </p>
-      <div class="cta-contacts">
-        <a href="https://t.me/" target="_blank" rel="noopener" class="cta-contact">
-          <svg class="ico ico-sm"><use href="#i-message"/></svg>
-          Telegram
-        </a>
-        <a href="https://wa.me/79999999999" target="_blank" rel="noopener" class="cta-contact">
-          <svg class="ico ico-sm"><use href="#i-message"/></svg>
-          WhatsApp
-        </a>
-        <a href="tel:+79999999999" class="cta-contact">
-          +7 (999) 999-99-99
-        </a>
+
+      <form class="lead-form" id="lead-form">
+        <div class="form-row">
+          <label for="lead-name">Ваше имя</label>
+          <input type="text" id="lead-name" name="name" placeholder="Как к вам обращаться" required maxlength="80">
+        </div>
+
+        <div class="form-row">
+          <label for="lead-phone">Телефон</label>
+          <input type="tel" id="lead-phone" name="phone" placeholder="+7 (___) ___-__-__" required maxlength="25">
+        </div>
+
+        <div class="form-row">
+          <label for="lead-grade">Класс ученика</label>
+          <select id="lead-grade" name="grade">
+            <option value="">— не указан —</option>
+            <option value="junior">Младшая группа</option>
+            <option value="8">8 класс</option>
+            <option value="9">9 класс</option>
+            <option value="10">10 класс</option>
+            <option value="11">11 класс</option>
+            <option value="adult">Старшие / взрослый</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="lead-comment">Комментарий <span style="color:var(--gray);font-weight:500">(необязательно)</span></label>
+          <textarea id="lead-comment" name="comment" placeholder="Что хотите подтянуть, какие цели, удобное время для звонка..." maxlength="500"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="lead-submit">
+          Отправить заявку <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
+        </button>
+      </form>
+
+      <div class="lead-success" id="lead-success">
+        <svg class="ico"><use href="#i-check"/></svg>
+        <h3>Заявка отправлена!</h3>
+        <p>Мы свяжемся с вами в ближайшее время, чтобы обсудить детали.</p>
       </div>
     </div>
   </div>
@@ -969,19 +1116,17 @@
           <div class="brand-icon"><svg class="ico"><use href="#i-flask"/></svg></div>
         </div>
         <div class="tutor-info">
-          <div class="tutor-name">Иван Петрович</div>
+          <div class="tutor-name">Лила Викторовна</div>
           <div class="tutor-role">Репетитор по химии</div>
         </div>
       </div>
       <div class="footer-links">
-        <a href="tel:+79999999999">+7 (999) 999-99-99</a>
-        <a href="mailto:hi@alchimichka.ru">hi@alchimichka.ru</a>
-        <a href="https://t.me/" target="_blank" rel="noopener">Telegram</a>
-        <a href="https://wa.me/79999999999" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="tel:89055618707">8 (905) 561-87-07</a>
+        <a href="mailto:nikolajmedvedenko339@gmail.com">nikolajmedvedenko339@gmail.com</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2026 Иван Петрович</div>
+      <div class="footer-copy">© 2026 Лила Викторовна</div>
       <div class="footer-platform">
         Работает на платформе <b>Алхимичка</b>
       </div>
@@ -1009,6 +1154,221 @@
         t.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   ЗВЁЗДЫ В ФОРМЕ ОТЗЫВА
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const starsWrap = document.getElementById('stars-input');
+  const ratingInput = document.getElementById('rating-value');
+  const starBtns = starsWrap.querySelectorAll('.star-btn');
+  let currentRating = 0;
+
+  function paint(n) {
+    starBtns.forEach((btn, i) => {
+      btn.classList.toggle('active', i < n);
+    });
+  }
+
+  starBtns.forEach((btn, i) => {
+    btn.addEventListener('mouseenter', () => {
+      starBtns.forEach((b, j) => b.classList.toggle('hovered', j <= i));
+    });
+    btn.addEventListener('mouseleave', () => {
+      starBtns.forEach(b => b.classList.remove('hovered'));
+    });
+    btn.addEventListener('click', () => {
+      currentRating = i + 1;
+      ratingInput.value = currentRating;
+      paint(currentRating);
+    });
+  });
+
+  starsWrap.addEventListener('mouseleave', () => {
+    starBtns.forEach(b => b.classList.remove('hovered'));
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   ФОРМА ОТЗЫВА — отправка на /api/feedback
+   + загрузка одобренных отзывов из /api/feedback/approved
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  // ─── Форма отзыва ───
+  const form = document.getElementById('feedback-form');
+  const success = document.getElementById('feedback-success');
+  const submitBtn = document.getElementById('fb-submit');
+  const ratingValue = document.getElementById('rating-value');
+  const errorBox = document.createElement('div');
+  errorBox.style.cssText = 'padding:12px 16px;border-radius:12px;background:rgba(224,67,92,.1);color:#e0435c;font-size:14px;display:none;margin-bottom:8px;';
+  form.insertBefore(errorBox, form.firstChild);
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = 'block';
+  }
+  function hideError() {
+    errorBox.style.display = 'none';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    const rating = Number(ratingValue.value);
+    if (!rating) return showError('Поставьте оценку — нажмите на звёзды');
+
+    const author_name = form.querySelector('#fb-name').value.trim();
+    const text = form.querySelector('#fb-text').value.trim();
+
+    if (text.length < 5) return showError('Отзыв слишком короткий');
+    if (text.length > 1000) return showError('Отзыв слишком длинный (максимум 1000 символов)');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Отправляем…';
+
+    try {
+      const r = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ author_name, rating, text })
+      });
+      const json = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(json.error || 'Не удалось отправить отзыв');
+
+      form.style.display = 'none';
+      success.classList.add('show');
+    } catch (err) {
+      showError(err.message);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Отправить отзыв <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>';
+    }
+  });
+
+  // ─── Загрузка одобренных отзывов ───
+  const emptyBox = document.getElementById('feedback-empty');
+  const listEl = document.getElementById('feedback-list');
+  if (!emptyBox || !listEl) return;
+
+  function escHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function starsHtml(n) {
+    let out = '<span class="fb-item-stars">';
+    for (let i = 1; i <= 5; i++) {
+      out += `<span class="${i <= n ? '' : 'off'}">★</span>`;
+    }
+    return out + '</span>';
+  }
+  function formatDateRu(sqlDate) {
+    if (!sqlDate) return '';
+    const d = new Date(String(sqlDate).replace(' ', 'T') + 'Z');
+    if (isNaN(d)) return sqlDate;
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  }
+  function initials(name) {
+    const n = (name || '').trim();
+    if (!n) return '★';
+    const parts = n.split(/\s+/);
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function renderFeedback(feedback) {
+    if (!feedback || !feedback.length) {
+      emptyBox.style.display = '';
+      listEl.style.display = 'none';
+      listEl.innerHTML = '';
+      return;
+    }
+    emptyBox.style.display = 'none';
+    listEl.style.display = '';
+    listEl.innerHTML = feedback.map((fb, i) => {
+      const name = fb.author_name || 'Аноним';
+      return `
+        <div class="feedback-item" style="animation-delay:${i * 0.06}s">
+          <div class="fb-item-head">
+            <div class="fb-item-author">
+              <div class="fb-item-avatar">${escHtml(initials(fb.author_name))}</div>
+              <div>
+                <div class="fb-item-name">${escHtml(name)}</div>
+                <div class="fb-item-date">${formatDateRu(fb.created_at)}</div>
+              </div>
+            </div>
+            ${starsHtml(fb.rating)}
+          </div>
+          <div class="fb-item-text">${escHtml(fb.text)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  fetch('/api/feedback/approved', { credentials: 'same-origin' })
+    .then(r => r.json())
+    .then(data => renderFeedback(data.feedback || []))
+    .catch(() => { /* тихо */ });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   ФОРМА ЗАЯВКИ — отправка на /api/leads
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const form = document.getElementById('lead-form');
+  const success = document.getElementById('lead-success');
+  const submitBtn = document.getElementById('lead-submit');
+  const errorBox = document.createElement('div');
+  errorBox.style.cssText = 'padding:12px 16px;border-radius:12px;background:rgba(224,67,92,.1);color:#e0435c;font-size:14px;display:none;margin-bottom:8px;';
+  form.insertBefore(errorBox, form.firstChild);
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = 'block';
+  }
+  function hideError() {
+    errorBox.style.display = 'none';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    const name    = form.querySelector('#lead-name').value.trim();
+    const phone   = form.querySelector('#lead-phone').value.trim();
+    const grade   = form.querySelector('#lead-grade').value;
+    const comment = form.querySelector('#lead-comment').value.trim();
+
+    if (name.length < 2) return showError('Введите имя');
+    if (phone.replace(/\D/g, '').length < 10) return showError('Введите корректный телефон');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Отправляем…';
+
+    try {
+      const r = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ name, phone, grade, comment })
+      });
+      const json = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(json.error || 'Не удалось отправить заявку');
+
+      form.style.display = 'none';
+      success.classList.add('show');
+    } catch (err) {
+      showError(err.message);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Отправить заявку <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>';
+    }
   });
 })();
 </script>

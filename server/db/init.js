@@ -127,6 +127,28 @@ CREATE TABLE IF NOT EXISTS tutor_applications (
   reviewed_at TEXT DEFAULT NULL,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+CREATE TABLE IF NOT EXISTS feedback (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  author_name TEXT DEFAULT NULL,
+  rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  text TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+  reject_reason TEXT DEFAULT NULL,
+  reviewed_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  reviewed_at TEXT DEFAULT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS leads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  grade TEXT DEFAULT NULL,
+  comment TEXT DEFAULT NULL,
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','read')),
+  read_at TEXT DEFAULT NULL,
+  read_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 CREATE INDEX IF NOT EXISTS idx_topics_tutor ON topics(tutor_id);
 CREATE INDEX IF NOT EXISTS idx_materials_topic ON materials(topic_id);
 CREATE INDEX IF NOT EXISTS idx_questions_test ON questions(test_id);
@@ -147,6 +169,8 @@ CREATE INDEX IF NOT EXISTS idx_overrides_date ON lesson_overrides(override_date)
 CREATE INDEX IF NOT EXISTS idx_applications_status ON tutor_applications(status);
 CREATE INDEX IF NOT EXISTS idx_applications_email ON tutor_applications(email);
 CREATE INDEX IF NOT EXISTS idx_applications_login ON tutor_applications(desired_login);
+CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status);
+CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
 `;
 
 const MODER_LOGIN = 'admin';
@@ -325,7 +349,7 @@ function initDb() {
   openExistingTopicsForAll();
   cleanTrash();
 
-  console.log('✅ БД готова (13 таблиц)');
+  console.log('✅ БД готова (15 таблиц)');
 }
 
 // ─── МИГРАЦИЯ: CHECK role на 'moderator' ───

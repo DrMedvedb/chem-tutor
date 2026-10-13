@@ -2635,6 +2635,12 @@ router.get('/moder/stats', (req, res) => {
   const applications = db.prepare(
     "SELECT COUNT(*) AS c FROM tutor_applications WHERE status = 'new'"
   ).get().c;
+  const feedbackPending = db.prepare(
+    "SELECT COUNT(*) AS c FROM feedback WHERE status = 'pending'"
+  ).get().c;
+  const leadsNew = db.prepare(
+    "SELECT COUNT(*) AS c FROM leads WHERE status = 'new'"
+  ).get().c;
 
   const trashTutors = db.prepare(
     "SELECT COUNT(*) AS c FROM users WHERE role = 'tutor' AND deleted_at IS NOT NULL"
@@ -2645,6 +2651,8 @@ router.get('/moder/stats', (req, res) => {
 
   res.json({
     tutors, students, topics, attempts, messages, applications,
+    feedback_pending: feedbackPending,
+    leads_new: leadsNew,
     trash_tutors: trashTutors,
     trash_students: trashStudents
   });
@@ -2814,6 +2822,241 @@ router.delete('/moder/users/:id/purge', (req, res) => {
 
   db.prepare('DELETE FROM users WHERE id = ?').run(userId);
 
+  res.json({ ok: true });
+});
+
+// ═══════════════════════════════════════════════════
+//  ОТЗЫВЫ (feedback)
+// ═══════════════════════════════════════════════════
+
+// POST /api/feedback — публичный, приём отзыва
+router.post('/feedback', (req, res) => {
+  const { author_name, rating, text } = req.body || {};
+
+  const name = String(author_name || '').trim().slice(0, 60);
+  const r = Number(rating);
+  const body = String(text || '').trim();
+
+  if (!Number.isInteger(r) || r < 1 || r > 5) {
+    return res.status(400).json({ error: 'Поставьте оценку от 1 до 5' });
+  }
+  if (body.length < 5) {
+    return res.status(400).json({ error: 'Отзыв слишком короткий (минимум 5 символов)' });
+  }
+  if (body.length > 1000) {
+    return res.status(400).json({ error: 'Отзыв слишком длинный (максимум 1000 символов)' });
+  }
+
+  const info = db.prepare(`
+    INSERT INTO feedback (author_name, rating, text, status)
+    VALUES (?, ?, ?, 'pending')
+  `).run(name || null, r, body);
+
+  res.json({ ok: true, feedback_id: Number(info.lastInsertRowid) });
+});
+
+// GET /api/feedback/approved — публичный, одобренные отзывы (для визитки)
+router.get('/feedback/approved', (req, res) => {
+  const rows = db.prepare(`
+    SELECT id, author_name, rating, text, created_at
+    FROM feedback
+    WHERE status = 'approved'
+    ORDER BY id DESC
+    LIMIT 50
+  `).all();
+  res.json({ feedback: rows });
+});
+
+// GET /api/moder/feedback — все отзывы (модер)
+router.get('/moder/feedback', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+
+  const status = String(req.query.status || '').trim();
+  let sql = `
+    SELECT id, author_name, rating, text, status, reject_reason,
+           reviewed_at, reviewed_by, created_at
+    FROM feedback
+  `;
+  const params = [];
+  if (['pending','approved','rejected'].includes(status)) {
+    sql += ' WHERE status = ?';
+    params.push(status);
+  }
+  sql += ` ORDER BY
+    CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END,
+    id DESC`;
+
+  const rows = db.prepare(sql).all(...params);
+  res.json({ feedback: rows });
+});
+
+// GET /api/moder/feedback/count — счётчик pending (модер)
+router.get('/moder/feedback/count', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const row = db.prepare(
+    "SELECT COUNT(*) AS c FROM feedback WHERE status = 'pending'"
+  ).get();
+  res.json({ count: row.c });
+});
+
+// POST /api/moder/feedback/:id/approve — одобрить отзыв
+router.post('/moder/feedback/:id/approve', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const id = Number(req.params.id);
+
+  const fb = db.prepare('SELECT * FROM feedback WHERE id = ?').get(id);
+  if (!fb) return res.status(404).json({ error: 'Отзыв не найден' });
+  if (fb.status !== 'pending') {
+    return res.status(400).json({ error: 'Отзыв уже рассмотрен' });
+  }
+
+  db.prepare(`
+    UPDATE feedback
+    SET status = 'approved',
+        reviewed_at = datetime('now'),
+        reviewed_by = ?
+    WHERE id = ?
+  `).run(req.session.userId, id);
+
+  res.json({ ok: true });
+});
+
+// POST /api/moder/feedback/:id/reject — отклонить отзыв
+router.post('/moder/feedback/:id/reject', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const id = Number(req.params.id);
+  const reason = String((req.body && req.body.reason) || '').trim().slice(0, 500);
+
+  const fb = db.prepare('SELECT * FROM feedback WHERE id = ?').get(id);
+  if (!fb) return res.status(404).json({ error: 'Отзыв не найден' });
+  if (fb.status !== 'pending') {
+    return res.status(400).json({ error: 'Отзыв уже рассмотрен' });
+  }
+
+  db.prepare(`
+    UPDATE feedback
+    SET status = 'rejected',
+        reviewed_at = datetime('now'),
+        reviewed_by = ?,
+        reject_reason = ?
+    WHERE id = ?
+  `).run(req.session.userId, reason || null, id);
+
+  res.json({ ok: true });
+});
+
+// DELETE /api/moder/feedback/:id — удалить отзыв навсегда
+router.delete('/moder/feedback/:id', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const id = Number(req.params.id);
+  const fb = db.prepare('SELECT id FROM feedback WHERE id = ?').get(id);
+  if (!fb) return res.status(404).json({ error: 'Отзыв не найден' });
+  db.prepare('DELETE FROM feedback WHERE id = ?').run(id);
+  res.json({ ok: true });
+});
+
+// ═══════════════════════════════════════════════════
+//  ЗАЯВКИ ОТ УЧЕНИКОВ (leads)
+// ═══════════════════════════════════════════════════
+
+// POST /api/leads — публичный, приём заявки
+router.post('/leads', (req, res) => {
+  const { name, phone, grade, comment } = req.body || {};
+
+  const n = String(name || '').trim().slice(0, 80);
+  const p = String(phone || '').trim().slice(0, 25);
+  const g = String(grade || '').trim().slice(0, 20);
+  const c = String(comment || '').trim().slice(0, 500);
+
+  if (n.length < 2) {
+    return res.status(400).json({ error: 'Введите имя' });
+  }
+  const digits = p.replace(/\D/g, '');
+  if (digits.length < 10) {
+    return res.status(400).json({ error: 'Введите корректный телефон' });
+  }
+
+  const validGrades = ['junior','8','9','10','11','adult'];
+  const gradeVal = validGrades.includes(g) ? g : null;
+
+  const info = db.prepare(`
+    INSERT INTO leads (name, phone, grade, comment, status)
+    VALUES (?, ?, ?, ?, 'new')
+  `).run(n, p, gradeVal, c || null);
+
+  res.json({ ok: true, lead_id: Number(info.lastInsertRowid) });
+});
+
+// GET /api/moder/leads — список заявок (модер)
+router.get('/moder/leads', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+
+  const status = String(req.query.status || '').trim();
+  let sql = `
+    SELECT id, name, phone, grade, comment, status, read_at, read_by, created_at
+    FROM leads
+  `;
+  const params = [];
+  if (['new','read'].includes(status)) {
+    sql += ' WHERE status = ?';
+    params.push(status);
+  }
+  sql += ` ORDER BY
+    CASE status WHEN 'new' THEN 0 ELSE 1 END,
+    id DESC`;
+
+  const rows = db.prepare(sql).all(...params);
+  res.json({ leads: rows });
+});
+
+// GET /api/moder/leads/count — счётчик новых (модер)
+router.get('/moder/leads/count', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const row = db.prepare("SELECT COUNT(*) AS c FROM leads WHERE status = 'new'").get();
+  res.json({ count: row.c });
+});
+
+// POST /api/moder/leads/mark-read — отметить все как прочитанные
+router.post('/moder/leads/mark-read', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+
+  const result = db.prepare(`
+    UPDATE leads
+    SET status = 'read',
+        read_at = datetime('now'),
+        read_by = ?
+    WHERE status = 'new'
+  `).run(req.session.userId);
+
+  res.json({ ok: true, updated: result.changes });
+});
+
+// POST /api/moder/leads/:id/read — отметить одну как прочитанную
+router.post('/moder/leads/:id/read', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const id = Number(req.params.id);
+
+  const lead = db.prepare('SELECT id FROM leads WHERE id = ?').get(id);
+  if (!lead) return res.status(404).json({ error: 'Заявка не найдена' });
+
+  db.prepare(`
+    UPDATE leads
+    SET status = 'read',
+        read_at = datetime('now'),
+        read_by = ?
+    WHERE id = ?
+  `).run(req.session.userId, id);
+
+  res.json({ ok: true });
+});
+
+// DELETE /api/moder/leads/:id — удалить заявку
+router.delete('/moder/leads/:id', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const id = Number(req.params.id);
+  const lead = db.prepare('SELECT id FROM leads WHERE id = ?').get(id);
+  if (!lead) return res.status(404).json({ error: 'Заявка не найдена' });
+  db.prepare('DELETE FROM leads WHERE id = ?').run(id);
   res.json({ ok: true });
 });
 
