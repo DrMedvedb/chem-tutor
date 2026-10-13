@@ -14,9 +14,7 @@ async function api(url, opts = {}) {
   });
   const json = await res.json().catch(() => ({}));
   if (res.status === 401 || res.status === 403) {
-    if (json.error && json.error.includes('Только для модератора')) {
-      // не редиректим — просто кидаем ошибку
-    } else {
+    if (!(json.error && json.error.includes('Только для модератора'))) {
       location.href = 'moder-login.html';
     }
     throw new Error(json.error || 'unauth');
@@ -40,6 +38,34 @@ function ico(id, cls = 'ico') {
 function openModal(id)  { $('#' + id).classList.add('open'); }
 function closeModal(id) { $('#' + id).classList.remove('open'); }
 
+// ─── НАДЁЖНОЕ КОПИРОВАНИЕ (с fallback) ───
+async function copyToClipboard(text) {
+  // 1. Современный API
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) { /* пробуем fallback */ }
+  }
+  // 2. Fallback через execCommand
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) {
+    return false;
+  }
+}
+
 $$('.modal-backdrop').forEach(bd => {
   bd.addEventListener('click', (e) => {
     if (e.target === bd) bd.classList.remove('open');
@@ -60,7 +86,6 @@ let trashCache = { tutors: [], students: [] };
 let currentView = 'tutors';
 let searchQuery = '';
 
-// Фильтры
 let applicationsFilter = 'new';
 let feedbackFilter = 'pending';
 let leadsFilter = 'new';
@@ -453,8 +478,26 @@ function openApplicationModal(id) {
   let html = `
     <div class="app-info-block">
       <div class="app-info-row"><span class="lbl">Имя и фамилия</span><span class="val">${esc(app.full_name)}</span></div>
-      <div class="app-info-row"><span class="lbl">Email</span><span class="val mono">${esc(app.email)}</span></div>
-      <div class="app-info-row"><span class="lbl">Желаемый логин</span><span class="val mono">${esc(app.desired_login)}</span></div>
+      <div class="app-info-row">
+        <span class="lbl">Email</span>
+        <span class="val mono" style="display:flex;gap:8px;align-items:center;justify-content:flex-end">
+          <span>${esc(app.email)}</span>
+          <button id="copy-email-field-btn" title="Скопировать email"
+                  style="padding:4px 8px;border-radius:8px;background:var(--light);border:1px solid var(--border);color:var(--gray);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12px">
+            ${ico('copy','ico-sm')}
+          </button>
+        </span>
+      </div>
+      <div class="app-info-row">
+        <span class="lbl">Желаемый логин</span>
+        <span class="val mono" style="display:flex;gap:8px;align-items:center;justify-content:flex-end">
+          <span>${esc(app.desired_login)}</span>
+          <button id="copy-login-field-btn" title="Скопировать логин"
+                  style="padding:4px 8px;border-radius:8px;background:var(--light);border:1px solid var(--border);color:var(--gray);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12px">
+            ${ico('copy','ico-sm')}
+          </button>
+        </span>
+      </div>
       <div class="app-info-row"><span class="lbl">Статус</span><span class="val">${statusBadge}</span></div>
       ${app.reviewed_at ? `<div class="app-info-row"><span class="lbl">Рассмотрена</span><span class="val">${formatDate(app.reviewed_at)}</span></div>` : ''}
       ${app.reject_reason ? `<div class="app-info-row"><span class="lbl">Причина отклонения</span><span class="val">${esc(app.reject_reason)}</span></div>` : ''}
@@ -471,6 +514,22 @@ function openApplicationModal(id) {
   }
 
   $('#app-body').innerHTML = html;
+
+  // Кнопки копирования email / логина
+  const copyEmailBtn = $('#copy-email-field-btn');
+  const copyLoginBtn = $('#copy-login-field-btn');
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', async () => {
+      const ok = await copyToClipboard(app.email);
+      toast(ok ? 'Email скопирован' : 'Не удалось скопировать', ok ? 'success' : 'error');
+    });
+  }
+  if (copyLoginBtn) {
+    copyLoginBtn.addEventListener('click', async () => {
+      const ok = await copyToClipboard(app.desired_login);
+      toast(ok ? 'Логин скопирован' : 'Не удалось скопировать', ok ? 'success' : 'error');
+    });
+  }
 
   if (app.status === 'new') {
     $('#app-approve-btn').addEventListener('click', () => approveApplication(app));
@@ -508,7 +567,7 @@ function renderApprovedScreen(app, template) {
     <div class="email-template-block" style="background:linear-gradient(135deg,rgba(106,76,255,.06),rgba(14,165,233,.04));border-radius:16px;padding:18px 20px;border:1.5px solid rgba(106,76,255,.2);margin-top:16px">
       <div class="email-template-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
         <h4 style="font-size:14px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;margin:0">${ico('mail','ico-sm')} Письмо учителю</h4>
-        <button class="copy-btn" id="copy-email-btn" style="padding:8px 14px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:none">${ico('copy','ico-sm')} Скопировать</button>
+        <button class="copy-btn" id="copy-email-btn" style="padding:8px 14px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:none">${ico('copy','ico-sm')} Скопировать письмо</button>
       </div>
       <div style="font-size:12.5px;color:var(--gray);font-weight:600;margin-bottom:12px">Кому: <b>${esc(template.to)}</b><br>Тема: <b>${esc(template.subject)}</b></div>
       <div style="background:var(--white);border-radius:12px;padding:14px 16px;border:1.5px solid var(--border);font-family:'Consolas',monospace;font-size:12.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--dark);max-height:320px;overflow-y:auto;user-select:all">${esc(template.body)}</div>
@@ -516,13 +575,16 @@ function renderApprovedScreen(app, template) {
   `;
   $('#app-body').innerHTML = html;
 
-  $('#copy-email-btn').addEventListener('click', () => {
+  $('#copy-email-btn').addEventListener('click', async () => {
     const text = `Кому: ${template.to}\nТема: ${template.subject}\n\n${template.body}`;
-    navigator.clipboard.writeText(text).then(() => {
+    const ok = await copyToClipboard(text);
+    if (ok) {
       const btn = $('#copy-email-btn');
       btn.innerHTML = `${ico('check','ico-sm')} Скопировано`;
-      setTimeout(() => btn.innerHTML = `${ico('copy','ico-sm')} Скопировать`, 1800);
-    }).catch(() => toast('Не удалось скопировать', 'error'));
+      setTimeout(() => btn.innerHTML = `${ico('copy','ico-sm')} Скопировать письмо`, 1800);
+    } else {
+      toast('Не удалось скопировать. Выделите текст вручную.', 'error');
+    }
   });
 }
 
@@ -573,20 +635,23 @@ function renderRejectedScreen(app, template) {
     <div class="email-template-block" style="background:linear-gradient(135deg,rgba(106,76,255,.06),rgba(14,165,233,.04));border-radius:16px;padding:18px 20px;border:1.5px solid rgba(106,76,255,.2);margin-top:16px">
       <div class="email-template-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
         <h4 style="font-size:14px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;margin:0">${ico('mail','ico-sm')} Письмо учителю</h4>
-        <button class="copy-btn" id="copy-email-btn" style="padding:8px 14px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:none">${ico('copy','ico-sm')} Скопировать</button>
+        <button class="copy-btn" id="copy-email-btn" style="padding:8px 14px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:none">${ico('copy','ico-sm')} Скопировать письмо</button>
       </div>
       <div style="font-size:12.5px;color:var(--gray);font-weight:600;margin-bottom:12px">Кому: <b>${esc(template.to)}</b><br>Тема: <b>${esc(template.subject)}</b></div>
       <div style="background:var(--white);border-radius:12px;padding:14px 16px;border:1.5px solid var(--border);font-family:'Consolas',monospace;font-size:12.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--dark);max-height:320px;overflow-y:auto;user-select:all">${esc(template.body)}</div>
     </div>
   `;
   $('#app-body').innerHTML = html;
-  $('#copy-email-btn').addEventListener('click', () => {
+  $('#copy-email-btn').addEventListener('click', async () => {
     const text = `Кому: ${template.to}\nТема: ${template.subject}\n\n${template.body}`;
-    navigator.clipboard.writeText(text).then(() => {
+    const ok = await copyToClipboard(text);
+    if (ok) {
       const btn = $('#copy-email-btn');
       btn.innerHTML = `${ico('check','ico-sm')} Скопировано`;
-      setTimeout(() => btn.innerHTML = `${ico('copy','ico-sm')} Скопировать`, 1800);
-    }).catch(() => toast('Не удалось скопировать', 'error'));
+      setTimeout(() => btn.innerHTML = `${ico('copy','ico-sm')} Скопировать письмо`, 1800);
+    } else {
+      toast('Не удалось скопировать', 'error');
+    }
   });
 }
 
@@ -878,6 +943,10 @@ function renderLeads() {
           </div>
           <div class="lead-meta">
             <a href="tel:${esc(phoneDigits)}">${ico('phone','ico-sm')} ${esc(l.phone)}</a>
+            <button data-copy-phone="${esc(phoneDigits)}" title="Скопировать телефон"
+                    style="padding:2px 8px;border-radius:8px;background:var(--light);border:1px solid var(--border);color:var(--gray);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11.5px;margin-left:4px">
+              ${ico('copy','ico-sm')}
+            </button>
             ${gradeTxt ? `<span>${ico('cap','ico-sm')} ${esc(gradeTxt)}</span>` : ''}
             <span class="lead-time">${ico('clock','ico-sm')} ${timeAgo(l.created_at)}</span>
           </div>
@@ -892,6 +961,15 @@ function renderLeads() {
   }).join('');
 
   wireLeadsFilterTabs(v);
+
+  $$('[data-copy-phone]', v).forEach(b => {
+    b.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const phone = b.dataset.copyPhone;
+      const ok = await copyToClipboard(phone);
+      toast(ok ? 'Телефон скопирован' : 'Не удалось скопировать', ok ? 'success' : 'error');
+    });
+  });
 
   $$('[data-mark-read]', v).forEach(b => {
     b.addEventListener('click', async (e) => {
@@ -935,13 +1013,11 @@ function wireLeadsFilterTabs(container) {
 
 // Автоматическая отметка всех новых заявок как прочитанных при открытии вкладки
 async function autoMarkLeadsRead() {
-  // Небольшая задержка, чтобы юзер увидел свои новые заявки как "новые"
   setTimeout(async () => {
     const hasNew = leadsCache.some(l => l.status === 'new');
     if (!hasNew) return;
     try {
       await api('/moder/leads/mark-read', { method: 'POST' });
-      // Обновляем локальный кеш
       for (const l of leadsCache) {
         if (l.status === 'new') {
           l.status = 'read';
@@ -950,7 +1026,7 @@ async function autoMarkLeadsRead() {
       }
       await loadStats();
     } catch (e) {}
-  }, 3000); // через 3 секунды после открытия вкладки
+  }, 3000);
 }
 
 // ═══ КОРЗИНА ═══
@@ -1110,12 +1186,15 @@ function showNewPassword(user) {
   openModal('modal-newpass');
 }
 
-$('#np-copy').addEventListener('click', () => {
+$('#np-copy').addEventListener('click', async () => {
   const pwd = $('#np-value').textContent;
-  navigator.clipboard.writeText(pwd).then(() => {
+  const ok = await copyToClipboard(pwd);
+  if (ok) {
     $('#np-copy').innerHTML = `${ico('check','ico-sm')} Скопировано`;
     setTimeout(() => $('#np-copy').innerHTML = `${ico('copy','ico-sm')} Скопировать`, 1500);
-  });
+  } else {
+    toast('Не удалось скопировать', 'error');
+  }
 });
 
 // ═══ СМЕНА ПАРОЛЯ МОДЕРА ═══
@@ -1171,21 +1250,18 @@ $('#confirm-ok').addEventListener('click', async () => {
   closeModal('modal-confirm');
 });
 
-// ═══ АВТООБНОВЛЕНИЕ ═══
+// ═══ АВТООБНОВЛЕНИЕ СЧЁТЧИКОВ ═══
 
 let pollTimer = null;
 
 async function refreshCounters() {
   try {
-    // счётчик новых заявок учителей
     const apps = await api('/moder/tutor-applications/count');
     updateApplicationsCounter(apps.count);
 
-    // счётчик новых отзывов
     const fb = await api('/moder/feedback/count');
     updateFeedbackCounter(fb.count);
 
-    // счётчик новых заявок учеников
     const leads = await api('/moder/leads/count');
     updateLeadsCounter(leads.count);
 
@@ -1200,6 +1276,16 @@ async function refreshCounters() {
 function startPolling() {
   if (pollTimer) clearInterval(pollTimer);
   pollTimer = setInterval(refreshCounters, 15000);
+
+  // Обновляем счётчики когда пользователь возвращается на вкладку
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      refreshCounters();
+    }
+  });
+  window.addEventListener('focus', () => {
+    refreshCounters();
+  });
 }
 
 // ═══ СТАРТ ═══
@@ -1228,6 +1314,9 @@ function startPolling() {
 
     switchView('tutors');
     startPolling();
+
+    // Первичный прогон счётчиков сразу после загрузки (на случай если stats не обновил)
+    refreshCounters();
   } catch (e) {
     console.error('boot error:', e);
   }
