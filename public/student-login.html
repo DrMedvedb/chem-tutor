@@ -5,6 +5,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Вход ученика — Алхимичка</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
@@ -22,6 +24,7 @@
   }
   .ico-xl { width: 34px; height: 34px; stroke-width: 1.5; }
   .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
   .btn .ico { margin-right: 4px; }
 
   .auth-wrap {
@@ -44,6 +47,7 @@
       radial-gradient(circle at 80% 70%, rgba(14,165,233,.10), transparent 45%),
       var(--light);
   }
+
   .auth-card {
     position: relative;
     z-index: 2;
@@ -58,6 +62,7 @@
   html.dark .auth-card {
     box-shadow: 0 25px 60px -15px rgba(0,0,0,.7);
   }
+
   .auth-head { text-align: center; margin-bottom: 28px; }
   .auth-logo {
     width: 68px; height: 68px;
@@ -71,7 +76,21 @@
   }
   .auth-head h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; color: var(--dark); }
   .auth-head p  { color: var(--gray); font-size: 14px; }
+
   .form-group { margin-bottom: 16px; }
+
+  .error-msg {
+    background: rgba(224,67,92,.1);
+    color: var(--danger);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: none;
+    line-height: 1.5;
+  }
+  .error-msg.show { display: block; }
+
   .hint {
     background: rgba(14,165,233,.08);
     border-left: 3px solid var(--accent);
@@ -83,23 +102,16 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
+    line-height: 1.5;
   }
   .hint .ico { color: var(--accent-dark); flex-shrink: 0; margin-top: 2px; }
-  html.dark .hint {
-    background: rgba(14,165,233,.14);
-  }
-  .error-msg {
-    background: rgba(224,67,92,.1);
-    color: var(--danger);
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    margin-bottom: 16px;
-    display: none;
-  }
-  .error-msg.show { display: block; }
+  html.dark .hint { background: rgba(14,165,233,.14); }
+
   .back-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     text-align: center;
     margin-top: 22px;
     color: var(--gray);
@@ -118,16 +130,41 @@
   html.dark .theme-toggle-float {
     box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
   }
+
+  .back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--gray);
+    font-weight: 700;
+    font-size: 13.5px;
+    transition: all .2s;
+    box-shadow: 0 6px 16px -8px rgba(26,26,46,.15);
+  }
+  .back-home:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -8px rgba(14,165,233,.4);
+  }
+  .back-home .ico { width: 16px; height: 16px; }
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
   <defs>
-    <symbol id="i-graduation" viewBox="0 0 24 24">
-      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
-      <path d="M22 10v6"/>
-      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+    <symbol id="i-student" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
     </symbol>
     <symbol id="i-arrow-right" viewBox="0 0 24 24">
       <path d="M5 12h14"/>
@@ -144,17 +181,22 @@
   </defs>
 </svg>
 
+<a href="index.html" class="back-home">
+  <svg class="ico"><use href="#i-arrow-left"/></svg>
+  На главную
+</a>
+
 <div class="theme-toggle-float" data-theme-toggle></div>
 
 <div class="auth-wrap">
   <div class="blob blob-2"></div>
 
-  <div class="auth-card">
+  <div class="auth-card" id="auth-card">
     <div class="auth-head">
       <div class="auth-logo">
-        <svg class="ico ico-xl"><use href="#i-graduation"/></svg>
+        <svg class="ico ico-xl"><use href="#i-student"/></svg>
       </div>
-      <h1>Вход для ученика</h1>
+      <h1>Вход ученика</h1>
       <p>Введите данные, которые выдал учитель</p>
     </div>
 
@@ -174,51 +216,70 @@
         <label class="label">Пароль</label>
         <input class="input" type="text" name="password" placeholder="oxygen7392" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn btn-accent btn-block mt-2">
+      <button type="submit" class="btn btn-accent btn-block mt-2" id="submit-btn">
         Войти <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
       </button>
     </form>
 
-    <a href="index.html" class="back-link">
-      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg> На главную
+    <a href="login.html" class="back-link">
+      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg>
+      Назад к выбору роли
     </a>
   </div>
 </div>
 
+<script src="js/login-anim.js"></script>
 <script>
-const API = '/api';
-const errorBox = document.getElementById('error');
-const form = document.getElementById('login-form');
+(function () {
+  const form = document.getElementById('login-form');
+  const errorBox = document.getElementById('error');
+  const submitBtn = document.getElementById('submit-btn');
+  const authCard = document.getElementById('auth-card');
 
-function showError(msg) {
-  errorBox.textContent = msg;
-  errorBox.classList.add('show');
-}
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  errorBox.classList.remove('show');
-  const fd = new FormData(form);
-  try {
-    const r = await fetch(API + '/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin',
-      body: JSON.stringify({
-        username: fd.get('username').trim(),
-        password: fd.get('password').trim()
-      })
-    });
-    const j = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(j.error || 'Ошибка сервера');
-    if (j.user.role !== 'student') {
-      throw new Error('Это логин учителя. Войдите через страницу учителя.');
-    }
-    location.href = 'dashboard-student.html';
-  } catch (err) {
-    showError(err.message);
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.classList.add('show');
+    window.LoginAnim?.shakeForm(authCard);
   }
-});
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.remove('show');
+
+    const fd = new FormData(form);
+    const username = String(fd.get('username') || '').trim();
+    const password = String(fd.get('password') || '').trim();
+
+    if (!username || !password) return showError('Введите логин и пароль');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Входим…';
+
+    try {
+      const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ username, password })
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || 'Ошибка сервера');
+      if (j.user.role !== 'student') {
+        throw new Error('Это логин учителя. Войдите через страницу учителя.');
+      }
+
+      // ✅ Анимация + редирект
+      window.LoginAnim.playAndRedirect({
+        role: 'student',
+        redirect: 'dashboard-student.html'
+      });
+    } catch (err) {
+      showError(err.message);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Войти <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>';
+    }
+  });
+})();
 </script>
 <script src="js/icons.js"></script>
 </body>

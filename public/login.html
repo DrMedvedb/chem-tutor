@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вход — Алхимичка</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme.js"></script>
+<style>
+  .ico {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ico-xl { width: 44px; height: 44px; stroke-width: 1.4; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(106, 76, 255, .10), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(14, 165, 233, .10), transparent 45%),
+      var(--light);
+    transition: background .35s ease;
+  }
+  html.dark .login-wrap {
+    background:
+      radial-gradient(circle at 20% 30%, rgba(122, 92, 255, .16), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(14, 165, 233, .14), transparent 45%),
+      var(--light);
+  }
+
+  .back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--gray);
+    font-weight: 700;
+    font-size: 13.5px;
+    transition: all .2s;
+    box-shadow: 0 6px 16px -8px rgba(26,26,46,.15);
+  }
+  .back-home:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -8px rgba(106,76,255,.4);
+  }
+  .back-home .ico { width: 16px; height: 16px; }
+
+  .theme-toggle-float {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    box-shadow: 0 6px 16px -8px rgba(106,76,255,.4);
+  }
+
+  .login-card {
+    position: relative;
+    z-index: 2;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 48px 44px;
+    max-width: 620px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    border: 1.5px solid var(--border);
+  }
+
+  .login-head { text-align: center; margin-bottom: 32px; }
+  .login-head h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .login-head p { color: var(--gray); font-size: 15px; }
+
+  /* ─── Карточки выбора роли (с уникальными классами) ─── */
+  .login-role-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+  @media (max-width: 600px) {
+    .login-role-cards { grid-template-columns: 1fr; }
+  }
+
+  .login-role-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 28px 20px;
+    border-radius: 20px;
+    background: var(--light);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(.2,.8,.3,1);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+    align-self: start;
+  }
+  .login-role-card:hover {
+    transform: translateY(-4px);
+    background: var(--white);
+    box-shadow: 0 20px 40px -20px rgba(106,76,255,.3);
+  }
+  .login-role-card.tutor:hover   { border-color: var(--primary); }
+  .login-role-card.student:hover { border-color: var(--accent); }
+
+  .login-role-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s ease;
+  }
+  .login-role-card.tutor::before {
+    background: linear-gradient(90deg, var(--primary), #a678ff);
+  }
+  .login-role-card.student::before {
+    background: linear-gradient(90deg, var(--accent), #38bdf8);
+  }
+  .login-role-card:hover::before { transform: scaleX(1); }
+
+  .login-role-icon {
+    width: 72px; height: 72px;
+    border-radius: 20px;
+    display: grid; place-items: center;
+    margin-bottom: 18px;
+    transition: transform .35s cubic-bezier(.2,.8,.3,1);
+    flex-shrink: 0;
+  }
+  .login-role-card:hover .login-role-icon { transform: scale(1.08) rotate(-4deg); }
+
+  .login-role-card.tutor .login-role-icon {
+    background: linear-gradient(135deg, rgba(106,76,255,.16), rgba(106,76,255,.04));
+    color: var(--primary);
+  }
+  .login-role-card.student .login-role-icon {
+    background: linear-gradient(135deg, rgba(14,165,233,.16), rgba(14,165,233,.04));
+    color: var(--accent-dark);
+  }
+
+  .login-role-card h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -.3px;
+    color: var(--dark);
+  }
+  .login-role-card p {
+    font-size: 13.5px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  .login-foot {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1.5px dashed var(--border);
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray);
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="m12 19-7-7 7-7"/>
+      <path d="M19 12H5"/>
+    </symbol>
+    <symbol id="i-teacher" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </symbol>
+    <symbol id="i-student" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24">
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<a href="index.html" class="back-home">
+  <svg class="ico"><use href="#i-arrow-left"/></svg>
+  На главную
+</a>
+
+<div class="theme-toggle-float" data-theme-toggle></div>
+
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-head">
+      <h1>Алхимичка</h1>
+      <p>Выберите, как вы хотите войти</p>
+    </div>
+
+    <div class="login-role-cards">
+      <a href="tutor-login.html" class="login-role-card tutor">
+        <div class="login-role-icon">
+          <svg class="ico ico-xl"><use href="#i-teacher"/></svg>
+        </div>
+        <h3>Я учитель</h3>
+        <p>Управляйте темами, учениками и проверкой работ</p>
+      </a>
+
+      <a href="student-login.html" class="login-role-card student">
+        <div class="login-role-icon">
+          <svg class="ico ico-xl"><use href="#i-student"/></svg>
+        </div>
+        <h3>Я ученик</h3>
+        <p>Изучайте материалы и проходите тесты</p>
+      </a>
+    </div>
+
+    <div class="login-foot">
+      <svg class="ico ico-sm" style="vertical-align:-3px"><use href="#i-sparkle"/></svg>
+      Вы репетитор и хотите работать на платформе?
+      <a href="tutor-register.html" style="color:var(--primary);font-weight:700">Оставить заявку</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/icons.js"></script>
+</body>
+</html>

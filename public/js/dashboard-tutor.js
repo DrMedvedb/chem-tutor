@@ -191,7 +191,7 @@ window.switchToChatSection = function () {
 
 $('#logout').addEventListener('click', async () => {
   await api('/logout', { method: 'POST' }).catch(() => {});
-  location.href = 'index.html';
+  location.href = 'login.html';
 });
 
 // ═══ СЧЁТЧИКИ ═══

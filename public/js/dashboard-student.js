@@ -130,7 +130,7 @@ function loadTables() {
 
 $('#logout').addEventListener('click', async () => {
   await api('/logout', { method: 'POST' }).catch(() => {});
-  location.href = 'index.html';
+  location.href = 'login.html';
 });
 
 // ─── Темы ученика ───

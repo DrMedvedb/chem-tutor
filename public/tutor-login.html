@@ -5,6 +5,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Вход учителя — Алхимичка</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6a4cff">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
@@ -21,6 +23,8 @@
     vertical-align: middle;
   }
   .ico-xl { width: 34px; height: 34px; stroke-width: 1.5; }
+  .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
+  .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
   .btn .ico { margin-right: 4px; }
 
   .auth-wrap {
@@ -43,6 +47,7 @@
       radial-gradient(circle at 80% 70%, rgba(122, 92, 255, .12), transparent 45%),
       var(--light);
   }
+
   .auth-card {
     position: relative;
     z-index: 2;
@@ -54,6 +59,7 @@
     box-shadow: var(--shadow-lg);
     border: 1.5px solid var(--border);
   }
+
   .auth-head { text-align: center; margin-bottom: 28px; }
   .auth-logo {
     width: 68px; height: 68px;
@@ -68,32 +74,8 @@
   .auth-head h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; color: var(--dark); }
   .auth-head p  { color: var(--gray); font-size: 14px; }
 
-  .tabs {
-    display: flex;
-    background: var(--light);
-    border-radius: 14px;
-    padding: 5px;
-    margin-bottom: 26px;
-  }
-  .tab {
-    flex: 1;
-    padding: 11px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--gray);
-    transition: all .2s;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-  }
-  .tab.active {
-    background: var(--white);
-    color: var(--primary);
-    box-shadow: 0 4px 12px -4px rgba(106,76,255,.3);
-  }
-
   .form-group { margin-bottom: 16px; }
+
   .error-msg {
     background: rgba(224,67,92,.1);
     color: var(--danger);
@@ -102,11 +84,15 @@
     font-size: 14px;
     margin-bottom: 16px;
     display: none;
+    line-height: 1.5;
   }
   .error-msg.show { display: block; }
 
   .back-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     text-align: center;
     margin-top: 22px;
     color: var(--gray);
@@ -125,16 +111,41 @@
   html.dark .theme-toggle-float {
     box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
   }
+
+  .back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--gray);
+    font-weight: 700;
+    font-size: 13.5px;
+    transition: all .2s;
+    box-shadow: 0 6px 16px -8px rgba(26,26,46,.15);
+  }
+  .back-home:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -8px rgba(106,76,255,.4);
+  }
+  .back-home .ico { width: 16px; height: 16px; }
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
   <defs>
-    <symbol id="i-graduation" viewBox="0 0 24 24">
-      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
-      <path d="M22 10v6"/>
-      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+    <symbol id="i-teacher" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
     </symbol>
     <symbol id="i-arrow-right" viewBox="0 0 24 24">
       <path d="M5 12h14"/>
@@ -144,8 +155,16 @@
       <path d="m12 19-7-7 7-7"/>
       <path d="M19 12H5"/>
     </symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24">
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+    </symbol>
   </defs>
 </svg>
+
+<a href="index.html" class="back-home">
+  <svg class="ico"><use href="#i-arrow-left"/></svg>
+  На главную
+</a>
 
 <div class="theme-toggle-float" data-theme-toggle></div>
 
@@ -153,18 +172,13 @@
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
 
-  <div class="auth-card">
+  <div class="auth-card" id="auth-card">
     <div class="auth-head">
       <div class="auth-logo">
-        <svg class="ico ico-xl"><use href="#i-graduation"/></svg>
+        <svg class="ico ico-xl"><use href="#i-teacher"/></svg>
       </div>
-      <h1>Кабинет учителя</h1>
-      <p>Войдите или создайте аккаунт</p>
-    </div>
-
-    <div class="tabs">
-      <button class="tab active" data-tab="login" type="button">Вход</button>
-      <button class="tab" data-tab="register" type="button">Регистрация</button>
+      <h1>Вход учителя</h1>
+      <p>Введите логин и пароль</p>
     </div>
 
     <div class="error-msg" id="error"></div>
@@ -178,102 +192,70 @@
         <label class="label">Пароль</label>
         <input class="input" type="password" name="password" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn btn-primary btn-block mt-2">
+      <button type="submit" class="btn btn-primary btn-block mt-2" id="submit-btn">
         Войти <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
       </button>
     </form>
 
-    <form id="register-form" style="display:none">
-      <div class="form-group">
-        <label class="label">Ваше имя</label>
-        <input class="input" name="display_name" placeholder="Иван Петрович" required>
-      </div>
-      <div class="form-group">
-        <label class="label">Логин</label>
-        <input class="input" name="username" autocomplete="username" required>
-      </div>
-      <div class="form-group">
-        <label class="label">Пароль</label>
-        <input class="input" type="password" name="password" autocomplete="new-password" required>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block mt-2">
-        Создать аккаунт <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>
-      </button>
-    </form>
-
-    <a href="index.html" class="back-link">
-      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg> На главную
+    <a href="login.html" class="back-link">
+      <svg class="ico ico-sm"><use href="#i-arrow-left"/></svg>
+      Назад к выбору роли
     </a>
   </div>
 </div>
 
+<script src="js/login-anim.js"></script>
 <script>
-const API = '/api';
-const tabs = document.querySelectorAll('.tab');
-const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
-const errorBox = document.getElementById('error');
+(function () {
+  const form = document.getElementById('login-form');
+  const errorBox = document.getElementById('error');
+  const submitBtn = document.getElementById('submit-btn');
+  const authCard = document.getElementById('auth-card');
 
-tabs.forEach(t => t.addEventListener('click', () => {
-  tabs.forEach(x => x.classList.remove('active'));
-  t.classList.add('active');
-  errorBox.classList.remove('show');
-  if (t.dataset.tab === 'login') {
-    loginForm.style.display = '';
-    registerForm.style.display = 'none';
-  } else {
-    loginForm.style.display = 'none';
-    registerForm.style.display = '';
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.classList.add('show');
+    window.LoginAnim?.shakeForm(authCard);
   }
-}));
 
-function showError(msg) {
-  errorBox.textContent = msg;
-  errorBox.classList.add('show');
-}
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.remove('show');
 
-async function post(url, data) {
-  const r = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'same-origin',
-    body: JSON.stringify(data)
+    const fd = new FormData(form);
+    const username = String(fd.get('username') || '').trim();
+    const password = String(fd.get('password') || '');
+
+    if (!username || !password) return showError('Введите логин и пароль');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Входим…';
+
+    try {
+      const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ username, password })
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || 'Ошибка сервера');
+      if (j.user.role !== 'tutor') {
+        throw new Error('Это логин ученика. Войдите через страницу ученика.');
+      }
+
+      // ✅ Анимация + редирект
+      window.LoginAnim.playAndRedirect({
+        role: 'tutor',
+        redirect: 'dashboard-tutor.html'
+      });
+    } catch (err) {
+      showError(err.message);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Войти <svg class="ico ico-sm"><use href="#i-arrow-right"/></svg>';
+    }
   });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error || 'Ошибка сервера');
-  return j;
-}
-
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  errorBox.classList.remove('show');
-  const fd = new FormData(loginForm);
-  try {
-    await post(API + '/login', {
-      username: fd.get('username').trim(),
-      password: fd.get('password')
-    });
-    location.href = 'dashboard-tutor.html';
-  } catch (err) {
-    showError(err.message);
-  }
-});
-
-registerForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  errorBox.classList.remove('show');
-  const fd = new FormData(registerForm);
-  try {
-    await post(API + '/register-tutor', {
-      display_name: fd.get('display_name').trim(),
-      username: fd.get('username').trim(),
-      password: fd.get('password')
-    });
-    location.href = 'dashboard-tutor.html';
-  } catch (err) {
-    showError(err.message);
-  }
-});
+})();
 </script>
 <script src="js/icons.js"></script>
 </body>

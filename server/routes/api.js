@@ -53,7 +53,6 @@ function isModerator(req) {
   return !!(req.session && req.session.userId && req.session.role === 'moderator');
 }
 
-// ⭐ Кэш last_seen: пишем в БД не чаще раза в 60 сек на юзера
 const LAST_SEEN_CACHE = new Map();
 const LAST_SEEN_TTL_MS = 60 * 1000;
 
@@ -244,6 +243,230 @@ router.post('/register-tutor', (req, res) => {
     user: { id: req.session.userId, username, display_name, role: 'tutor', avatar, avatar_bg }
   });
 });
+
+// ═══════════════════════════════════════════════════
+//  ЗАЯВКИ УЧИТЕЛЕЙ
+// ═══════════════════════════════════════════════════
+
+// POST /api/tutor-applications — публичный, приём заявки
+router.post('/tutor-applications', (req, res) => {
+  const { full_name, email, desired_login, password } = req.body || {};
+
+  const name  = String(full_name || '').trim();
+  const mail  = String(email || '').trim().toLowerCase();
+  const login = String(desired_login || '').trim();
+  const pwd   = String(password || '');
+
+  if (name.length < 2) {
+    return res.status(400).json({ error: 'Введите имя и фамилию (минимум 2 символа)' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
+    return res.status(400).json({ error: 'Введите корректный email' });
+  }
+  if (!/^[A-Za-z0-9_.\-]{3,30}$/.test(login)) {
+    return res.status(400).json({ error: 'Логин: 3–30 символов, только латиница, цифры, _ - .' });
+  }
+  if (pwd.length < 6) {
+    return res.status(400).json({ error: 'Пароль минимум 6 символов' });
+  }
+
+  // Логин не занят в users
+  const loginInUsers = db.prepare('SELECT 1 FROM users WHERE username = ?').get(login);
+  if (loginInUsers) {
+    return res.status(400).json({ error: 'Такой логин уже занят' });
+  }
+
+  // Логин не занят в активных заявках
+  const loginInApps = db.prepare(`
+    SELECT 1 FROM tutor_applications
+    WHERE desired_login = ? AND status IN ('new','approved')
+  `).get(login);
+  if (loginInApps) {
+    return res.status(400).json({ error: 'Заявка с таким логином уже есть' });
+  }
+
+  // Email не занят в users
+  const emailInUsers = db.prepare('SELECT 1 FROM users WHERE email = ?').get(mail);
+  if (emailInUsers) {
+    return res.status(400).json({ error: 'Этот email уже используется' });
+  }
+
+  // Email не занят в активных заявках
+  const emailInApps = db.prepare(`
+    SELECT 1 FROM tutor_applications
+    WHERE email = ? AND status IN ('new','approved')
+  `).get(mail);
+  if (emailInApps) {
+    return res.status(400).json({ error: 'Заявка с таким email уже есть' });
+  }
+
+  const hash = bcrypt.hashSync(pwd, 10);
+  const info = db.prepare(`
+    INSERT INTO tutor_applications (full_name, email, desired_login, password_hash, status)
+    VALUES (?, ?, ?, ?, 'new')
+  `).run(name, mail, login, hash);
+
+  res.json({ ok: true, application_id: Number(info.lastInsertRowid) });
+});
+
+// GET /api/moder/tutor-applications — список заявок (модер)
+router.get('/moder/tutor-applications', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+
+  const status = String(req.query.status || '').trim();
+  let sql = `
+    SELECT id, full_name, email, desired_login, status, reject_reason,
+           created_user_id, reviewed_by, reviewed_at, created_at
+    FROM tutor_applications
+  `;
+  const params = [];
+  if (['new','approved','rejected'].includes(status)) {
+    sql += ' WHERE status = ?';
+    params.push(status);
+  }
+  sql += ` ORDER BY
+    CASE status WHEN 'new' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END,
+    id DESC`;
+
+  const rows = db.prepare(sql).all(...params);
+  res.json({ applications: rows });
+});
+
+// GET /api/moder/tutor-applications/count — счётчик новых (модер)
+router.get('/moder/tutor-applications/count', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+  const row = db.prepare(
+    "SELECT COUNT(*) AS c FROM tutor_applications WHERE status = 'new'"
+  ).get();
+  res.json({ count: row.c });
+});
+
+// POST /api/moder/tutor-applications/:id/approve — одобрить
+router.post('/moder/tutor-applications/:id/approve', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+
+  const id = Number(req.params.id);
+  const app = db.prepare('SELECT * FROM tutor_applications WHERE id = ?').get(id);
+  if (!app) return res.status(404).json({ error: 'Заявка не найдена' });
+  if (app.status !== 'new') {
+    return res.status(400).json({ error: 'Заявка уже рассмотрена' });
+  }
+
+  // Проверки на случай гонки
+  const loginInUsers = db.prepare('SELECT 1 FROM users WHERE username = ?').get(app.desired_login);
+  if (loginInUsers) {
+    return res.status(400).json({ error: 'Логин уже занят — попросите учителя выбрать другой' });
+  }
+  const emailInUsers = db.prepare('SELECT 1 FROM users WHERE email = ?').get(app.email);
+  if (emailInUsers) {
+    return res.status(400).json({ error: 'Email уже используется' });
+  }
+
+  const { avatar, avatar_bg } = randomAvatar('tutor');
+
+  let newUserId = null;
+  try {
+    db.exec('BEGIN');
+
+    const info = db.prepare(`
+      INSERT INTO users (username, password_hash, role, display_name, avatar, avatar_bg, last_seen, email)
+      VALUES (?, ?, 'tutor', ?, ?, ?, datetime('now'), ?)
+    `).run(app.desired_login, app.password_hash, app.full_name, avatar, avatar_bg, app.email);
+
+    newUserId = Number(info.lastInsertRowid);
+
+    db.prepare(`
+      UPDATE tutor_applications
+      SET status = 'approved',
+          reviewed_at = datetime('now'),
+          reviewed_by = ?,
+          created_user_id = ?
+      WHERE id = ?
+    `).run(req.session.userId, newUserId, id);
+
+    db.exec('COMMIT');
+  } catch (e) {
+    try { db.exec('ROLLBACK'); } catch (_) {}
+    console.error('approve application error:', e);
+    return res.status(500).json({ error: 'Не удалось одобрить заявку' });
+  }
+
+  // Создаём вводную тему (как при обычной регистрации)
+  createWelcomeTopicForTutor(newUserId);
+
+  const user = db.prepare(`
+    SELECT id, username, display_name, email, avatar, avatar_bg
+    FROM users WHERE id = ?
+  `).get(newUserId);
+
+  res.json({
+    ok: true,
+    user,
+    email_template: {
+      to: app.email,
+      subject: 'Ваша заявка на платформе «Алхимичка» одобрена',
+      body:
+`Здравствуйте, ${app.full_name}!
+
+Ваша заявка на платформе «Алхимичка» одобрена. 🎉
+
+Ваш логин: ${app.desired_login}
+Пароль: тот, который вы указали при регистрации.
+
+Войти в кабинет: https://<ваш-домен>/tutor-login.html
+
+Если вы забыли пароль — напишите в ответ на это письмо, мы поможем восстановить доступ.
+
+С уважением,
+команда «Алхимичка»`
+    }
+  });
+});
+
+// POST /api/moder/tutor-applications/:id/reject — отклонить
+router.post('/moder/tutor-applications/:id/reject', (req, res) => {
+  if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
+
+  const id = Number(req.params.id);
+  const reason = String((req.body && req.body.reason) || '').trim().slice(0, 500);
+
+  const app = db.prepare('SELECT * FROM tutor_applications WHERE id = ?').get(id);
+  if (!app) return res.status(404).json({ error: 'Заявка не найдена' });
+  if (app.status !== 'new') {
+    return res.status(400).json({ error: 'Заявка уже рассмотрена' });
+  }
+
+  db.prepare(`
+    UPDATE tutor_applications
+    SET status = 'rejected',
+        reviewed_at = datetime('now'),
+        reviewed_by = ?,
+        reject_reason = ?
+    WHERE id = ?
+  `).run(req.session.userId, reason || null, id);
+
+  res.json({
+    ok: true,
+    email_template: {
+      to: app.email,
+      subject: 'Заявка на платформе «Алхимичка»',
+      body:
+`Здравствуйте, ${app.full_name}!
+
+К сожалению, ваша заявка на платформе «Алхимичка» была отклонена.${reason ? '\n\nПричина: ' + reason : ''}
+
+Если вы считаете, что это ошибка, ответьте на это письмо.
+
+С уважением,
+команда «Алхимичка»`
+    }
+  });
+});
+
+// ──────────── ДАЛЬШЕ — ВСЁ КАК БЫЛО ────────────
+// (весь остальной код api.js без изменений: /login, /logout, /me,
+//  /topics, /students, /my/*, /reviews/*, /chat/*, /lessons/*, /moder/*
+//  и служебные функции handleMultipart, parseMultipart, expandWeek и т.д.)
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body || {};
@@ -1029,8 +1252,7 @@ router.get('/students', (req, res) => {
     SELECT id, username, display_name, created_at, avatar, avatar_bg, last_seen, grade
     FROM users
     WHERE role = 'student' AND created_by = ?
-    ORDER BY grade ASC, display_name ASC, id DESC
-  `).all(req.session.userId);
+    ORDER BY grade ASC, display_name ASC, id DESC  `).all(req.session.userId);
   res.json({ students: rows });
 });
 
@@ -1833,9 +2055,6 @@ router.get('/chat/with/:userId', (req, res) => {
     reactionsByMsg[r.message_id][r.emoji].push({ user_id: r.user_id, display_name: r.display_name });
   }
 
-  // ⭐ РАНЬШЕ ТУТ БЫЛ UPDATE messages SET read_at — удалено,
-  //    отметка "прочитано" делается через POST /chat/read/:userId
-
   const decorated = messages.map(m => ({
     id: m.id, from_user_id: m.from_user_id, to_user_id: m.to_user_id,
     from_me: m.from_user_id === meId,
@@ -2413,6 +2632,9 @@ router.get('/moder/stats', (req, res) => {
   const topics = db.prepare('SELECT COUNT(*) AS c FROM topics').get().c;
   const attempts = db.prepare('SELECT COUNT(*) AS c FROM attempts').get().c;
   const messages = db.prepare('SELECT COUNT(*) AS c FROM messages').get().c;
+  const applications = db.prepare(
+    "SELECT COUNT(*) AS c FROM tutor_applications WHERE status = 'new'"
+  ).get().c;
 
   const trashTutors = db.prepare(
     "SELECT COUNT(*) AS c FROM users WHERE role = 'tutor' AND deleted_at IS NOT NULL"
@@ -2422,7 +2644,7 @@ router.get('/moder/stats', (req, res) => {
   ).get().c;
 
   res.json({
-    tutors, students, topics, attempts, messages,
+    tutors, students, topics, attempts, messages, applications,
     trash_tutors: trashTutors,
     trash_students: trashStudents
   });
@@ -2432,7 +2654,7 @@ router.get('/moder/tutors', (req, res) => {
   if (!isModerator(req)) return res.status(403).json({ error: 'Только для модератора' });
 
   const rows = db.prepare(`
-    SELECT u.id, u.username, u.display_name, u.avatar, u.avatar_bg, u.created_at, u.last_seen,
+    SELECT u.id, u.username, u.display_name, u.email, u.avatar, u.avatar_bg, u.created_at, u.last_seen,
       (SELECT COUNT(*) FROM users s WHERE s.created_by = u.id AND s.role = 'student' AND s.deleted_at IS NULL) AS students_count,
       (SELECT COUNT(*) FROM topics t WHERE t.tutor_id = u.id) AS topics_count,
       (SELECT COUNT(*) FROM attempts a JOIN tests te ON te.id = a.test_id JOIN topics t2 ON t2.id = te.topic_id WHERE t2.tutor_id = u.id) AS attempts_count

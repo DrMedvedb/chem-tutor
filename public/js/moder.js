@@ -49,9 +49,15 @@ let me = null;
 let stats = null;
 let tutorsCache = [];
 let studentsCache = [];
+let applicationsCache = [];
 let trashCache = { tutors: [], students: [] };
 let currentView = 'tutors';
 let searchQuery = '';
+
+// Фильтр заявок: 'new' | 'approved' | 'rejected' | 'all'
+let applicationsFilter = 'new';
+
+// ═══ УТИЛИТЫ ДЛЯ ДАТ ═══
 
 function timeAgo(sqlDate) {
   if (!sqlDate) return '';
@@ -74,25 +80,30 @@ function formatDate(sqlDate) {
   return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+// ═══ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ═══
+
 function switchView(view) {
   currentView = view;
   $$('.moder-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
-  $('#view-tutors').style.display   = (view === 'tutors')   ? '' : 'none';
-  $('#view-students').style.display = (view === 'students') ? '' : 'none';
-  $('#view-trash').style.display    = (view === 'trash')    ? '' : 'none';
+  $('#view-tutors').style.display       = (view === 'tutors')       ? '' : 'none';
+  $('#view-students').style.display     = (view === 'students')     ? '' : 'none';
+  $('#view-applications').style.display = (view === 'applications') ? '' : 'none';
+  $('#view-trash').style.display        = (view === 'trash')        ? '' : 'none';
 
-  if (view === 'tutors')   renderTutors();
-  if (view === 'students') renderStudents();
-  if (view === 'trash')    renderTrash();
+  if (view === 'tutors')       renderTutors();
+  if (view === 'students')     renderStudents();
+  if (view === 'applications') renderApplications();
+  if (view === 'trash')        renderTrash();
 }
 
 $$('.moder-tab').forEach(t => t.addEventListener('click', () => switchView(t.dataset.view)));
 
 $('#moder-search').addEventListener('input', (e) => {
   searchQuery = e.target.value.trim().toLowerCase();
-  if (currentView === 'tutors')   renderTutors();
-  if (currentView === 'students') renderStudents();
-  if (currentView === 'trash')    renderTrash();
+  if (currentView === 'tutors')       renderTutors();
+  if (currentView === 'students')     renderStudents();
+  if (currentView === 'applications') renderApplications();
+  if (currentView === 'trash')        renderTrash();
 });
 
 $('#logout').addEventListener('click', async () => {
@@ -109,6 +120,7 @@ async function loadStats() {
     $('#cnt-tutors').textContent = stats.tutors;
     $('#cnt-students').textContent = stats.students;
     $('#cnt-trash').textContent = (stats.trash_tutors + stats.trash_students);
+    updateApplicationsCounter(stats.applications || 0);
   } catch (e) {
     toast(e.message, 'error');
   }
@@ -118,6 +130,7 @@ function renderStats() {
   if (!stats) return;
   const s = stats;
   const trash = (s.trash_tutors || 0) + (s.trash_students || 0);
+  const apps = s.applications || 0;
   $('#stats-grid').innerHTML = `
     <div class="stat-card accent">
       <div class="sc-label">${ico('users','ico-sm')} Учителей</div>
@@ -128,6 +141,11 @@ function renderStats() {
       <div class="sc-label">${ico('graduation','ico-sm')} Учеников</div>
       <div class="sc-value">${s.students || 0}</div>
       <div class="sc-sub">на платформе</div>
+    </div>
+    <div class="stat-card apps">
+      <div class="sc-label">${ico('mail','ico-sm')} Заявки</div>
+      <div class="sc-value">${apps}</div>
+      <div class="sc-sub">новых на рассмотрении</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">${ico('book','ico-sm')} Тем</div>
@@ -152,6 +170,17 @@ function renderStats() {
   `;
 }
 
+function updateApplicationsCounter(count) {
+  const badge = $('#cnt-applications');
+  if (!badge) return;
+  badge.textContent = count;
+  if (count > 0) {
+    badge.classList.add('alert');
+  } else {
+    badge.classList.remove('alert');
+  }
+}
+
 // ═══ УЧИТЕЛЯ ═══
 
 async function loadTutors() {
@@ -167,7 +196,8 @@ function renderTutors() {
   if (searchQuery) {
     list = list.filter(t =>
       (t.display_name || '').toLowerCase().includes(searchQuery) ||
-      (t.username || '').toLowerCase().includes(searchQuery)
+      (t.username || '').toLowerCase().includes(searchQuery) ||
+      (t.email || '').toLowerCase().includes(searchQuery)
     );
   }
 
@@ -191,6 +221,7 @@ function renderTutors() {
         </div>
         <div class="uc-meta">
           <span>${ico('calendar','ico-sm')} ${formatDate(t.created_at)}</span>
+          ${t.email ? `<span>${ico('mail','ico-sm')} <b>${esc(t.email)}</b></span>` : ''}
           <span>${ico('graduation','ico-sm')} <b>${t.students_count}</b> учеников</span>
           <span>${ico('book','ico-sm')} <b>${t.topics_count}</b> тем</span>
           <span>${ico('file-text','ico-sm')} <b>${t.attempts_count}</b> попыток</span>
@@ -268,6 +299,376 @@ function gradeLabel(id) {
     '10': '10 класс', '11': '11 класс', adult: 'Старшие'
   };
   return map[id] || id;
+}
+
+// ═══ ЗАЯВКИ УЧИТЕЛЕЙ ═══
+
+async function loadApplications() {
+  const data = await api('/moder/tutor-applications');
+  applicationsCache = data.applications || [];
+  renderApplications();
+}
+
+function renderApplications() {
+  const v = $('#view-applications');
+
+  // Считаем количество по статусам
+  const counts = { new: 0, approved: 0, rejected: 0, all: applicationsCache.length };
+  for (const a of applicationsCache) {
+    if (counts[a.status] !== undefined) counts[a.status]++;
+  }
+
+  // Фильтр-табы
+  let filterHtml = '<div class="apps-filter">';
+  filterHtml += `<button class="apps-filter-tab ${applicationsFilter === 'new' ? 'active' : ''}" data-app-filter="new">
+    ${ico('mail','ico-sm')} Новые <span class="fcnt ${counts.new > 0 ? 'alert' : ''}">${counts.new}</span>
+  </button>`;
+  filterHtml += `<button class="apps-filter-tab ${applicationsFilter === 'approved' ? 'active' : ''}" data-app-filter="approved">
+    ${ico('check','ico-sm')} Одобренные <span class="fcnt">${counts.approved}</span>
+  </button>`;
+  filterHtml += `<button class="apps-filter-tab ${applicationsFilter === 'rejected' ? 'active' : ''}" data-app-filter="rejected">
+    ${ico('x','ico-sm')} Отклонённые <span class="fcnt">${counts.rejected}</span>
+  </button>`;
+  filterHtml += `<button class="apps-filter-tab ${applicationsFilter === 'all' ? 'active' : ''}" data-app-filter="all">
+    Все <span class="fcnt">${counts.all}</span>
+  </button>`;
+  filterHtml += '</div>';
+
+  // Фильтруем список
+  let list = applicationsCache;
+  if (applicationsFilter !== 'all') {
+    list = list.filter(a => a.status === applicationsFilter);
+  }
+
+  // Поиск
+  if (searchQuery) {
+    list = list.filter(a =>
+      (a.full_name || '').toLowerCase().includes(searchQuery) ||
+      (a.email || '').toLowerCase().includes(searchQuery) ||
+      (a.desired_login || '').toLowerCase().includes(searchQuery)
+    );
+  }
+
+  if (!list.length) {
+    v.innerHTML = filterHtml + `
+      <div class="moder-empty">
+        <span class="ic">${ico('mail','ico')}</span>
+        <h3>${searchQuery ? 'Ничего не найдено' : (applicationsFilter === 'new' ? 'Нет новых заявок' : 'Заявок нет')}</h3>
+        <p>${searchQuery ? 'Попробуй другой запрос' : 'Заявки от учителей будут появляться здесь'}</p>
+      </div>`;
+    wireFilterTabs(v);
+    return;
+  }
+
+  const statusLabels = {
+    new: 'Новая',
+    approved: 'Одобрена',
+    rejected: 'Отклонена'
+  };
+
+  const cards = list.map(a => {
+    let extraMeta = '';
+    if (a.status === 'approved') {
+      extraMeta = `<span>${ico('check','ico-sm')} Одобрена ${a.reviewed_at ? formatDate(a.reviewed_at) : ''}</span>`;
+    } else if (a.status === 'rejected') {
+      extraMeta = `<span>${ico('x','ico-sm')} Отклонена ${a.reviewed_at ? formatDate(a.reviewed_at) : ''}</span>`;
+    } else {
+      extraMeta = `<span>${ico('clock','ico-sm')} Подана ${timeAgo(a.created_at)}</span>`;
+    }
+
+    return `
+      <div class="app-card ${a.status}" data-app-id="${a.id}">
+        <div class="app-avatar">${ico('user','ico-lg')}</div>
+        <div class="app-body">
+          <div class="app-head">
+            <span class="app-name">${esc(a.full_name)}</span>
+            <span class="app-status ${a.status}">${statusLabels[a.status] || a.status}</span>
+          </div>
+          <div class="app-meta">
+            <span>${ico('mail','ico-sm')} <b>${esc(a.email)}</b></span>
+            <span>${ico('user','ico-sm')} логин: <b>${esc(a.desired_login)}</b></span>
+            ${extraMeta}
+          </div>
+        </div>
+        <div class="app-arrow">${ico('arrow-right','ico')}</div>
+      </div>
+    `;
+  }).join('');
+
+  v.innerHTML = filterHtml + cards;
+
+  wireFilterTabs(v);
+
+  $$('.app-card', v).forEach(card => {
+    card.addEventListener('click', () => {
+      const id = Number(card.dataset.appId);
+      openApplicationModal(id);
+    });
+  });
+}
+
+function wireFilterTabs(container) {
+  $$('[data-app-filter]', container).forEach(tab => {
+    tab.addEventListener('click', () => {
+      applicationsFilter = tab.dataset.appFilter;
+      renderApplications();
+    });
+  });
+}
+
+// ═══ МОДАЛКА ЗАЯВКИ ═══
+
+let currentApplication = null;
+
+function openApplicationModal(id) {
+  const app = applicationsCache.find(a => a.id === id);
+  if (!app) return;
+  currentApplication = app;
+
+  $('#app-title').innerHTML = `${ico('mail','ico ico-lg')} Заявка учителя`;
+  $('#app-sub').textContent = `Подана ${formatDate(app.created_at)}`;
+
+  const statusLabels = {
+    new: 'Новая — ждёт решения',
+    approved: 'Одобрена',
+    rejected: 'Отклонена'
+  };
+
+  const statusBadge = `<span class="app-status ${app.status}">${statusLabels[app.status]}</span>`;
+
+  let html = `
+    <div class="app-info-block">
+      <div class="app-info-row">
+        <span class="lbl">Имя и фамилия</span>
+        <span class="val">${esc(app.full_name)}</span>
+      </div>
+      <div class="app-info-row">
+        <span class="lbl">Email</span>
+        <span class="val mono">${esc(app.email)}</span>
+      </div>
+      <div class="app-info-row">
+        <span class="lbl">Желаемый логин</span>
+        <span class="val mono">${esc(app.desired_login)}</span>
+      </div>
+      <div class="app-info-row">
+        <span class="lbl">Статус</span>
+        <span class="val">${statusBadge}</span>
+      </div>
+      ${app.reviewed_at ? `
+        <div class="app-info-row">
+          <span class="lbl">Рассмотрена</span>
+          <span class="val">${formatDate(app.reviewed_at)}</span>
+        </div>
+      ` : ''}
+      ${app.reject_reason ? `
+        <div class="app-info-row">
+          <span class="lbl">Причина отклонения</span>
+          <span class="val">${esc(app.reject_reason)}</span>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  if (app.status === 'new') {
+    html += `
+      <div class="app-actions-row">
+        <button class="btn btn-approve" id="app-approve-btn">
+          ${ico('check','ico-sm')} Одобрить
+        </button>
+        <button class="btn btn-reject" id="app-reject-btn">
+          ${ico('x','ico-sm')} Отклонить
+        </button>
+      </div>
+    `;
+  }
+
+  $('#app-body').innerHTML = html;
+
+  if (app.status === 'new') {
+    $('#app-approve-btn').addEventListener('click', () => approveApplication(app));
+    $('#app-reject-btn').addEventListener('click', () => showRejectForm(app));
+  }
+
+  openModal('modal-application');
+}
+
+// ═══ ОДОБРЕНИЕ ═══
+
+async function approveApplication(app) {
+  const btn = $('#app-approve-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Одобряем…';
+  }
+
+  try {
+    const data = await api('/moder/tutor-applications/' + app.id + '/approve', {
+      method: 'POST'
+    });
+
+    // Обновляем локальный кэш
+    app.status = 'approved';
+    app.reviewed_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
+
+    // Показываем экран с шаблоном письма
+    renderApprovedScreen(app, data.email_template);
+
+    // Обновляем счётчики
+    await loadStats();
+    await loadTutors();
+
+    toast('Заявка одобрена', 'success');
+  } catch (e) {
+    toast(e.message, 'error');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `${ico('check','ico-sm')} Одобрить`;
+    }
+  }
+}
+
+function renderApprovedScreen(app, template) {
+  const html = `
+    <div class="approved-note">
+      ${ico('check','ico-sm')}
+      <div>
+        <b>Аккаунт учителя создан.</b><br>
+        Логин: <b>${esc(app.desired_login)}</b>. Пароль — тот, который учитель указал при регистрации.
+      </div>
+    </div>
+
+    <div class="email-template-block">
+      <div class="email-template-head">
+        <h4>${ico('mail','ico-sm')} Письмо учителю</h4>
+        <button class="copy-btn" id="copy-email-btn">
+          ${ico('copy','ico-sm')} Скопировать
+        </button>
+      </div>
+      <div class="email-template-sub">
+        Кому: <b>${esc(template.to)}</b><br>
+        Тема: <b>${esc(template.subject)}</b>
+      </div>
+      <div class="email-template-pre" id="email-body-pre">${esc(template.body)}</div>
+    </div>
+
+    <div class="flex gap-2 mt-3" style="justify-content:flex-end">
+      <button class="btn btn-primary" data-close>Готово</button>
+    </div>
+  `;
+
+  $('#app-body').innerHTML = html;
+
+  $('#copy-email-btn').addEventListener('click', () => {
+    const text = `Кому: ${template.to}\nТема: ${template.subject}\n\n${template.body}`;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = $('#copy-email-btn');
+      btn.classList.add('copied');
+      btn.innerHTML = `${ico('check','ico-sm')} Скопировано`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `${ico('copy','ico-sm')} Скопировать`;
+      }, 1800);
+    }).catch(() => toast('Не удалось скопировать', 'error'));
+  });
+}
+
+// ═══ ОТКЛОНЕНИЕ ═══
+
+function showRejectForm(app) {
+  const html = `
+    <div class="reject-reason-block">
+      <label>${ico('message','ico-sm')} Причина отклонения (необязательно)</label>
+      <textarea id="reject-reason" placeholder="Например: неверный email, некорректный логин…"></textarea>
+    </div>
+
+    <div class="app-actions-row">
+      <button class="btn btn-reject" id="reject-confirm-btn">
+        ${ico('x','ico-sm')} Отклонить заявку
+      </button>
+      <button class="btn btn-ghost" id="reject-cancel-btn">Отмена</button>
+    </div>
+  `;
+
+  $('#app-body').innerHTML = html;
+
+  $('#reject-cancel-btn').addEventListener('click', () => openApplicationModal(app.id));
+  $('#reject-confirm-btn').addEventListener('click', () => rejectApplication(app));
+}
+
+async function rejectApplication(app) {
+  const reason = ($('#reject-reason')?.value || '').trim();
+  const btn = $('#reject-confirm-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Отклоняем…';
+  }
+
+  try {
+    const data = await api('/moder/tutor-applications/' + app.id + '/reject', {
+      method: 'POST',
+      body: { reason }
+    });
+
+    app.status = 'rejected';
+    app.reviewed_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    app.reject_reason = reason || null;
+
+    renderRejectedScreen(app, data.email_template);
+    await loadStats();
+
+    toast('Заявка отклонена', 'success');
+  } catch (e) {
+    toast(e.message, 'error');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `${ico('x','ico-sm')} Отклонить заявку`;
+    }
+  }
+}
+
+function renderRejectedScreen(app, template) {
+  const html = `
+    <div class="approved-note" style="background:rgba(224,67,92,.1);color:#b02b2b">
+      ${ico('x','ico-sm')}
+      <div>
+        <b>Заявка отклонена.</b>
+        ${app.reject_reason ? '<br>Причина: ' + esc(app.reject_reason) : ''}
+      </div>
+    </div>
+
+    <div class="email-template-block">
+      <div class="email-template-head">
+        <h4>${ico('mail','ico-sm')} Письмо учителю</h4>
+        <button class="copy-btn" id="copy-email-btn">
+          ${ico('copy','ico-sm')} Скопировать
+        </button>
+      </div>
+      <div class="email-template-sub">
+        Кому: <b>${esc(template.to)}</b><br>
+        Тема: <b>${esc(template.subject)}</b>
+      </div>
+      <div class="email-template-pre" id="email-body-pre">${esc(template.body)}</div>
+    </div>
+
+    <div class="flex gap-2 mt-3" style="justify-content:flex-end">
+      <button class="btn btn-primary" data-close>Готово</button>
+    </div>
+  `;
+
+  $('#app-body').innerHTML = html;
+
+  $('#copy-email-btn').addEventListener('click', () => {
+    const text = `Кому: ${template.to}\nТема: ${template.subject}\n\n${template.body}`;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = $('#copy-email-btn');
+      btn.classList.add('copied');
+      btn.innerHTML = `${ico('check','ico-sm')} Скопировано`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `${ico('copy','ico-sm')} Скопировать`;
+      }, 1800);
+    }).catch(() => toast('Не удалось скопировать', 'error'));
+  });
 }
 
 // ═══ КОРЗИНА ═══
@@ -498,6 +899,28 @@ $('#confirm-ok').addEventListener('click', async () => {
   closeModal('modal-confirm');
 });
 
+// ═══ АВТООБНОВЛЕНИЕ ЗАЯВОК ═══
+
+let appsPollTimer = null;
+
+async function refreshApplicationsCount() {
+  try {
+    const { count } = await api('/moder/tutor-applications/count');
+    updateApplicationsCounter(count);
+    if (stats) stats.applications = count;
+    // Обновляем stat-карточку если открыт не на заявках
+    if (currentView !== 'applications') {
+      const statApps = document.querySelector('.stat-card.apps .sc-value');
+      if (statApps) statApps.textContent = count;
+    }
+  } catch (e) {}
+}
+
+function startApplicationsPolling() {
+  if (appsPollTimer) clearInterval(appsPollTimer);
+  appsPollTimer = setInterval(refreshApplicationsCount, 15000);
+}
+
 // ═══ СТАРТ ═══
 
 (async function boot() {
@@ -516,8 +939,9 @@ $('#confirm-ok').addEventListener('click', async () => {
     me = user;
 
     await loadStats();
-    await Promise.all([loadTutors(), loadStudents(), loadTrash()]);
+    await Promise.all([loadTutors(), loadStudents(), loadApplications(), loadTrash()]);
 
     switchView('tutors');
+    startApplicationsPolling();
   } catch (e) {}
 })();

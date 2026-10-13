@@ -114,6 +114,19 @@ CREATE TABLE IF NOT EXISTS lesson_overrides (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE(lesson_id, override_date)
 );
+CREATE TABLE IF NOT EXISTS tutor_applications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  desired_login TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','approved','rejected')),
+  reject_reason TEXT DEFAULT NULL,
+  created_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  reviewed_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  reviewed_at TEXT DEFAULT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 CREATE INDEX IF NOT EXISTS idx_topics_tutor ON topics(tutor_id);
 CREATE INDEX IF NOT EXISTS idx_materials_topic ON materials(topic_id);
 CREATE INDEX IF NOT EXISTS idx_questions_test ON questions(test_id);
@@ -131,6 +144,9 @@ CREATE INDEX IF NOT EXISTS idx_lessons_student ON lessons(student_id);
 CREATE INDEX IF NOT EXISTS idx_lessons_dow ON lessons(day_of_week);
 CREATE INDEX IF NOT EXISTS idx_overrides_lesson ON lesson_overrides(lesson_id);
 CREATE INDEX IF NOT EXISTS idx_overrides_date ON lesson_overrides(override_date);
+CREATE INDEX IF NOT EXISTS idx_applications_status ON tutor_applications(status);
+CREATE INDEX IF NOT EXISTS idx_applications_email ON tutor_applications(email);
+CREATE INDEX IF NOT EXISTS idx_applications_login ON tutor_applications(desired_login);
 `;
 
 const MODER_LOGIN = 'admin';
@@ -141,7 +157,6 @@ const TRASH_DAYS = 30;
 function initDb() {
   db.exec(schema);
 
-  // ⭐ МИГРАЦИЯ: разрешить роль 'moderator' (пересоздать users, если CHECK старый)
   migrateUsersRoleCheck();
 
   // ─── МИГРАЦИИ ──────────────────────────────────────
@@ -225,6 +240,10 @@ function initDb() {
     db.exec("ALTER TABLE users ADD COLUMN deleted_by INTEGER DEFAULT NULL");
     console.log('🔧 users.deleted_by');
   }
+  if (!userCols.includes('email')) {
+    db.exec("ALTER TABLE users ADD COLUMN email TEXT DEFAULT NULL");
+    console.log('🔧 users.email');
+  }
 
   const testCols = db.prepare("PRAGMA table_info(tests)").all().map(c => c.name);
   if (!testCols.includes('is_draft')) {
@@ -253,6 +272,7 @@ function initDb() {
   db.exec("CREATE INDEX IF NOT EXISTS idx_users_grade ON users(grade)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_topics_grade ON topics(grade)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_users_deleted ON users(deleted_at)");
+  db.exec("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)");
 
   // ─── Переливка старых вопросов ───
   const oldQuestions = db.prepare(`
@@ -300,16 +320,12 @@ function initDb() {
     console.log(`🎨 Аватарки выданы ${usersWithoutAvatar.length} пользователям`);
   }
 
-  // ⭐ Создание модер-аккаунта
   ensureModerator();
-
   ensureWelcomeTopics();
   openExistingTopicsForAll();
-
-  // ⭐ Автоочистка корзины
   cleanTrash();
 
-  console.log('✅ БД готова (12 таблиц)');
+  console.log('✅ БД готова (13 таблиц)');
 }
 
 // ─── МИГРАЦИЯ: CHECK role на 'moderator' ───
@@ -345,7 +361,8 @@ function migrateUsersRoleCheck() {
           last_seen TEXT DEFAULT NULL,
           grade TEXT DEFAULT NULL,
           deleted_at TEXT DEFAULT NULL,
-          deleted_by INTEGER DEFAULT NULL
+          deleted_by INTEGER DEFAULT NULL,
+          email TEXT DEFAULT NULL
         );
       `);
 
