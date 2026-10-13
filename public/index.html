@@ -20,6 +20,12 @@
     --amber: #f59e0b;
     --rose: #f43f5e;
     --star: #fbbf24;
+    --c-carbon: #2b2b45;
+    --c-oxygen: #e0435c;
+    --c-hydrogen: #a8b5c7;
+    --c-nitrogen: #4a90e2;
+    --c-sulfur: #f5b400;
+    --c-chlorine: #7ee29a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -39,11 +45,9 @@
 
   .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 
-  /* ═══ HEADER ═══ */
+  /* HEADER */
   .header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
     background: rgba(255,255,255,.92);
     backdrop-filter: blur(14px) saturate(180%);
     border-bottom: 1.5px solid var(--border);
@@ -51,9 +55,7 @@
   .header-inner { display: flex; align-items: center; gap: 20px; padding: 12px 0; }
   .brand-block { display: flex; align-items: center; gap: 14px; }
   .brand-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; align-items: center; gap: 8px;
     padding-right: 14px;
     border-right: 1.5px solid var(--border);
     cursor: default;
@@ -68,12 +70,10 @@
   }
   .brand-icon .ico { stroke: #fff; }
   .brand-name {
-    font-weight: 800;
-    font-size: 16px;
+    font-weight: 800; font-size: 16px;
     letter-spacing: -.3px;
     background: linear-gradient(135deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip: text; background-clip: text;
     color: transparent;
   }
   .tutor-info { display: flex; flex-direction: column; line-height: 1.15; }
@@ -82,25 +82,16 @@
 
   .nav { display: flex; gap: 4px; margin-left: auto; }
   .nav a {
-    color: var(--gray);
-    font-weight: 600;
-    font-size: 14px;
-    padding: 8px 14px;
-    border-radius: 9px;
-    transition: all .2s;
+    color: var(--gray); font-weight: 600; font-size: 14px;
+    padding: 8px 14px; border-radius: 9px; transition: all .2s;
   }
   .nav a:hover { color: var(--dark); background: var(--paper-alt); }
 
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 20px;
-    border-radius: 11px;
-    font-weight: 700;
-    font-size: 13.5px;
-    transition: all .22s;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px; border-radius: 11px;
+    font-weight: 700; font-size: 13.5px;
+    transition: all .22s; white-space: nowrap;
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -109,47 +100,38 @@
   }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -8px rgba(106,76,255,.7); }
   .btn-ghost {
-    background: var(--paper);
-    color: var(--dark);
+    background: var(--paper); color: var(--dark);
     border: 1.5px solid var(--border);
   }
   .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
   .btn-lg { padding: 15px 28px; font-size: 15px; border-radius: 13px; }
   .btn-block { width: 100%; justify-content: center; }
 
-  /* ═══ HERO ═══ */
+  /* HERO */
   .hero {
     padding: 72px 0 64px;
     background:
       radial-gradient(circle at 15% 20%, rgba(106,76,255,.08), transparent 45%),
       radial-gradient(circle at 85% 80%, rgba(14,165,233,.08), transparent 45%),
       var(--paper);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .hero-grid {
     display: grid;
     grid-template-columns: 1.15fr 1fr;
-    gap: 64px;
-    align-items: center;
+    gap: 64px; align-items: center;
   }
   .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 14px;
-    border-radius: 999px;
-    background: var(--paper);
-    color: var(--primary);
-    font-size: 12.5px;
-    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px;
+    background: var(--paper); color: var(--primary);
+    font-size: 12.5px; font-weight: 700;
     border: 1.5px solid var(--border);
     margin-bottom: 24px;
     box-shadow: 0 6px 16px -10px rgba(106,76,255,.3);
   }
   .hero-tag .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%;
     background: var(--mint);
     animation: pulse 2s infinite;
   }
@@ -160,31 +142,25 @@
 
   h1.hero-title {
     font-size: clamp(38px, 5vw, 58px);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -2px;
-    margin-bottom: 24px;
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -2px; margin-bottom: 24px;
   }
   h1.hero-title em { font-style: italic; font-weight: 400; color: var(--gray); }
   h1.hero-title .grad {
     background: linear-gradient(135deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip: text; background-clip: text;
     color: transparent;
   }
 
   .hero-lead {
-    font-size: 17.5px;
-    color: var(--gray);
-    line-height: 1.65;
-    max-width: 520px;
+    font-size: 17.5px; color: var(--gray);
+    line-height: 1.65; max-width: 520px;
     margin-bottom: 32px;
   }
   .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
 
   .hero-trust {
-    display: flex;
-    gap: 24px;
+    display: flex; gap: 24px;
     padding-top: 28px;
     border-top: 1.5px solid var(--border);
     flex-wrap: wrap;
@@ -195,117 +171,171 @@
     border-radius: 10px;
     display: grid; place-items: center;
     background: rgba(106,76,255,.1);
-    color: var(--primary);
-    flex-shrink: 0;
+    color: var(--primary); flex-shrink: 0;
   }
   .hero-trust-ic .ico { width: 18px; height: 18px; }
   .hero-trust-body { display: flex; flex-direction: column; }
   .hero-trust-num { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1.2; }
   .hero-trust-lbl { font-size: 11.5px; color: var(--gray); font-weight: 600; }
 
-  .hero-photo {
-    aspect-ratio: 4/5;
-    border-radius: 28px;
-    background:
-      radial-gradient(circle at 30% 30%, rgba(106,76,255,.25), transparent 60%),
-      radial-gradient(circle at 70% 70%, rgba(14,165,233,.25), transparent 60%),
-      linear-gradient(135deg, #eef1ff, #e0f2fe);
-    display: grid;
-    place-items: center;
-    border: 2px solid var(--paper);
-    box-shadow: 0 30px 60px -30px rgba(106,76,255,.35);
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-photo::after {
-    content: 'Фото преподавателя';
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: var(--gray);
-    font-weight: 600;
-    background: rgba(255,255,255,.9);
-    padding: 6px 12px;
-    border-radius: 999px;
-  }
-  .hero-photo .ico { width: 130px; height: 130px; stroke-width: .7; color: var(--primary); opacity: .3; }
-
-  /* ═══ SECTION HEAD ═══ */
-  section.block { padding: 80px 0; }
-  section.alt { background: var(--paper-alt); }
-  .section-head { text-align: center; margin-bottom: 48px; }
-  .section-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 14px;
-    border-radius: 999px;
-    background: rgba(106,76,255,.08);
-    color: var(--primary);
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: clamp(28px, 3.6vw, 42px);
-    font-weight: 800;
-    letter-spacing: -1px;
-    line-height: 1.15;
-    margin-bottom: 12px;
-  }
-  .section-title em { font-style: italic; font-weight: 400; color: var(--gray); }
-  .section-sub {
-    color: var(--gray);
-    font-size: 16.5px;
-    max-width: 640px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  /* ═══ ABOUT ═══ */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: 64px;
-    align-items: center;
-  }
+  /* МОЛЕКУЛА */
+  .hero-photo,
   .about-photo {
     aspect-ratio: 4/5;
     border-radius: 24px;
     background:
-      radial-gradient(circle at 30% 30%, rgba(106,76,255,.18), transparent 60%),
-      radial-gradient(circle at 70% 70%, rgba(14,165,233,.18), transparent 60%),
-      linear-gradient(135deg, #eef1ff, #e0f2fe);
-    display: grid;
-    place-items: center;
+      radial-gradient(circle at 30% 30%, rgba(106,76,255,.10), transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(14,165,233,.10), transparent 60%),
+      linear-gradient(135deg, #fbfcff, #eef4ff);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border: 2px solid var(--paper);
+    box-shadow: 0 30px 60px -30px rgba(106,76,255,.35);
+    position: relative; overflow: hidden;
+    padding: 24px;
+  }
+  .about-photo {
     border: 1.5px solid var(--border);
-    position: relative;
-    overflow: hidden;
+    box-shadow: none;
   }
-  .about-photo::after {
-    content: 'Фото';
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: var(--gray);
-    font-weight: 600;
-    background: rgba(255,255,255,.85);
-    padding: 6px 12px;
-    border-radius: 999px;
-  }
-  .about-photo .ico { width: 120px; height: 120px; stroke-width: .75; color: var(--primary); opacity: .35; }
 
-  .about-text h3 {
-    font-size: 28px;
+  .molecule-stage {
+    width: 100%; flex: 1;
+    position: relative;
+    display: grid; place-items: center;
+    min-height: 0;
+  }
+  .molecule-slide {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    opacity: 0;
+    transform: scale(.85);
+    transition:
+      opacity .8s cubic-bezier(.4,0,.2,1),
+      transform .8s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+  }
+  .molecule-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+  .molecule-slide svg {
+    width: 100%; height: 100%;
+    max-width: 340px; max-height: 340px;
+    overflow: visible; display: block;
+  }
+
+  .mol-bond {
+    stroke: #4a4a6a;
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .mol-bond-double {
+    stroke: #4a4a6a;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .mol-bond-aromatic {
+    stroke: #6a4cff;
+    stroke-width: 3.5;
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .mol-atom {
+    stroke: #fff;
+    stroke-width: 2.5;
+    cursor: pointer;
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: transform .25s cubic-bezier(.2,.8,.3,1), filter .3s ease;
+  }
+  .mol-atom.carbon   { fill: var(--c-carbon); }
+  .mol-atom.oxygen   { fill: var(--c-oxygen); }
+  .mol-atom.hydrogen { fill: var(--c-hydrogen); }
+  .mol-atom.nitrogen { fill: var(--c-nitrogen); }
+  .mol-atom.sulfur   { fill: var(--c-sulfur); }
+  .mol-atom.chlorine { fill: var(--c-chlorine); }
+
+  .mol-atom:hover {
+    transform: scale(1.35);
+    filter: drop-shadow(0 0 12px rgba(106,76,255,.85))
+            drop-shadow(0 0 24px rgba(106,76,255,.5));
+  }
+
+  .mol-label {
+    font-family: 'Inter', sans-serif;
     font-weight: 800;
-    letter-spacing: -.6px;
-    margin-bottom: 20px;
+    font-size: 13px;
+    fill: #fff;
+    pointer-events: none;
+    user-select: none;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+  .mol-label-dark { fill: #2b2b45; }
+
+  .molecule-label {
+    margin-top: 16px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(6px);
+    border: 1.5px solid var(--border);
+    font-size: 13.5px; font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -.2px;
+    text-align: center;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .4s ease;
+    white-space: nowrap;
+  }
+  .molecule-label .formula {
+    color: var(--primary);
+    font-weight: 800;
+    font-family: 'Consolas', 'Monaco', monospace;
+    margin-right: 6px;
+  }
+
+  /* SECTION HEAD */
+  section.block { padding: 80px 0; }
+  section.alt { background: var(--paper-alt); }
+  .section-head { text-align: center; margin-bottom: 48px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 14px; border-radius: 999px;
+    background: rgba(106,76,255,.08);
+    color: var(--primary);
+    font-size: 12px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: clamp(28px, 3.6vw, 42px);
+    font-weight: 800; letter-spacing: -1px;
+    line-height: 1.15; margin-bottom: 12px;
+  }
+  .section-title em { font-style: italic; font-weight: 400; color: var(--gray); }
+  .section-sub {
+    color: var(--gray); font-size: 16.5px;
+    max-width: 640px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 64px; align-items: center;
+  }
+  .about-text h3 {
+    font-size: 28px; font-weight: 800;
+    letter-spacing: -.6px; margin-bottom: 20px;
     line-height: 1.2;
   }
   .about-text p { color: var(--gray); font-size: 16.5px; margin-bottom: 18px; line-height: 1.7; }
@@ -314,26 +344,21 @@
   .about-facts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 28px;
+    gap: 14px; margin-top: 28px;
   }
   .fact {
-    padding: 16px 18px;
-    border-radius: 14px;
+    padding: 16px 18px; border-radius: 14px;
     background: var(--paper);
     border: 1.5px solid var(--border);
   }
   .fact-lbl {
-    font-size: 11.5px;
-    color: var(--gray);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-    margin-bottom: 4px;
+    font-size: 11.5px; color: var(--gray);
+    font-weight: 800; text-transform: uppercase;
+    letter-spacing: .6px; margin-bottom: 4px;
   }
   .fact-val { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1.3; }
 
-  /* ═══ SERVICES ═══ */
+  /* SERVICES */
   .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -345,10 +370,8 @@
     padding: 28px;
     border: 1.5px solid var(--border);
     transition: all .25s;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
   }
   .service-card::before {
     content: '';
@@ -384,8 +407,7 @@
   .service-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.3px; }
   .service-card p { color: var(--gray); font-size: 14.5px; margin-bottom: 18px; flex: 1; }
   .service-price {
-    font-size: 17px;
-    font-weight: 800;
+    font-size: 17px; font-weight: 800;
     padding-top: 16px;
     border-top: 1.5px dashed var(--border);
     margin-top: auto;
@@ -396,11 +418,8 @@
   .service-card.c4 .service-price { color: var(--amber); }
   .service-price.free { color: var(--mint); }
 
-  /* ═══ FEEDBACK ═══ */
-  .feedback-wrap {
-    max-width: 720px;
-    margin: 0 auto;
-  }
+  /* FEEDBACK */
+  .feedback-wrap { max-width: 720px; margin: 0 auto; }
   .feedback-card {
     background: var(--paper);
     border-radius: 24px;
@@ -408,11 +427,8 @@
     border: 1.5px solid var(--border);
     box-shadow: 0 20px 50px -25px rgba(106,76,255,.2);
   }
-
   .stars-input {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
+    display: flex; gap: 6px; justify-content: center;
     margin: 8px 0 20px;
   }
   .star-btn {
@@ -421,8 +437,7 @@
     display: grid; place-items: center;
     background: transparent;
     color: var(--border);
-    font-size: 32px;
-    line-height: 1;
+    font-size: 32px; line-height: 1;
     transition: all .15s ease;
     padding: 0;
   }
@@ -431,13 +446,10 @@
   .star-btn.hovered { color: #fcd34d; transform: scale(1.12); }
 
   .feedback-form { display: flex; flex-direction: column; gap: 16px; }
-
   .form-row { display: flex; flex-direction: column; gap: 8px; }
   .form-row label {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--dark);
-    letter-spacing: .2px;
+    font-size: 13px; font-weight: 700;
+    color: var(--dark); letter-spacing: .2px;
   }
   .form-row input,
   .form-row textarea,
@@ -467,33 +479,25 @@
     background: var(--paper-alt);
     border-radius: 18px;
     border: 1.5px dashed var(--border);
-    color: var(--gray);
-    font-size: 15px;
+    color: var(--gray); font-size: 15px;
     margin-top: 24px;
   }
   .feedback-empty .ico {
     width: 48px; height: 48px; stroke-width: 1;
-    color: var(--gray-light);
-    margin-bottom: 8px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    color: var(--gray-light); margin-bottom: 8px;
+    display: block; margin-left: auto; margin-right: auto;
   }
 
-  /* ─── Список одобренных отзывов ─── */
   .feedback-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 24px;
+    display: flex; flex-direction: column;
+    gap: 16px; margin-top: 24px;
   }
   .feedback-item {
     background: var(--paper);
     border-radius: 20px;
     padding: 24px 28px;
     border: 1.5px solid var(--border);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     transition: all .25s ease;
     animation: fbIn .5s cubic-bezier(.2,.8,.3,1) backwards;
   }
@@ -514,17 +518,13 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .feedback-item .fb-item-head {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 12px; margin-bottom: 12px;
     flex-wrap: wrap;
   }
   .feedback-item .fb-item-author {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    display: flex; align-items: center; gap: 12px;
   }
   .feedback-item .fb-item-avatar {
     width: 48px; height: 48px;
@@ -532,32 +532,24 @@
     display: grid; place-items: center;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     color: #fff;
-    font-weight: 800;
-    font-size: 18px;
+    font-weight: 800; font-size: 18px;
     flex-shrink: 0;
   }
   .feedback-item .fb-item-name {
-    font-weight: 800;
-    font-size: 15px;
-    color: var(--dark);
-    margin-bottom: 2px;
+    font-weight: 800; font-size: 15px;
+    color: var(--dark); margin-bottom: 2px;
   }
   .feedback-item .fb-item-date {
-    font-size: 12px;
-    color: var(--gray);
-    font-weight: 600;
+    font-size: 12px; color: var(--gray); font-weight: 600;
   }
   .feedback-item .fb-item-stars {
-    display: inline-flex;
-    gap: 2px;
-    font-size: 20px;
-    line-height: 1;
+    display: inline-flex; gap: 2px;
+    font-size: 20px; line-height: 1;
     color: #fbbf24;
   }
   .feedback-item .fb-item-stars .off { color: var(--border); }
   .feedback-item .fb-item-text {
-    color: var(--gray);
-    font-size: 15px;
+    color: var(--gray); font-size: 15px;
     line-height: 1.65;
     white-space: pre-wrap;
     word-break: break-word;
@@ -581,17 +573,15 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ═══ CONTACTS / LEAD FORM ═══ */
+  /* LEAD FORM */
   .lead-card {
-    max-width: 620px;
-    margin: 0 auto;
+    max-width: 620px; margin: 0 auto;
     background: var(--paper);
     border-radius: 24px;
     padding: 40px;
     border: 1.5px solid var(--border);
     box-shadow: 0 25px 60px -25px rgba(106,76,255,.25);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .lead-card::before {
     content: '';
@@ -601,20 +591,15 @@
     background: linear-gradient(90deg, var(--primary), var(--accent));
   }
   .lead-card h3 {
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 26px; font-weight: 800;
     text-align: center;
-    letter-spacing: -.5px;
-    margin-bottom: 8px;
+    letter-spacing: -.5px; margin-bottom: 8px;
   }
   .lead-card .lead-sub {
     text-align: center;
-    color: var(--gray);
-    font-size: 15px;
-    margin-bottom: 28px;
-    line-height: 1.5;
+    color: var(--gray); font-size: 15px;
+    margin-bottom: 28px; line-height: 1.5;
   }
-
   .lead-form { display: flex; flex-direction: column; gap: 16px; }
 
   .lead-success {
@@ -626,35 +611,29 @@
   .lead-success .ico {
     width: 64px; height: 64px;
     stroke-width: 1.2;
-    color: var(--mint);
-    margin-bottom: 16px;
+    color: var(--mint); margin-bottom: 16px;
   }
   .lead-success h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
   .lead-success p { color: var(--gray); font-size: 15px; line-height: 1.5; }
 
-  /* ═══ PLATFORM BANNER ═══ */
+  /* PLATFORM BANNER */
   .platform-banner {
     padding: 40px 0;
     background: linear-gradient(135deg, #0a0a0f, #1a1a2e);
     color: #fff;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .platform-banner::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
       radial-gradient(circle at 15% 30%, rgba(106,76,255,.35), transparent 40%),
       radial-gradient(circle at 85% 70%, rgba(14,165,233,.3), transparent 40%);
     pointer-events: none;
   }
   .platform-inner {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    position: relative;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 32px;
+    position: relative; flex-wrap: wrap;
   }
   .platform-logo-block { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
   .platform-logo-icon {
@@ -667,22 +646,17 @@
   .platform-logo-text { line-height: 1.15; }
   .platform-logo-name { font-size: 20px; font-weight: 900; }
   .platform-logo-sub { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 600; }
-
   .platform-text { flex: 1; min-width: 260px; }
   .platform-text p { font-size: 14.5px; color: rgba(255,255,255,.75); line-height: 1.55; }
   .platform-text p b { color: #fff; font-weight: 700; }
-
   .platform-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 22px;
     border-radius: 12px;
     background: rgba(255,255,255,.1);
     border: 1.5px solid rgba(255,255,255,.2);
     color: #fff;
-    font-weight: 700;
-    font-size: 13.5px;
+    font-weight: 700; font-size: 13.5px;
     backdrop-filter: blur(10px);
     transition: all .25s;
     flex-shrink: 0;
@@ -693,17 +667,15 @@
     transform: translateY(-2px);
   }
 
-  /* ═══ FOOTER ═══ */
+  /* FOOTER */
   .footer {
     padding: 48px 0 40px;
     background: var(--paper-alt);
     border-top: 1.5px solid var(--border);
   }
   .footer-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 24px;
     flex-wrap: wrap;
     padding-bottom: 32px;
     border-bottom: 1.5px solid var(--border);
@@ -711,46 +683,34 @@
   }
   .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
   .footer-links a {
-    color: var(--gray);
-    font-size: 13.5px;
-    font-weight: 600;
-    transition: color .2s;
+    color: var(--gray); font-size: 13.5px;
+    font-weight: 600; transition: color .2s;
   }
   .footer-links a:hover { color: var(--primary); }
   .footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 16px; flex-wrap: wrap;
   }
   .footer-copy { color: var(--gray); font-size: 12.5px; font-weight: 600; }
   .footer-platform {
-    color: var(--gray);
-    font-size: 12.5px;
+    color: var(--gray); font-size: 12.5px;
     font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
   }
   .footer-platform b { color: var(--primary); font-weight: 800; }
 
-  /* ═══ KABINET LINK ═══ */
+  /* KABINET LINK */
   .kabinet-link {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: 24px; right: 24px;
     z-index: 90;
     padding: 12px 20px;
     border-radius: 14px;
     background: var(--paper);
     border: 1.5px solid var(--border);
     box-shadow: 0 12px 30px -10px rgba(26,26,46,.2);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 13.5px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 13.5px;
     color: var(--dark);
     transition: all .25s;
   }
@@ -760,7 +720,7 @@
     transform: translateY(-2px);
   }
 
-  /* ═══ RESPONSIVE ═══ */
+  /* RESPONSIVE */
   @media (max-width: 1000px) {
     .hero-grid { grid-template-columns: 1fr; gap: 48px; }
     .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -776,6 +736,8 @@
     .platform-cta { width: 100%; justify-content: center; }
     .feedback-card, .lead-card { padding: 24px 20px; }
     .feedback-item { padding: 18px 20px; }
+    .molecule-slide svg { max-width: 260px; max-height: 260px; }
+    .molecule-label { font-size: 12px; padding: 6px 14px; }
   }
 </style>
 </head>
@@ -800,7 +762,7 @@
   </defs>
 </svg>
 
-<!-- ═══ HEADER ═══ -->
+<!-- HEADER -->
 <header class="header">
   <div class="container header-inner">
     <div class="brand-block">
@@ -813,7 +775,6 @@
         <div class="tutor-role">Репетитор по химии</div>
       </div>
     </div>
-
     <nav class="nav">
       <a href="#about">Обо мне</a>
       <a href="#services">Услуги</a>
@@ -823,7 +784,7 @@
   </div>
 </header>
 
-<!-- ═══ HERO ═══ -->
+<!-- HERO -->
 <section class="hero">
   <div class="container hero-grid">
     <div>
@@ -873,17 +834,19 @@
     </div>
 
     <div class="hero-photo">
-      <svg class="ico"><use href="#i-user"/></svg>
+      <div class="molecule-stage" data-molecule-stage data-molecule-group="hero"></div>
+      <div class="molecule-label" data-molecule-label></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ ABOUT ═══ -->
+<!-- ABOUT -->
 <section id="about" class="block alt">
   <div class="container">
     <div class="about-grid">
       <div class="about-photo">
-        <svg class="ico"><use href="#i-user"/></svg>
+        <div class="molecule-stage" data-molecule-stage data-molecule-group="about"></div>
+        <div class="molecule-label" data-molecule-label></div>
       </div>
 
       <div class="about-text">
@@ -926,7 +889,7 @@
   </div>
 </section>
 
-<!-- ═══ SERVICES ═══ -->
+<!-- SERVICES -->
 <section id="services" class="block">
   <div class="container">
     <div class="services-grid">
@@ -965,7 +928,7 @@
   </div>
 </section>
 
-<!-- ═══ FEEDBACK ═══ -->
+<!-- FEEDBACK -->
 <section id="feedback" class="block alt">
   <div class="container">
     <div class="section-head">
@@ -1027,7 +990,7 @@
   </div>
 </section>
 
-<!-- ═══ CONTACT / LEAD FORM ═══ -->
+<!-- CONTACT -->
 <section id="contact" class="block">
   <div class="container">
     <div class="lead-card">
@@ -1080,7 +1043,7 @@
   </div>
 </section>
 
-<!-- ═══ PLATFORM BANNER ═══ -->
+<!-- PLATFORM BANNER -->
 <div class="platform-banner">
   <div class="container platform-inner">
     <div class="platform-logo-block">
@@ -1107,7 +1070,7 @@
   </div>
 </div>
 
-<!-- ═══ FOOTER ═══ -->
+<!-- FOOTER -->
 <footer class="footer">
   <div class="container">
     <div class="footer-top">
@@ -1141,10 +1104,307 @@
 
 <script>
 /* ══════════════════════════════════════════════════════════════
-   ПЛАВНЫЙ СКРОЛЛ ПО ЯКОРЯМ
+   МОЛЕКУЛЫ — правильные структурные формулы
+   ══════════════════════════════════════════════════════════════ */
+
+// Двойная связь — две параллельные линии
+function doubleBond(x1, y1, x2, y2, offset) {
+  offset = offset || 4;
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.hypot(dx, dy) || 1;
+  const px = (-dy / len) * offset;
+  const py = (dx / len) * offset;
+  return `
+    <line class="mol-bond-double" x1="${x1 + px}" y1="${y1 + py}" x2="${x2 + px}" y2="${y2 + py}"/>
+    <line class="mol-bond-double" x1="${x1 - px}" y1="${y1 - py}" x2="${x2 - px}" y2="${y2 - py}"/>
+  `;
+}
+
+const MOLECULES = {
+  hero: [
+    // H₂O — вода, угловая
+    {
+      name: 'Вода',
+      formula: 'H₂O',
+      svg: `
+        <line class="mol-bond" x1="150" y1="150" x2="95"  y2="205"/>
+        <line class="mol-bond" x1="150" y1="150" x2="205" y2="205"/>
+        <circle class="mol-atom oxygen" cx="150" cy="150" r="32"/>
+        <text class="mol-label" x="150" y="150">O</text>
+        <circle class="mol-atom hydrogen" cx="95"  cy="205" r="22"/>
+        <text class="mol-label mol-label-dark" x="95" y="205">H</text>
+        <circle class="mol-atom hydrogen" cx="205" cy="205" r="22"/>
+        <text class="mol-label mol-label-dark" x="205" y="205">H</text>
+      `
+    },
+
+    // CH₄ — метан, тетраэдр (плоская проекция)
+    {
+      name: 'Метан',
+      formula: 'CH₄',
+      svg: `
+        <line class="mol-bond" x1="150" y1="150" x2="150" y2="60"/>
+        <line class="mol-bond" x1="150" y1="150" x2="230" y2="195"/>
+        <line class="mol-bond" x1="150" y1="150" x2="70"  y2="195"/>
+        <line class="mol-bond" x1="150" y1="150" x2="150" y2="245"/>
+        <circle class="mol-atom carbon" cx="150" cy="150" r="28"/>
+        <text class="mol-label" x="150" y="150">C</text>
+        <circle class="mol-atom hydrogen" cx="150" cy="60"  r="18"/>
+        <text class="mol-label mol-label-dark" x="150" y="60">H</text>
+        <circle class="mol-atom hydrogen" cx="230" cy="195" r="18"/>
+        <text class="mol-label mol-label-dark" x="230" y="195">H</text>
+        <circle class="mol-atom hydrogen" cx="70"  cy="195" r="18"/>
+        <text class="mol-label mol-label-dark" x="70" y="195">H</text>
+        <circle class="mol-atom hydrogen" cx="150" cy="245" r="18"/>
+        <text class="mol-label mol-label-dark" x="150" y="245">H</text>
+      `
+    },
+
+    // CO₂ — углекислый газ, линейный, O=C=O
+    {
+      name: 'Углекислый газ',
+      formula: 'CO₂',
+      svg: `
+        ${doubleBond(75, 150, 150, 150)}
+        ${doubleBond(150, 150, 225, 150)}
+        <circle class="mol-atom oxygen" cx="75"  cy="150" r="30"/>
+        <text class="mol-label" x="75" y="150">O</text>
+        <circle class="mol-atom carbon" cx="150" cy="150" r="30"/>
+        <text class="mol-label" x="150" y="150">C</text>
+        <circle class="mol-atom oxygen" cx="225" cy="150" r="30"/>
+        <text class="mol-label" x="225" y="150">O</text>
+      `
+    },
+
+    // NH₃ — аммиак, пирамида (плоская проекция)
+    {
+      name: 'Аммиак',
+      formula: 'NH₃',
+      svg: `
+        <line class="mol-bond" x1="150" y1="100" x2="75"  y2="185"/>
+        <line class="mol-bond" x1="150" y1="100" x2="225" y2="185"/>
+        <line class="mol-bond" x1="150" y1="100" x2="150" y2="235"/>
+        <circle class="mol-atom nitrogen" cx="150" cy="100" r="30"/>
+        <text class="mol-label" x="150" y="100">N</text>
+        <circle class="mol-atom hydrogen" cx="75"  cy="185" r="20"/>
+        <text class="mol-label mol-label-dark" x="75" y="185">H</text>
+        <circle class="mol-atom hydrogen" cx="225" cy="185" r="20"/>
+        <text class="mol-label mol-label-dark" x="225" y="185">H</text>
+        <circle class="mol-atom hydrogen" cx="150" cy="235" r="20"/>
+        <text class="mol-label mol-label-dark" x="150" y="235">H</text>
+      `
+    },
+
+    // O₂ — кислород, двойная связь
+    {
+      name: 'Кислород',
+      formula: 'O₂',
+      svg: `
+        ${doubleBond(105, 150, 195, 150, 5)}
+        <circle class="mol-atom oxygen" cx="105" cy="150" r="36"/>
+        <text class="mol-label" x="105" y="150" style="font-size:16px">O</text>
+        <circle class="mol-atom oxygen" cx="195" cy="150" r="36"/>
+        <text class="mol-label" x="195" y="150" style="font-size:16px">O</text>
+      `
+    }
+  ],
+
+  about: [
+    // H₂SO₄ — серная кислота
+    // S в центре, 2 O двойной связью (сверху), 2 OH одинарной (снизу)
+    {
+      name: 'Серная кислота',
+      formula: 'H₂SO₄',
+      svg: `
+        <!-- S=O сверху-слева -->
+        ${doubleBond(150, 150, 75, 75, 4)}
+        <!-- S=O сверху-справа -->
+        ${doubleBond(150, 150, 225, 75, 4)}
+        <!-- S–OH снизу-слева -->
+        <line class="mol-bond" x1="150" y1="150" x2="85" y2="220"/>
+        <!-- S–OH снизу-справа -->
+        <line class="mol-bond" x1="150" y1="150" x2="215" y2="220"/>
+        <!-- O–H слева -->
+        <line class="mol-bond" x1="85" y1="220" x2="50" y2="260"/>
+        <!-- O–H справа -->
+        <line class="mol-bond" x1="215" y1="220" x2="250" y2="260"/>
+
+        <!-- Атомы -->
+        <circle class="mol-atom sulfur" cx="150" cy="150" r="32"/>
+        <text class="mol-label mol-label-dark" x="150" y="150">S</text>
+
+        <circle class="mol-atom oxygen" cx="75"  cy="75"  r="24"/>
+        <text class="mol-label" x="75" y="75">O</text>
+        <circle class="mol-atom oxygen" cx="225" cy="75"  r="24"/>
+        <text class="mol-label" x="225" y="75">O</text>
+
+        <circle class="mol-atom oxygen" cx="85"  cy="220" r="24"/>
+        <text class="mol-label" x="85" y="220">O</text>
+        <circle class="mol-atom oxygen" cx="215" cy="220" r="24"/>
+        <text class="mol-label" x="215" y="220">O</text>
+
+        <circle class="mol-atom hydrogen" cx="50"  cy="260" r="16"/>
+        <text class="mol-label mol-label-dark" x="50" y="260">H</text>
+        <circle class="mol-atom hydrogen" cx="250" cy="260" r="16"/>
+        <text class="mol-label mol-label-dark" x="250" y="260">H</text>
+      `
+    },
+
+    // C₂H₅OH — этанол
+    {
+      name: 'Этанол',
+      formula: 'C₂H₅OH',
+      svg: `
+        <!-- C1–C2 -->
+        <line class="mol-bond" x1="75"  y1="170" x2="150" y2="170"/>
+        <!-- C2–O -->
+        <line class="mol-bond" x1="150" y1="170" x2="215" y2="120"/>
+        <!-- O–H -->
+        <line class="mol-bond" x1="215" y1="120" x2="260" y2="80"/>
+
+        <circle class="mol-atom carbon" cx="75"  cy="170" r="28"/>
+        <text class="mol-label" x="75" y="170">C</text>
+        <circle class="mol-atom carbon" cx="150" cy="170" r="28"/>
+        <text class="mol-label" x="150" y="170">C</text>
+        <circle class="mol-atom oxygen" cx="215" cy="120" r="28"/>
+        <text class="mol-label" x="215" y="120">O</text>
+        <circle class="mol-atom hydrogen" cx="260" cy="80" r="18"/>
+        <text class="mol-label mol-label-dark" x="260" y="80">H</text>
+      `
+    },
+
+    // CH₃COOH — уксусная кислота
+    {
+      name: 'Уксусная кислота',
+      formula: 'CH₃COOH',
+      svg: `
+        <!-- C1 – C2 (C карбоксильная) -->
+        <line class="mol-bond" x1="75" y1="160" x2="150" y2="160"/>
+        <!-- C2 = O (двойная) -->
+        ${doubleBond(150, 160, 150, 85, 4)}
+        <!-- C2 – O (одинарная) -->
+        <line class="mol-bond" x1="150" y1="160" x2="225" y2="160"/>
+        <!-- O – H -->
+        <line class="mol-bond" x1="225" y1="160" x2="265" y2="200"/>
+
+        <circle class="mol-atom carbon" cx="75"  cy="160" r="26"/>
+        <text class="mol-label" x="75" y="160">C</text>
+        <circle class="mol-atom carbon" cx="150" cy="160" r="28"/>
+        <text class="mol-label" x="150" y="160">C</text>
+        <circle class="mol-atom oxygen" cx="150" cy="85"  r="24"/>
+        <text class="mol-label" x="150" y="85">O</text>
+        <circle class="mol-atom oxygen" cx="225" cy="160" r="24"/>
+        <text class="mol-label" x="225" y="160">O</text>
+        <circle class="mol-atom hydrogen" cx="265" cy="200" r="16"/>
+        <text class="mol-label mol-label-dark" x="265" y="200">H</text>
+      `
+    },
+
+    // C₆H₆ — бензол (IUPAC-стиль: гексагон + кружок внутри)
+    {
+      name: 'Бензол',
+      formula: 'C₆H₆',
+      svg: `
+        <!-- Внешний шестиугольник (σ-связи) -->
+        <line class="mol-bond" x1="150" y1="65"  x2="220" y2="105"/>
+        <line class="mol-bond" x1="220" y1="105" x2="220" y2="185"/>
+        <line class="mol-bond" x1="220" y1="185" x2="150" y2="225"/>
+        <line class="mol-bond" x1="150" y1="225" x2="80"  y2="185"/>
+        <line class="mol-bond" x1="80"  y1="185" x2="80"  y2="105"/>
+        <line class="mol-bond" x1="80"  y1="105" x2="150" y2="65"/>
+
+        <!-- Кружок внутри = ароматическая π-система (делокализованные электроны) -->
+        <circle cx="150" cy="145" r="45" fill="none" stroke="#6a4cff" stroke-width="3.5" opacity="0.7"/>
+
+        <!-- Атомы C -->
+        <circle class="mol-atom carbon" cx="150" cy="65"  r="20"/>
+        <text class="mol-label" x="150" y="65">C</text>
+        <circle class="mol-atom carbon" cx="220" cy="105" r="20"/>
+        <text class="mol-label" x="220" y="105">C</text>
+        <circle class="mol-atom carbon" cx="220" cy="185" r="20"/>
+        <text class="mol-label" x="220" y="185">C</text>
+        <circle class="mol-atom carbon" cx="150" cy="225" r="20"/>
+        <text class="mol-label" x="150" y="225">C</text>
+        <circle class="mol-atom carbon" cx="80"  cy="185" r="20"/>
+        <text class="mol-label" x="80" y="185">C</text>
+        <circle class="mol-atom carbon" cx="80"  cy="105" r="20"/>
+        <text class="mol-label" x="80" y="105">C</text>
+      `
+    },
+
+    // HCl — хлороводород (простая, узнаваемая)
+    {
+      name: 'Хлороводород',
+      formula: 'HCl',
+      svg: `
+        <line class="mol-bond" x1="110" y1="150" x2="190" y2="150"/>
+        <circle class="mol-atom hydrogen" cx="110" cy="150" r="28"/>
+        <text class="mol-label mol-label-dark" x="110" y="150" style="font-size:14px">H</text>
+        <circle class="mol-atom chlorine" cx="190" cy="150" r="42"/>
+        <text class="mol-label mol-label-dark" x="190" y="150" style="font-size:16px">Cl</text>
+      `
+    }
+  ]
+};
+
+// ══════════════════════════════════════════════════════════════
+//  ИНИЦИАЛИЗАЦИЯ МОЛЕКУЛЯРНЫХ СЦЕН
+// ══════════════════════════════════════════════════════════════
+function initMoleculeStage(stageEl, group) {
+  const list = MOLECULES[group];
+  if (!list) return;
+
+  const labelEl = stageEl.parentElement.querySelector('[data-molecule-label]');
+
+  list.forEach((mol, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'molecule-slide' + (i === 0 ? ' active' : '');
+    slide.innerHTML = `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">${mol.svg}</svg>`;
+    stageEl.appendChild(slide);
+  });
+
+  if (labelEl) {
+    labelEl.innerHTML = `<span class="formula">${list[0].formula}</span> ${list[0].name}`;
+  }
+
+  const slides = stageEl.querySelectorAll('.molecule-slide');
+  let currentIdx = 0;
+  let paused = false;
+
+  function nextSlide() {
+    if (paused) return;
+    const prevIdx = currentIdx;
+    currentIdx = (currentIdx + 1) % slides.length;
+
+    slides[prevIdx].classList.remove('active');
+    slides[currentIdx].classList.add('active');
+
+    if (labelEl) {
+      const mol = list[currentIdx];
+      labelEl.style.opacity = '0';
+      setTimeout(() => {
+        labelEl.innerHTML = `<span class="formula">${mol.formula}</span> ${mol.name}`;
+        labelEl.style.opacity = '1';
+      }, 300);
+    }
+  }
+
+  setInterval(nextSlide, 5000);
+  stageEl.addEventListener('mouseenter', () => { paused = true; });
+  stageEl.addEventListener('mouseleave', () => { paused = false; });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-molecule-stage]').forEach(stage => {
+    const group = stage.dataset.moleculeGroup || 'hero';
+    initMoleculeStage(stage, group);
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════
+   ПЛАВНЫЙ СКРОЛЛ
    ══════════════════════════════════════════════════════════════ */
 (function () {
-  'use strict';
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href').slice(1);
@@ -1158,21 +1418,16 @@
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   ЗВЁЗДЫ В ФОРМЕ ОТЗЫВА
+   ЗВЁЗДЫ
    ══════════════════════════════════════════════════════════════ */
 (function () {
-  'use strict';
   const starsWrap = document.getElementById('stars-input');
   const ratingInput = document.getElementById('rating-value');
   const starBtns = starsWrap.querySelectorAll('.star-btn');
   let currentRating = 0;
-
   function paint(n) {
-    starBtns.forEach((btn, i) => {
-      btn.classList.toggle('active', i < n);
-    });
+    starBtns.forEach((btn, i) => btn.classList.toggle('active', i < n));
   }
-
   starBtns.forEach((btn, i) => {
     btn.addEventListener('mouseenter', () => {
       starBtns.forEach((b, j) => b.classList.toggle('hovered', j <= i));
@@ -1186,20 +1441,15 @@
       paint(currentRating);
     });
   });
-
   starsWrap.addEventListener('mouseleave', () => {
     starBtns.forEach(b => b.classList.remove('hovered'));
   });
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   ФОРМА ОТЗЫВА — отправка на /api/feedback
-   + загрузка одобренных отзывов из /api/feedback/approved
+   ФОРМА ОТЗЫВА + ЗАГРУЗКА ОДОБРЕННЫХ
    ══════════════════════════════════════════════════════════════ */
 (function () {
-  'use strict';
-
-  // ─── Форма отзыва ───
   const form = document.getElementById('feedback-form');
   const success = document.getElementById('feedback-success');
   const submitBtn = document.getElementById('fb-submit');
@@ -1208,24 +1458,16 @@
   errorBox.style.cssText = 'padding:12px 16px;border-radius:12px;background:rgba(224,67,92,.1);color:#e0435c;font-size:14px;display:none;margin-bottom:8px;';
   form.insertBefore(errorBox, form.firstChild);
 
-  function showError(msg) {
-    errorBox.textContent = msg;
-    errorBox.style.display = 'block';
-  }
-  function hideError() {
-    errorBox.style.display = 'none';
-  }
+  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = 'block'; }
+  function hideError() { errorBox.style.display = 'none'; }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     hideError();
-
     const rating = Number(ratingValue.value);
     if (!rating) return showError('Поставьте оценку — нажмите на звёзды');
-
     const author_name = form.querySelector('#fb-name').value.trim();
     const text = form.querySelector('#fb-text').value.trim();
-
     if (text.length < 5) return showError('Отзыв слишком короткий');
     if (text.length > 1000) return showError('Отзыв слишком длинный (максимум 1000 символов)');
 
@@ -1241,7 +1483,6 @@
       });
       const json = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(json.error || 'Не удалось отправить отзыв');
-
       form.style.display = 'none';
       success.classList.add('show');
     } catch (err) {
@@ -1251,7 +1492,6 @@
     }
   });
 
-  // ─── Загрузка одобренных отзывов ───
   const emptyBox = document.getElementById('feedback-empty');
   const listEl = document.getElementById('feedback-list');
   if (!emptyBox || !listEl) return;
@@ -1314,14 +1554,13 @@
   fetch('/api/feedback/approved', { credentials: 'same-origin' })
     .then(r => r.json())
     .then(data => renderFeedback(data.feedback || []))
-    .catch(() => { /* тихо */ });
+    .catch(() => {});
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   ФОРМА ЗАЯВКИ — отправка на /api/leads
+   ФОРМА ЗАЯВКИ
    ══════════════════════════════════════════════════════════════ */
 (function () {
-  'use strict';
   const form = document.getElementById('lead-form');
   const success = document.getElementById('lead-success');
   const submitBtn = document.getElementById('lead-submit');
@@ -1329,18 +1568,12 @@
   errorBox.style.cssText = 'padding:12px 16px;border-radius:12px;background:rgba(224,67,92,.1);color:#e0435c;font-size:14px;display:none;margin-bottom:8px;';
   form.insertBefore(errorBox, form.firstChild);
 
-  function showError(msg) {
-    errorBox.textContent = msg;
-    errorBox.style.display = 'block';
-  }
-  function hideError() {
-    errorBox.style.display = 'none';
-  }
+  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = 'block'; }
+  function hideError() { errorBox.style.display = 'none'; }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     hideError();
-
     const name    = form.querySelector('#lead-name').value.trim();
     const phone   = form.querySelector('#lead-phone').value.trim();
     const grade   = form.querySelector('#lead-grade').value;
@@ -1361,7 +1594,6 @@
       });
       const json = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(json.error || 'Не удалось отправить заявку');
-
       form.style.display = 'none';
       success.classList.add('show');
     } catch (err) {
