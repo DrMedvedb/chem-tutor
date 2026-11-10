@@ -609,5 +609,30 @@ function renderAttemptItem(d, i) {
 
     switchView('topics');
     startNextLessonPolling();
-  } catch (e) {}
+
+    // ═══ ЛОГИКА ВКЛЮЧЕНИЯ ПУШ-УВЕДОМЛЕНИЙ ═══
+    const notifBtn = $('#enable-notif-btn');
+    if (notifBtn) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        notifBtn.style.display = 'none'; // Скрываем, если уже включено
+      } else if ('Notification' in window && Notification.permission === 'denied') {
+        notifBtn.title = 'Уведомления заблокированы в браузере';
+        notifBtn.style.opacity = '0.5';
+      } else {
+        notifBtn.onclick = () => {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              toast('Уведомления включены!', 'success');
+              notifBtn.style.display = 'none';
+            } else {
+              toast('Вы отклонили уведомления', 'error');
+            }
+          });
+        };
+      }
+    }
+
+  } catch (e) {
+    console.error('Boot error:', e);
+  }
 })();

@@ -1,11 +1,4 @@
-/* public/js/chat.js
-   Универсальный модуль чата.
-   Публичное API:
-     Chat.init({ role, mountSelector, notifMountSelector })
-     Chat.openWith(userId)
-     Chat.close()
-     Chat.refreshNotifCounter()
-*/
+/* public/js/chat.js */
 
 (function (global) {
   'use strict';
@@ -111,6 +104,43 @@
   let pendingFile = null;
   let notifPanelOpen = false;
 
+  // ═══ ПУШ-УВЕДОМЛЕНИЯ ═══
+  function requestNotificationPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') return;
+    if (Notification.permission === 'denied') return;
+
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        toast('Уведомления включены', 'success');
+      }
+    });
+  }
+
+  function showNotification(title, body, userId) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+    
+    // Показываем только если вкладка не активна
+    if (document.visibilityState === 'visible') return;
+
+    try {
+      const notif = new Notification(title, {
+        body: body,
+        icon: '/favicon.ico', // или ссылка на логотип
+        tag: 'chat-message'
+      });
+      
+      notif.onclick = function() {
+        window.focus();
+        if (userId) openWith(userId);
+        notif.close();
+      };
+    } catch (e) {
+      console.warn('Ошибка уведомления:', e);
+    }
+  }
+
   // ═══ ИНИЦИАЛИЗАЦИЯ ═══
 
   function init(opts) {
@@ -121,6 +151,9 @@
     notifMountEl = typeof opts.notifMountSelector === 'string'
       ? document.querySelector(opts.notifMountSelector)
       : opts.notifMountSelector;
+
+    // Запрашиваем разрешение на уведомления
+    requestNotificationPermission();
 
     if (!mountEl) {
       console.warn('Chat.init: не найден mountSelector');
@@ -755,6 +788,18 @@
         const newMessages = history.messages || [];
         if (newMessages.length !== currentMessages.length) {
           const wasAtBottom = isScrolledToBottom();
+          const lastOldMsg = currentMessages[currentMessages.length - 1];
+          const lastNewMsg = newMessages[newMessages.length - 1];
+          
+          // Если пришло новое сообщение не от нас — показываем уведомление
+          if (lastNewMsg && !lastNewMsg.from_me && (!lastOldMsg || lastOldMsg.id !== lastNewMsg.id)) {
+             showNotification(
+               'Новое сообщение от ' + currentPeer.display_name,
+               lastNewMsg.text || 'Файл',
+               currentPeer.id
+             );
+          }
+
           currentMessages = newMessages;
           renderMessages();
           if (wasAtBottom) scrollToBottom();
@@ -763,6 +808,17 @@
         if (d && d.unread_count > 0) {
           await api('/chat/read/' + currentPeer.id, { method: 'POST' });
           d.unread_count = 0;
+        }
+      } else {
+        // Если чат не открыт, ищем непрочитанные для уведомлений
+        for (const d of dialogs) {
+          if (d.unread_count > 0 && d.last_message && !d.last_message.from_me) {
+             showNotification(
+               'Новое сообщение от ' + d.user.display_name,
+               d.last_message.text || 'Файл',
+               d.user.id
+             );
+          }
         }
       }
     } catch (e) {}

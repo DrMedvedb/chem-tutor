@@ -7,6 +7,7 @@
 <title>Тема — Алхимичка</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/search.css">
 <link rel="stylesheet" href="css/theme.css">
 <script src="js/theme.js"></script>
 <style>
@@ -847,15 +848,32 @@
       </div>
       <div>Алхимичка</div>
     </div>
+    
+    <button class="search-trigger search-trigger-sidebar" type="button" style="margin-bottom: 12px; width: 100%; justify-content: flex-start;">
+      <svg class="ico"><use href="#i-search"/></svg>
+      <span class="label">Поиск</span>
+      <span class="hint">Ctrl+K</span>
+    </button>
+
     <a class="nav-item" href="dashboard-tutor.html">
       <svg class="ico"><use href="#i-book"/></svg> Мои темы
     </a>
-    <a class="nav-item" href="dashboard-tutor.html">
+    <a class="nav-item" href="dashboard-tutor.html?view=students">
       <svg class="ico"><use href="#i-users"/></svg> Мои ученики
     </a>
-    <a class="nav-item" href="dashboard-tutor.html">
+    <a class="nav-item" href="dashboard-tutor.html?view=chat">
+      <svg class="ico"><use href="#i-message"/></svg> Чат
+    </a>
+    <a class="nav-item" href="dashboard-tutor.html?view=reviews">
+      <svg class="ico"><use href="#i-bell"/></svg> Проверка работ
+    </a>
+    <a class="nav-item" href="dashboard-tutor.html?view=results">
       <svg class="ico"><use href="#i-chart"/></svg> Результаты
     </a>
+    <a class="nav-item" href="dashboard-tutor.html?view=schedule">
+      <svg class="ico"><use href="#i-calendar"/></svg> Расписание
+    </a>
+
     <div class="profile-card">
       <span id="avatar"></span>
       <div class="profile-info">

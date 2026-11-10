@@ -41,57 +41,22 @@ $$('[data-close]').forEach(b => {
   b.addEventListener('click', () => b.closest('.modal-backdrop').classList.remove('open'));
 });
 
-// Надёжная функция копирования (сработает и без HTTPS)
-async function copyTextToClipboard(text) {
-  // 1. Пробуем современный API
-  if (navigator.clipboard && window.isSecureContext) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (e) {}
-  }
-  // 2. Резервный метод через скрытое текстовое поле
-  try {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.opacity = "0";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    const successful = document.execCommand('copy');
-    document.body.removeChild(textArea);
-    return successful;
-  } catch (err) {
-    return false;
-  }
-}
-
-// Обработчик для полей ввода (копировать логин / пароль)
 document.addEventListener('click', async (e) => {
   const f = e.target.closest('.copy-field');
   if (!f) return;
-  const val = $('.val', f).textContent.trim();
-  
-  if (!val) return;
-  
-  const ok = await copyTextToClipboard(val);
-  const oldText = $('.cpy', f).textContent;
-  
-  if (ok) {
+  const val = $('.val', f).textContent;
+  try {
+    await navigator.clipboard.writeText(val);
+    const old = $('.cpy', f).textContent;
     $('.cpy', f).textContent = 'Скопировано';
     f.style.borderColor = 'var(--accent)';
-  } else {
-    $('.cpy', f).textContent = 'Ошибка';
-    f.style.borderColor = 'var(--danger)';
+    setTimeout(() => {
+      $('.cpy', f).textContent = old;
+      f.style.borderColor = '';
+    }, 1400);
+  } catch (err) {
+    toast('Ошибка копирования', 'error');
   }
-  
-  setTimeout(() => {
-    $('.cpy', f).textContent = oldText;
-    f.style.borderColor = '';
-  }, 1400);
 });
 
 $('#menu-btn')?.addEventListener('click', () => {
@@ -172,8 +137,9 @@ let editingLessonId = null;
 
 function switchView(view) {
   $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
-  ['topics', 'students', 'chat', 'reviews', 'results', 'schedule'].forEach(v => {
-    $('#view-' + v).style.display = (v === view) ? '' : 'none';
+  ['topics', 'students', 'chat', 'reviews', 'results', 'schedule', 'analytics'].forEach(v => {
+    const el = $('#view-' + v);
+    if (el) el.style.display = (v === view) ? '' : 'none';
   });
   const titles = {
     topics:   ['Мои темы', 'Управляйте темами, материалами и тестами'],
@@ -181,6 +147,7 @@ function switchView(view) {
     chat:     ['Чат', 'Переписка с учениками'],
     reviews:  ['Проверка работ', 'Ответы, ожидающие вашей оценки'],
     results:  ['Результаты', 'Все попытки ваших учеников — кликните, чтобы посмотреть ответы'],
+    analytics:['Аналитика', 'Успеваемость и проблемные вопросы'],
     schedule: ['Расписание', 'Еженедельные занятия с учениками']
   };
   $('#page-title').textContent = titles[view][0];
@@ -212,6 +179,7 @@ function switchView(view) {
   }
   if (view === 'reviews') loadReviews();
   if (view === 'results') loadResults();
+  if (view === 'analytics') loadAnalytics();
   if (view === 'schedule') loadSchedule();
 }
 
@@ -1164,6 +1132,105 @@ async function loadResults() {
   }
 }
 
+// ═══ АНАЛИТИКА ═══
+
+async function loadAnalytics() {
+  const v = $('#view-analytics');
+  if (!v) return;
+
+  // Сразу рисуем структуру
+  v.innerHTML = `
+    <div class="grid grid-2">
+      <div class="analytics-block">
+        <h3 class="analytics-block-title">🚨 Проблемные вопросы</h3>
+        <p class="analytics-block-sub">Вопросы, на которых чаще всего ошибаются</p>
+        <div id="analytics-problems" class="analytics-list">
+          <div class="skeleton sk-line w60"></div>
+          <div class="skeleton sk-line w40"></div>
+          <div class="skeleton sk-line"></div>
+        </div>
+      </div>
+      <div class="analytics-block">
+        <h3 class="analytics-block-title">📊 Средний балл по темам</h3>
+        <p class="analytics-block-sub">Насколько хорошо ученики усваивают темы</p>
+        <div id="analytics-topics" class="analytics-list">
+          <div class="skeleton sk-line w60"></div>
+          <div class="skeleton sk-line w40"></div>
+          <div class="skeleton sk-line"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const [pq, ta] = await Promise.all([
+      api('/analytics/problem-questions'),
+      api('/analytics/topic-averages')
+    ]);
+
+    renderProblemQuestions(pq.problem_questions || []);
+    renderTopicAverages(ta.topics || []);
+  } catch (e) {
+    console.error('Analytics error:', e);
+    v.innerHTML = `<div class="empty" style="grid-column: 1 / -1; padding: 40px 20px;">
+      <span class="empty-icon" style="font-size: 48px; filter: grayscale(0.5);">${ico('chart','ico-xl')}</span>
+      <h3 style="font-size: 20px; margin-bottom: 8px;">Аналитика пока недоступна</h3>
+      <p style="color: var(--gray); font-size: 14px; max-width: 500px; margin: 0 auto;">
+        ${esc(e.message)}
+      </p>
+    </div>`;
+  }
+}
+
+function renderProblemQuestions(list) {
+  const wrap = $('#analytics-problems');
+  if (!wrap) return;
+
+  if (!list.length) {
+    wrap.innerHTML = `<div class="empty" style="padding:30px"><p>Пока нет данных для анализа</p></div>`;
+    return;
+  }
+
+  wrap.innerHTML = list.map(q => {
+    const severity = q.error_percent >= 70 ? 'danger' : q.error_percent >= 40 ? 'warn' : 'ok';
+    return `
+      <div class="analytics-card ${severity}">
+        <div class="analytics-head">
+          <div class="analytics-percent">${q.error_percent}%</div>
+          <div class="analytics-meta">ошибок (${q.errors} из ${q.total})</div>
+        </div>
+        <div class="analytics-text">${esc(q.text.slice(0, 100))}${q.text.length > 100 ? '...' : ''}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTopicAverages(list) {
+  const wrap = $('#analytics-topics');
+  if (!wrap) return;
+
+  if (!list.length) {
+    wrap.innerHTML = `<div class="empty" style="padding:30px"><p>Пока нет пройденных тестов</p></div>`;
+    return;
+  }
+
+  wrap.innerHTML = list.map(t => {
+    const cls = t.avg_percent >= 80 ? 'accent' : t.avg_percent >= 50 ? '' : 'danger';
+    return `
+      <div class="analytics-row">
+        <div class="analytics-row-info">
+          <div class="analytics-row-title">${esc(t.topic_title)}</div>
+          <div class="analytics-row-sub">Попыток: ${t.attempts_count}</div>
+        </div>
+        <div class="analytics-row-bar">
+          <div class="bar ${cls}"><span style="width:${t.avg_percent}%"></span></div>
+          <div class="analytics-row-pct">${t.avg_percent}%</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 // ═══ МОДАЛКА ПРОСМОТРА ОТВЕТОВ ═══
 
 function ensureResultModal() {
@@ -1368,14 +1435,9 @@ function showCreds(student) {
   $('#cred-pass').textContent  = student.password;
   openModal('modal-creds');
 }
-$('#copy-both').addEventListener('click', async () => {
+$('#copy-both').addEventListener('click', () => {
   const text = `Логин: ${$('#cred-login').textContent}\nПароль: ${$('#cred-pass').textContent}`;
-  const ok = await copyTextToClipboard(text);
-  if (ok) {
-    toast('Скопировано', 'success');
-  } else {
-    toast('Не удалось скопировать. Выделите текст вручную.', 'error');
-  }
+  navigator.clipboard.writeText(text).then(() => toast('Скопировано', 'success'));
 });
 
 let confirmAction = null;
@@ -1757,12 +1819,36 @@ async function loadCountersOnBoot() {
     startReviewsPolling();
     startUnseenPolling();
 
-    // ⭐ Грузим счётчики учеников и тем сразу
     loadCountersOnBoot();
 
     const params = new URLSearchParams(location.search);
     if (params.get('highlight-student')) {
       switchView('students');
     }
-  } catch (e) {}
+
+    // ═══ ЛОГИКА ВКЛЮЧЕНИЯ ПУШ-УВЕДОМЛЕНИЙ ДЛЯ УЧИТЕЛЯ ═══
+    const notifBtn = $('#enable-notif-btn');
+    if (notifBtn) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        notifBtn.style.display = 'none';
+      } else if ('Notification' in window && Notification.permission === 'denied') {
+        notifBtn.title = 'Уведомления заблокированы в браузере';
+        notifBtn.style.opacity = '0.5';
+      } else {
+        notifBtn.onclick = () => {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              toast('Уведомления включены!', 'success');
+              notifBtn.style.display = 'none';
+            } else {
+              toast('Вы отклонили уведомления', 'error');
+            }
+          });
+        };
+      }
+    }
+
+  } catch (e) {
+    console.error('Boot error:', e);
+  }
 })();

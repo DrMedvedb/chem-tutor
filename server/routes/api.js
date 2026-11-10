@@ -1641,6 +1641,97 @@ router.get('/results', (req, res) => {
   res.json({ results: rows });
 });
 
+// ═══════════════════════════════════════════════════
+//  АНАЛИТИКА ДЛЯ УЧИТЕЛЯ
+// ═══════════════════════════════════════════════════
+
+router.get('/analytics/problem-questions', (req, res) => {
+  if (!isTutor(req)) return res.status(403).json({ error: 'Только для учителя' });
+  
+  try {
+    const attempts = db.prepare(`
+      SELECT a.answers_json 
+      FROM attempts a
+      JOIN tests t ON t.id = a.test_id
+      JOIN topics tp ON tp.id = t.topic_id
+      WHERE tp.tutor_id = ? AND a.status IN ('auto_checked', 'reviewed')
+    `).all(req.session.userId);
+
+    if (!attempts || attempts.length === 0) {
+      return res.json({ problem_questions: [] });
+    }
+
+    const questionStats = {};
+
+    for (const att of attempts) {
+      let detail = [];
+      try { detail = JSON.parse(att.answers_json || '[]'); } catch(e) {}
+      
+      for (const item of detail) {
+        if (item.type === 'open') continue;
+        
+        const qid = item.question_id;
+        if (!questionStats[qid]) {
+          questionStats[qid] = {
+            question_id: qid,
+            text: item.text || '',
+            total: 0,
+            errors: 0
+          };
+        }
+        questionStats[qid].total++;
+        if (!item.auto_correct) {
+          questionStats[qid].errors++;
+        }
+      }
+    }
+
+    const result = Object.values(questionStats)
+      .filter(q => q.errors > 0)
+      .map(q => ({
+        ...q,
+        error_percent: Math.round((q.errors / q.total) * 100)
+      }))
+      .sort((a, b) => b.error_percent - a.error_percent || b.errors - a.errors)
+      .slice(0, 10);
+
+    res.json({ problem_questions: result });
+  } catch (err) {
+    console.error('Analytics error:', err);
+    res.status(500).json({ error: 'Ошибка сервера при сборе аналитики' });
+  }
+});
+
+router.get('/analytics/topic-averages', (req, res) => {
+  if (!isTutor(req)) return res.status(403).json({ error: 'Только для учителя' });
+
+  try {
+    const rows = db.prepare(`
+      SELECT 
+        tp.id AS topic_id,
+        tp.title AS topic_title,
+        tp.grade AS topic_grade,
+        COUNT(a.id) AS attempts_count,
+        AVG(CAST(a.score AS REAL) / a.total * 100) AS avg_percent
+      FROM topics tp
+      JOIN tests t ON t.topic_id = tp.id
+      LEFT JOIN attempts a ON a.test_id = t.id AND a.status IN ('auto_checked', 'reviewed')
+      WHERE tp.tutor_id = ? AND tp.is_welcome = 0
+      GROUP BY tp.id
+      HAVING attempts_count > 0
+      ORDER BY avg_percent ASC
+    `).all(req.session.userId);
+
+    res.json({ topics: rows.map(r => ({
+      ...r,
+      avg_percent: Math.round(r.avg_percent)
+    })) });
+  } catch (err) {
+    console.error('Topic averages error:', err);
+    res.status(500).json({ error: 'Ошибка сервера при сборе средних баллов' });
+  }
+});
+
 router.get('/results/unseen', (req, res) => {
   if (!isTutor(req)) return res.status(403).json({ error: 'Только для учителя' });
   const count = db.prepare(`
