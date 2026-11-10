@@ -41,19 +41,57 @@ $$('[data-close]').forEach(b => {
   b.addEventListener('click', () => b.closest('.modal-backdrop').classList.remove('open'));
 });
 
-document.addEventListener('click', (e) => {
+// Надёжная функция копирования (сработает и без HTTPS)
+async function copyTextToClipboard(text) {
+  // 1. Пробуем современный API
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {}
+  }
+  // 2. Резервный метод через скрытое текстовое поле
+  try {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    return false;
+  }
+}
+
+// Обработчик для полей ввода (копировать логин / пароль)
+document.addEventListener('click', async (e) => {
   const f = e.target.closest('.copy-field');
   if (!f) return;
-  const val = $('.val', f).textContent;
-  navigator.clipboard.writeText(val).then(() => {
-    const old = $('.cpy', f).textContent;
+  const val = $('.val', f).textContent.trim();
+  
+  if (!val) return;
+  
+  const ok = await copyTextToClipboard(val);
+  const oldText = $('.cpy', f).textContent;
+  
+  if (ok) {
     $('.cpy', f).textContent = 'Скопировано';
     f.style.borderColor = 'var(--accent)';
-    setTimeout(() => {
-      $('.cpy', f).textContent = old;
-      f.style.borderColor = '';
-    }, 1400);
-  });
+  } else {
+    $('.cpy', f).textContent = 'Ошибка';
+    f.style.borderColor = 'var(--danger)';
+  }
+  
+  setTimeout(() => {
+    $('.cpy', f).textContent = oldText;
+    f.style.borderColor = '';
+  }, 1400);
 });
 
 $('#menu-btn')?.addEventListener('click', () => {
@@ -1330,9 +1368,14 @@ function showCreds(student) {
   $('#cred-pass').textContent  = student.password;
   openModal('modal-creds');
 }
-$('#copy-both').addEventListener('click', () => {
+$('#copy-both').addEventListener('click', async () => {
   const text = `Логин: ${$('#cred-login').textContent}\nПароль: ${$('#cred-pass').textContent}`;
-  navigator.clipboard.writeText(text).then(() => toast('Скопировано', 'success'));
+  const ok = await copyTextToClipboard(text);
+  if (ok) {
+    toast('Скопировано', 'success');
+  } else {
+    toast('Не удалось скопировать. Выделите текст вручную.', 'error');
+  }
 });
 
 let confirmAction = null;

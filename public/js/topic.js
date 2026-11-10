@@ -63,7 +63,6 @@ $('#logout')?.addEventListener('click', async () => {
   location.href = 'index.html';
 });
 
-// ⭐ Классы
 const GRADES = {
   junior: { full: 'Младшая группа', cls: 'g-junior' },
   '8':    { full: '8 класс', cls: 'g-8' },
@@ -82,6 +81,15 @@ function fileTypeIco(name) {
   if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return 'image';
   return 'file-text';
 }
+function getFileExt(name) {
+  return (String(name).split('.').pop() || '').toLowerCase();
+}
+function isImage(name) {
+  return ['png','jpg','jpeg','gif','webp','svg'].includes(getFileExt(name));
+}
+function isPdf(name) {
+  return getFileExt(name) === 'pdf';
+}
 
 function formatSize(bytes) {
   if (!bytes && bytes !== 0) return '';
@@ -99,7 +107,7 @@ let test = null;
 let questions = [];
 let editingMaterial = null;
 let currentMatTab = 'text';
-let selectedFile = null;
+let selectedFiles = []; // Теперь это массив файлов
 
 let currentQType = 'single';
 let qOptions = ['', '', '', ''];
@@ -209,9 +217,18 @@ function renderMaterials() {
 
   v.innerHTML = `<div class="mat-list">${materials.map(m => {
     const isFile = !!m.file_path;
-    const icon = isFile ? fileTypeIco(m.file_name || '') : (m.type === 'link' ? 'link' : 'file-text');
+    const isImg = isFile && isImage(m.file_name || '');
+    const isPdfFile = isFile && isPdf(m.file_name || '');
+    const icon = isImg ? 'image' : (isFile ? fileTypeIco(m.file_name || '') : (m.type === 'link' ? 'link' : 'file-text'));
+    
     let body;
-    if (isFile) {
+    if (isImg) {
+      body = `<img src="${esc(m.content)}" style="max-height:200px;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:8px" alt="${esc(m.title)}"><br>
+              <span style="font-size:12px;color:var(--gray)">${ico('image','ico-sm')} Изображение</span>`;
+    } else if (isPdfFile) {
+      body = `<a href="${esc(m.content)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-weight:600">${ico('file-text','ico-sm')} Открыть PDF</a> 
+              <span class="muted">· ${formatSize(m.file_size)}</span>`;
+    } else if (isFile) {
       const size = m.file_size ? formatSize(m.file_size) : '';
       body = `<a href="${esc(m.content)}" download="${esc(m.file_name || '')}">${ico('download','ico-sm')} Скачать ${esc(m.file_name || 'файл')}</a>${size ? ` <span class="muted">· ${size}</span>` : ''}`;
     } else if (m.type === 'link') {
@@ -219,6 +236,7 @@ function renderMaterials() {
     } else {
       body = esc(m.content);
     }
+
     return `
       <div class="mat-item">
         <div class="type-icon">${ico(icon,'ico')}</div>
@@ -262,7 +280,7 @@ $$('[data-mat-tab]').forEach(t => t.addEventListener('click', () => {
 const fileDrop = $('#file-drop');
 const fileInput = $('#mat-file');
 fileInput.addEventListener('change', () => {
-  if (fileInput.files[0]) setSelectedFile(fileInput.files[0]);
+  if (fileInput.files.length > 0) addSelectedFiles(fileInput.files);
 });
 ['dragenter','dragover'].forEach(ev => fileDrop.addEventListener(ev, e => {
   e.preventDefault();
@@ -273,40 +291,55 @@ fileInput.addEventListener('change', () => {
   fileDrop.classList.remove('dragover');
 }));
 fileDrop.addEventListener('drop', e => {
-  const f = e.dataTransfer.files[0];
-  if (f) setSelectedFile(f);
+  const files = e.dataTransfer.files;
+  if (files.length > 0) addSelectedFiles(files);
 });
 
-function setSelectedFile(file) {
-  selectedFile = file;
+function addSelectedFiles(files) {
+  for (const file of files) {
+    selectedFiles.push(file);
+  }
+  renderFilePreview();
+  fileInput.value = ''; // Сбрасываем инпут, чтобы можно было выбрать те же файлы снова
+}
+
+function renderFilePreview() {
   const preview = $('#file-preview');
-  preview.style.display = '';
-  preview.innerHTML = `<div class="file-chip">
-    <div class="fc-icon">${ico(fileTypeIco(file.name),'ico')}</div>
-    <div class="fc-info">
-      <div class="fc-name">${esc(file.name)}</div>
-      <div class="fc-size">${formatSize(file.size)}</div>
-    </div>
-    <button class="icon-btn danger" id="clear-file" title="Убрать">${ico('x','ico-sm')}</button>
-  </div>`;
-  $('#clear-file').onclick = (e) => {
-    e.preventDefault();
-    selectedFile = null;
-    fileInput.value = '';
+  if (selectedFiles.length === 0) {
     preview.style.display = 'none';
     preview.innerHTML = '';
-  };
-  if (!$('#mat-title').value.trim()) {
-    $('#mat-title').value = file.name.replace(/\.[^.]+$/, '');
+    return;
   }
+  
+  preview.style.display = 'flex';
+  preview.style.flexDirection = 'column';
+  preview.style.gap = '8px';
+  preview.innerHTML = selectedFiles.map((file, idx) => `
+    <div class="file-chip" style="margin-bottom:0">
+      <div class="fc-icon">${ico(fileTypeIco(file.name),'ico')}</div>
+      <div class="fc-info">
+        <div class="fc-name">${esc(file.name)}</div>
+        <div class="fc-size">${formatSize(file.size)}</div>
+      </div>
+      <button class="icon-btn danger" data-remove-file="${idx}" title="Убрать">${ico('x','ico-sm')}</button>
+    </div>
+  `).join('');
+
+  $$('[data-remove-file]', preview).forEach(b => {
+    b.onclick = () => {
+      const idx = Number(b.dataset.removeFile);
+      selectedFiles.splice(idx, 1);
+      renderFilePreview();
+    };
+  });
 }
 
 function openMaterialModal(m) {
   editingMaterial = m || null;
-  selectedFile = null;
+  selectedFiles = [];
   fileInput.value = '';
-  $('#file-preview').style.display = 'none';
-  $('#file-preview').innerHTML = '';
+  renderFilePreview();
+  
   $('#mat-modal-title').innerHTML = m
     ? `${ico('pencil','ico ico-lg')} Изменить материал`
     : `${ico('file-text','ico ico-lg')} Новый материал`;
@@ -334,22 +367,50 @@ $('#add-material').addEventListener('click', () => openMaterialModal(null));
 
 $('#save-material').addEventListener('click', async () => {
   const title = $('#mat-title').value.trim();
-  if (!title) return toast('Введите название', 'error');
+  if (!title && selectedFiles.length === 0) return toast('Введите название', 'error');
+
+  const btn = $('#save-material');
+  btn.disabled = true;
+  const oldText = btn.textContent;
 
   try {
     if (currentMatTab === 'file') {
-      if (!selectedFile) return toast('Выберите файл', 'error');
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('file', selectedFile);
-      const res = await fetch(`/api/topics/${topicId}/upload`, {
-        method: 'POST',
-        credentials: 'same-origin',
-        body: formData
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error || 'Ошибка загрузки');
-      toast('Файл загружен', 'success');
+      if (selectedFiles.length === 0) return toast('Выберите хотя бы один файл', 'error');
+      
+      // Если учитель редактирует уже существующий материал и выбрал файлы — заменяем
+      if (editingMaterial) {
+        const file = selectedFiles[0];
+        const formData = new FormData();
+        formData.append('title', title || file.name);
+        formData.append('file', file);
+        const res = await fetch(`/api/topics/${topicId}/upload`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          body: formData
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || 'Ошибка загрузки');
+        toast('Файл заменён', 'success');
+      } else {
+        // Пакетная загрузка новых файлов
+        for (let i = 0; i < selectedFiles.length; i++) {
+          const file = selectedFiles[i];
+          btn.textContent = `Загрузка ${i + 1} из ${selectedFiles.length}…`;
+          
+          const formData = new FormData();
+          formData.append('title', title || file.name.replace(/\.[^.]+$/, ''));
+          formData.append('file', file);
+          
+          const res = await fetch(`/api/topics/${topicId}/upload`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData
+          });
+          const json = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(json.error || 'Ошибка загрузки');
+        }
+        toast(`Загружено файлов: ${selectedFiles.length}`, 'success');
+      }
     } else {
       const content = currentMatTab === 'text'
         ? $('#mat-text').value.trim()
@@ -371,7 +432,12 @@ $('#save-material').addEventListener('click', async () => {
     }
     closeModal('modal-material');
     loadAll();
-  } catch (e) { toast(e.message, 'error'); }
+  } catch (e) { 
+    toast(e.message, 'error'); 
+  } finally {
+    btn.disabled = false;
+    btn.textContent = oldText;
+  }
 });
 
 // ═══ ТЕСТ ═══

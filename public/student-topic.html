@@ -23,6 +23,7 @@
     vertical-align: middle;
   }
   .ico-lg { width: 22px; height: 22px; stroke-width: 1.5; }
+  .ico-xl { width: 32px; height: 32px; stroke-width: 1.5; }
   .ico-sm { width: 15px; height: 15px; stroke-width: 2; }
   h2 .ico, h3 .ico { margin-right: 8px; vertical-align: -3px; }
   .st-back .ico { margin-right: 4px; vertical-align: -3px; }
@@ -120,12 +121,63 @@
     color: var(--dark);
   }
 
+  /* ─── СЕТКА КАРТИНОК (ГАЛЕРЕЯ) ─── */
+  .image-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+    transition: all .2s ease;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s ease;
+  }
+  .gallery-item:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 20px -8px rgba(14,165,233,.4);
+    transform: translateY(-2px);
+  }
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+  .gallery-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26,26,46,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity .2s ease;
+    backdrop-filter: blur(2px);
+  }
+  .gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+  }
+
+  /* ─── ОСТАЛЬНЫЕ МАТЕРИАЛЫ ─── */
   .st-mat {
     border-radius: 16px;
     background: var(--light);
     border: 1.5px solid transparent;
     transition: all .2s;
-    margin-bottom: 12px;
     overflow: hidden;
   }
   .st-mat:hover { border-color: var(--accent); }
@@ -169,7 +221,7 @@
     padding: 0 16px;
   }
   .st-mat.open .st-mat-body {
-    max-height: 800px;
+    max-height: 2000px;
     padding: 0 16px 16px;
   }
   .st-mat-body .inner {
@@ -182,52 +234,193 @@
     white-space: pre-wrap;
     word-break: break-word;
   }
-  .st-mat-body a {
-    color: var(--accent-dark);
+  .st-mat-body a { color: var(--accent-dark); font-weight: 600; word-break: break-all; }
+
+  /* ─── PDF блок ─── */
+  .material-pdf-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+  }
+
+  /* ─── Лайтбокс (галерея) ─── */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(10, 10, 15, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .lightbox-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .lightbox-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .lightbox-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    transform: scale(0.95);
+    transition: transform .3s cubic-bezier(.2,.8,.3,1);
+  }
+  .lightbox-overlay.show .lightbox-content img {
+    transform: scale(1);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all .2s;
+    z-index: 10;
+  }
+  .lightbox-close:hover {
+    background: rgba(224, 67, 92, 0.8);
+    transform: rotate(90deg);
+  }
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all .2s;
+    z-index: 10;
+    user-select: none;
+  }
+  .lightbox-nav:hover {
+    background: rgba(255,255,255,.25);
+    transform: translateY(-50%) scale(1.1);
+  }
+  .lightbox-prev { left: 24px; }
+  .lightbox-next { right: 24px; }
+  .lightbox-nav.hidden { display: none; }
+
+  .lightbox-caption {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.8);
+    font-size: 14px;
     font-weight: 600;
-    word-break: break-all;
-  }
-
-  .test-cta {
+    background: rgba(0,0,0,.5);
+    padding: 8px 20px;
+    border-radius: 99px;
+    backdrop-filter: blur(4px);
+    max-width: 80%;
     text-align: center;
-    padding: 32px 20px;
-    background: linear-gradient(135deg, rgba(14,165,233,.06), rgba(106,76,255,.05));
-    border-radius: 18px;
-    border: 1.5px dashed var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  html.dark .test-cta {
-    background: linear-gradient(135deg, rgba(14,165,233,.10), rgba(122,92,255,.08));
-  }
-  .test-cta .emoji {
-    display: grid; place-items: center;
-    margin-bottom: 12px;
-    color: var(--accent-dark);
-  }
-  .test-cta .emoji .ico { width: 42px; height: 42px; stroke-width: 1.25; }
-  .test-cta h3 {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 6px;
-    color: var(--dark);
-  }
-  .test-cta p { color: var(--gray); font-size: 14px; margin-bottom: 20px; }
 
-  .best-result {
-    display: inline-flex;
+  /* ─── Модалка PDF ─── */
+  .pdf-viewer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(26, 26, 46, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn .2s ease;
+  }
+  .pdf-viewer-container {
+    width: 100%;
+    max-width: 1000px;
+    height: 90vh;
+    background: #fff;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+  }
+  .pdf-viewer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--light);
+  }
+  .pdf-viewer-title {
+    font-weight: 800;
+    color: var(--dark);
+    font-size: 16px;
+    display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    border-radius: 999px;
-    background: rgba(14,165,233,.12);
-    color: var(--accent-dark);
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 16px;
   }
+  .pdf-viewer-close {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--gray);
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .pdf-viewer-close:hover {
+    background: rgba(224,67,92,.1);
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+  .pdf-viewer-body {
+    flex: 1;
+    background: #f0f0f0;
+  }
+  .pdf-viewer-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   @media (max-width: 640px) {
     .st-head h1 { font-size: 24px; }
     .st-wrap { padding: 20px 16px 60px; }
+    .lightbox-content { padding: 10px; }
+    .lightbox-nav { width: 44px; height: 44px; }
+    .lightbox-prev { left: 10px; }
+    .lightbox-next { right: 10px; }
+    .lightbox-close { top: 12px; right: 12px; width: 40px; height: 40px; }
+    .pdf-viewer-container { height: 100vh; max-height: 100vh; border-radius: 0; }
+    .pdf-viewer-overlay { padding: 0; }
   }
 </style>
 </head>
@@ -239,6 +432,10 @@
     <symbol id="i-arrow-left" viewBox="0 0 24 24">
       <path d="m12 19-7-7 7-7"/>
       <path d="M19 12H5"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24">
+      <path d="M5 12h14"/>
+      <path d="m12 5 7 7-7 7"/>
     </symbol>
     <symbol id="i-file-text" viewBox="0 0 24 24">
       <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
@@ -270,6 +467,19 @@
     </symbol>
     <symbol id="i-chevr" viewBox="0 0 24 24">
       <path d="m9 18 6-6-6-6"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+      <circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.3-4.3"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="M18 6 6 18"/>
+      <path d="m6 6 12 12"/>
     </symbol>
   </defs>
 </svg>

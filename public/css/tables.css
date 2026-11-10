@@ -36,7 +36,7 @@
 .table-box-sub b { color: var(--dark); font-weight: 800; }
 
 /* ═══════════════════════════════════════════
-   ПЕРИОДИЧЕСКАЯ СИСТЕМА
+   ПЕРИОДИЧЕСКАЯ СИСТЕМА (интерактивная страница)
    ═══════════════════════════════════════════ */
 .periodic-grid {
   display: grid;
@@ -121,7 +121,7 @@
 .p-el.cat-unknown    { background: rgba(180,180,200,.18); }
 
 /* ═══════════════════════════════════════════
-   ТАБЛИЦА РАСТВОРИМОСТИ
+   ТАБЛИЦА РАСТВОРИМОСТИ (интерактивная страница)
    ═══════════════════════════════════════════ */
 .solubility-wrap {
   overflow-x: auto;
@@ -138,7 +138,6 @@
   min-width: 720px;
 }
 
-/* Общая ячейка */
 .sol-cell {
   display: flex;
   flex-direction: column;
@@ -160,7 +159,6 @@
   line-height: 1.15;
 }
 
-/* Угловая ячейка (верхний левый угол) */
 .sol-corner {
   background: linear-gradient(135deg, rgba(106,76,255,.12), rgba(14,165,233,.08));
   color: var(--gray);
@@ -171,7 +169,6 @@
 }
 .sol-corner:hover { transform: none; }
 
-/* Заголовки (катионы сверху, анионы слева) */
 .sol-header {
   background: linear-gradient(135deg, rgba(106,76,255,.10), rgba(106,76,255,.03));
   color: var(--primary);
@@ -202,7 +199,6 @@
   box-shadow: 0 6px 14px -6px rgba(14,165,233,.5);
 }
 
-/* Ячейки с реактивами — красивые градиенты по свойству */
 .sol-cell.solvable     { background: linear-gradient(135deg, rgba(14,165,233,.18), rgba(14,165,233,.06)); color: #0369a1; }
 .sol-cell.sparingly    { background: linear-gradient(135deg, rgba(255,205,86,.22), rgba(255,205,86,.06)); color: #8a6a00; }
 .sol-cell.insoluble    { background: linear-gradient(135deg, rgba(255,120,120,.20), rgba(255,120,120,.06)); color: #b02b2b; }
@@ -219,7 +215,6 @@
     0 0 0 3px rgba(106,76,255,.12);
 }
 
-/* Маленький кружок-индикатор цвета осадка */
 .sol-dot {
   display: inline-block;
   width: 7px;
@@ -239,7 +234,6 @@
 .sol-dot.gray   { background: #9a9ab0; }
 .sol-dot.pink   { background: #ff8fc8; }
 
-/* Легенда */
 .sol-legend {
   display: flex;
   flex-wrap: wrap;
@@ -569,63 +563,214 @@
    СТАТИЧНЫЕ (неинтерактивные) ВЕРСИИ ТАБЛИЦ В OVERLAY
    ═══════════════════════════════════════════════════════ */
 
-/* Периодическая система — статичная */
+/* ★ Сетка: 19 колонок (1 подпись + 18 групп), 12 строк (2 шапки + 10 рядов элементов) */
 .cheat-periodic-grid {
   display: grid;
-  grid-template-columns: repeat(18, minmax(0, 1fr));
-  grid-template-rows: repeat(7, auto);
-  gap: 4px;
-  padding: 10px;
+  grid-template-columns: 45px repeat(18, minmax(0, 1fr));
+  grid-template-rows: 28px 32px repeat(7, 52px) 12px repeat(2, 52px); /* <--- ИСПРАВЛЕНО */
+  gap: 3px;
+  padding: 12px;
   background: rgba(245, 246, 255, .5);
   border-radius: 14px;
   border: 1.5px solid var(--border);
+  min-width: 1050px;
+}
+.cheat-periodic-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  margin: 0 auto;
+  box-shadow: 0 4px 20px -10px rgba(106,76,255,.15);
+}
+html.dark .cheat-periodic-container { background: #1a1a2e; border-color: #2a2a45; }
+
+.cheat-groups-title {
+  grid-column: 2 / -1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 1px;
+  line-height: 28px;
+  background: linear-gradient(90deg, transparent, rgba(106,76,255,.05), transparent);
 }
 
+.cheat-group-head, .cheat-label-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+  background: rgba(106,76,255,.08);
+  border-radius: 6px;
+  line-height: 1;
+  text-align: center;
+  border: 1px solid rgba(106,76,255,.15);
+}
+html.dark .cheat-group-head, html.dark .cheat-label-head { background: rgba(122,92,255,.15); border-color: rgba(122,92,255,.3); color: #b8a6ff; }
+
+.cheat-period-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent-dark);
+  background: rgba(14,165,233,.08);
+  border-radius: 6px;
+  border: 1px solid rgba(14,165,233,.15);
+}
+html.dark .cheat-period-head { background: rgba(14,165,233,.15); color: #7ad8f8; border-color: rgba(14,165,233,.3); }
+
+.cheat-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-dark);
+  background: rgba(14,165,233,.08);
+  border-radius: 6px;
+  border: 1px solid rgba(14,165,233,.15);
+}
+html.dark .cheat-row-head { background: rgba(14,165,233,.15); color: #7ad8f8; border-color: rgba(14,165,233,.3); }
+
+/* ★ ИСПРАВЛЕНО: убран aspect-ratio, фиксированные width/height 100% */
 .cheat-p-el {
   position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 700;
   user-select: none;
-  pointer-events: none;
+  pointer-events: auto;
+  transition: transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s ease, border-color .2s;
+  z-index: 1;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  background: var(--white);
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 }
+html.dark .cheat-p-el { background: #1a1a2e; border-color: #3a3a55; }
+
+.cheat-p-el:hover {
+  transform: scale(1.4);
+  z-index: 20;
+  box-shadow: 0 10px 30px -10px rgba(106,76,255,.5);
+  border-color: var(--primary);
+}
+html.dark .cheat-p-el:hover {
+  box-shadow: 0 10px 30px -10px rgba(122,92,255,.6);
+  border-color: var(--accent);
+}
+
 .cheat-p-el .num {
   position: absolute;
   top: 3px;
   left: 4px;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--gray);
   line-height: 1;
 }
 .cheat-p-el .sym {
-  font-size: clamp(11px, 1vw, 15px);
+  font-size: 16px;
   line-height: 1;
   color: var(--dark);
+  margin-top: 4px;
+  font-weight: 800;
 }
 .cheat-p-el .mass-mini {
-  font-size: 7.5px;
+  font-size: 9px;
   font-weight: 600;
   color: var(--gray);
-  margin-top: 1px;
+  margin-top: 2px;
   line-height: 1;
 }
 
-.cheat-p-el.cat-alkali     { background: rgba(255, 99, 99, .16); }
-.cheat-p-el.cat-alkaline   { background: rgba(255, 159, 64, .18); }
-.cheat-p-el.cat-transition { background: rgba(255, 205, 86, .16); }
-.cheat-p-el.cat-post-trans { background: rgba(176, 214, 109, .16); }
-.cheat-p-el.cat-metalloid  { background: rgba(140, 200, 255, .20); }
-.cheat-p-el.cat-nonmetal   { background: rgba(90, 220, 200, .20); }
-.cheat-p-el.cat-halogen    { background: rgba(160, 140, 255, .20); }
-.cheat-p-el.cat-noble      { background: rgba(255, 140, 210, .20); }
-.cheat-p-el.cat-lanthanide { background: rgba(200, 140, 255, .16); }
-.cheat-p-el.cat-actinide   { background: rgba(255, 140, 140, .16); }
-.cheat-p-el.cat-unknown    { background: rgba(180, 180, 200, .18); }
+/* Цвета в стиле сайта (пастельные, мягкие) */
+.cheat-p-el.cat-alkali     { background: rgba(255, 99, 99, 0.12); }
+.cheat-p-el.cat-alkaline   { background: rgba(255, 159, 64, 0.12); }
+.cheat-p-el.cat-transition { background: rgba(255, 205, 86, 0.12); }
+.cheat-p-el.cat-post-trans { background: rgba(176, 214, 109, 0.12); }
+.cheat-p-el.cat-metalloid  { background: rgba(140, 200, 255, 0.15); }
+.cheat-p-el.cat-nonmetal   { background: rgba(90, 220, 200, 0.15); }
+.cheat-p-el.cat-halogen    { background: rgba(160, 140, 255, 0.15); }
+.cheat-p-el.cat-noble      { background: rgba(255, 140, 210, 0.15); }
+.cheat-p-el.cat-lanthanide { background: rgba(200, 140, 255, 0.15); }
+.cheat-p-el.cat-actinide   { background: rgba(255, 140, 140, 0.15); }
+
+html.dark .cheat-p-el.cat-alkali     { background: rgba(255, 99, 99, 0.25); }
+html.dark .cheat-p-el.cat-alkaline   { background: rgba(255, 159, 64, 0.25); }
+html.dark .cheat-p-el.cat-transition { background: rgba(255, 205, 86, 0.25); }
+html.dark .cheat-p-el.cat-post-trans { background: rgba(176, 214, 109, 0.25); }
+html.dark .cheat-p-el.cat-metalloid  { background: rgba(140, 200, 255, 0.25); }
+html.dark .cheat-p-el.cat-nonmetal   { background: rgba(90, 220, 200, 0.25); }
+html.dark .cheat-p-el.cat-halogen    { background: rgba(160, 140, 255, 0.25); }
+html.dark .cheat-p-el.cat-noble      { background: rgba(255, 140, 210, 0.25); }
+html.dark .cheat-p-el.cat-lanthanide { background: rgba(200, 140, 255, 0.25); }
+html.dark .cheat-p-el.cat-actinide   { background: rgba(255, 140, 140, 0.25); }
+
+/* Легенда (оксиды / водородные соединения) */
+.cheat-legend-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1.5px dashed var(--border);
+}
+.cheat-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cheat-legend-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--gray);
+  width: 140px;
+  text-align: right;
+}
+.cheat-legend-cells {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  gap: 3px;
+  flex: 1;
+  padding-left: 45px;
+}
+.cheat-legend-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dark);
+  background: rgba(106,76,255,.06);
+  border: 1px solid rgba(106,76,255,.15);
+}
+html.dark .cheat-legend-cell { background: rgba(122,92,255,.12); border-color: rgba(122,92,255,.25); color: #b8a6ff; }
+
+.cheat-notes {
+  font-size: 12px;
+  color: var(--gray);
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.cheat-notes b { color: var(--dark); font-size: 14px; }
 
 /* Таблица растворимости — статичная с подсветкой строк/столбцов */
 .cheat-sol-grid {
