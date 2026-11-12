@@ -188,7 +188,7 @@
     display: flex;
     gap: 16px;
     align-items: center;
-    flex-wrap: wrap; /* ИСПРАВЛЕНО: перенос строк */
+    flex-wrap: wrap;
     animation: tileIn .4s cubic-bezier(.2,.8,.3,1);
   }
   @keyframes tileIn {
@@ -215,7 +215,7 @@
   }
   .review-info { 
     flex: 1; 
-    min-width: 150px; /* ИСПРАВЛЕНО */
+    min-width: 150px;
     overflow: hidden; 
   }
   .review-name {
@@ -239,7 +239,7 @@
     display: flex; 
     gap: 8px; 
     flex-shrink: 0; 
-    margin-left: auto; /* ИСПРАВЛЕНО: прижимаем кнопку вправо */
+    margin-left: auto;
   }
 
   .rv-modal { max-width: 780px !important; width: 100%; }
@@ -1129,11 +1129,6 @@
         <div class="profile-role">Учитель</div>
       </div>
       <div data-theme-toggle></div>
-      
-      <!-- Кнопка включения уведомлений -->
-      <button class="btn btn-ghost" id="enable-notif-btn" title="Включить уведомления" style="padding:8px 10px;border-radius:10px;margin-left:4px;">
-        <svg class="ico ico-sm"><use href="#i-bell"/></svg>
-      </button>
     </div>
 
     <button class="btn btn-ghost" id="logout" title="Выйти" style="margin-top:10px;padding:10px 14px;font-size:13px;border-radius:10px">
